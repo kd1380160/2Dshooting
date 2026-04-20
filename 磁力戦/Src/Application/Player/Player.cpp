@@ -26,7 +26,7 @@ void C_Player::Update()
 	
 
 	//行列作成
-	player.Scale = Math::Matrix::CreateScale(1, 1, 1);
+	player.Scale = Math::Matrix::CreateScale(5, 5, 1);
 	player.Trans = Math::Matrix::CreateTranslation(player.Pos.x, player.Pos.y, 0);
 	player.Mat = player.Scale * player.Trans;
 }
@@ -35,7 +35,7 @@ void C_Player::Draw()
 {
 	//プレイヤー
 	SHADER.m_spriteShader.SetMatrix(player.Mat);
-	SHADER.m_spriteShader.DrawTex(player.Tex, Math::Rectangle{ 0,0,64,64 });
+	SHADER.m_spriteShader.DrawTex(player.Tex, Math::Rectangle{ 8,0,8,8 });
 }
 
 void C_Player::ShotNormalBullet()

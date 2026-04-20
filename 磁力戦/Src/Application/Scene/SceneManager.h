@@ -22,6 +22,7 @@ enum WaveList
 	Wave3,
 	Wave4,
 	Wave5,
+	Boss,
 	WaveNum
 };
 
@@ -35,16 +36,18 @@ public:
 
 	void SetNowScene(SceneList now);
 
+	WaveList	GetNowWave() { return NowWave; }
+	void		SetNowWave(WaveList now) { NowWave = now; }
 private:
 
 	SceneList NowScene;
-
+	WaveList NowWave;
 	
 
 
 private:
 
-	C_SceneManager() {}
+	C_SceneManager() { NowWave = WaveList::Wave1; }
 
 public:
 	static C_SceneManager& GetInstance()

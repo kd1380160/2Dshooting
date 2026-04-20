@@ -11,6 +11,7 @@ public:
 	void Update();
 	void Release();
 
+	void WaveInterval();
 	int GetEnemyKillCnt() { return enemyKillCnt; }
 	Math::Vector2 GetEnemy1Pos();
 private:
@@ -32,6 +33,10 @@ private:
 	
 	bool isCallBoss;
 	bool isBoss;
+	bool isInterval;
+
+	int intervalCnt;
+	static const int  INTERVAL = 120;
 
 private:
 

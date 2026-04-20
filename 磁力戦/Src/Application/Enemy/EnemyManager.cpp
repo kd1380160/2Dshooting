@@ -21,6 +21,7 @@ void C_EnemyManager::Init()
 {
 	isBoss = false;
 	isCallBoss = false;
+	isInterval = false;
 	enemyKillCnt = 0;
 	returnPosCnt = 0;
 
@@ -42,6 +43,35 @@ void C_EnemyManager::Init()
 
 void C_EnemyManager::Update()
 {
+	WaveInterval();
+
+	switch (SCENE_MGR.GetNowWave())
+	{
+	case Wave1:
+		break;
+	case Wave2:
+		break;
+	case Wave3:
+		break;
+	case Wave4:
+		break;
+	case Wave5:
+		break;
+	case Boss:
+
+		if (boss != nullptr)
+		{
+			boss->Update();
+
+
+			if (boss->GetBossHp() <= 0)
+			{
+				delete boss;
+				boss = nullptr;
+			}
+		}
+		break;
+	}
 	if (enemyKillCnt < 10)
 	{
 		for (int i = 0;i < ENEMY1_MAX;i++)
@@ -66,9 +96,13 @@ void C_EnemyManager::Update()
 
 				if (i == ENEMY1_MAX - 1)
 				{
-					isBoss = true;	
-					boss = new C_Boss(&bossTex);
+					
+					isInterval = true;
+					//SCENE_MGR.SetNowWave(Wave2);
+					//isBoss = true;	
+					//boss = new C_Boss(&bossTex);
 					isCallBoss = true;
+					//enemyKillCnt = 0;
 				}
 			}
 		}
@@ -90,17 +124,7 @@ void C_EnemyManager::Update()
 
 	
 
-	if (boss != nullptr)
-	{
-		boss->Update();
-		
-
-		if (boss->GetBossHp() <= 0)
-		{
-			delete boss;
-			boss = nullptr;
-		}
-	}
+	
 
 	if (GetAsyncKeyState(VK_LBUTTON) & 0x8000)
 	{
@@ -135,10 +159,39 @@ void C_EnemyManager::Release()
 	bossTex.Release();
 }
 
+void C_EnemyManager::WaveInterval()
+{
+	if (isInterval)
+	{
+		intervalCnt++;
+		if (intervalCnt >= INTERVAL)
+		{
+			switch (SCENE_MGR.GetNowWave())
+			{
+			case Wave1:
+				SCENE_MGR.SetNowWave(Wave2);
+				break;
+			case Wave2:
+				SCENE_MGR.SetNowWave(Wave3);
+				break;
+			case Wave3:
+				SCENE_MGR.SetNowWave(Wave4);
+				break;
+			case Wave4:
+				SCENE_MGR.SetNowWave(Wave5);
+				break;
+			case Wave5:
+				SCENE_MGR.SetNowWave(Boss);
+				break;
+			}
+			intervalCnt = 0;
+			isInterval = false;
+		}
+	}
+}
+
 Math::Vector2 C_EnemyManager::GetEnemy1Pos()
 {
-	
-
 	while (1)
 	{
 		if (!(LockOnEnemyPos[0].x == 0 && LockOnEnemyPos[0].y == -500)&&returnPosCnt==0)

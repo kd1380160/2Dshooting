@@ -25,6 +25,9 @@ void Scene::Draw2D()
 	char str[80];
 	sprintf_s(str, sizeof(str),"ìGÇì|ÇµÇΩêî: %d", ENEMY_MGR.GetEnemyKillCnt());
 	SHADER.m_spriteShader.DrawString(-600, 300, str, Math::Vector4{ 1,1,1,1 });
+
+	sprintf_s(str, sizeof(str), "ç°ÇÃWave: %d", SCENE_MGR.GetNowWave()+1);
+	SHADER.m_spriteShader.DrawString(-600, 250, str, Math::Vector4{1,1,1,1});
 }
 
 void Scene::Update()
