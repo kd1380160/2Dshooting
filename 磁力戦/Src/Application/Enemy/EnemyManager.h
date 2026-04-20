@@ -15,6 +15,7 @@ public:
 	void WaveInterval();
 	int GetEnemyKillCnt() { return enemyKillCnt; }
 	Math::Vector2 GetEnemy1Pos();
+	Math::Vector2 GetEnemy2Pos();
 private:
 
 	bool isClick;
@@ -33,7 +34,8 @@ private:
 
 	int enemyKillCnt=0;
 	int returnPosCnt=0;
-	Math::Vector2 LockOnEnemyPos[3] = { {0,0},{0,0},{0,0} };
+	Math::Vector2 LockOnEnemy1Pos[3] = { {0,0},{0,0},{0,0} };
+	Math::Vector2 LockOnEnemy2Pos[5] = { {0,0},{0,0},{0,0},{0,0},{0,0} };
 
 	KdTexture bossTex;
 	C_Boss* boss = {};

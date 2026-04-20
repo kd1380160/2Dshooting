@@ -48,7 +48,7 @@ private:
 
 
 
-	bool isLClick;
+	bool isLClick = false;
 private:
 
 	C_BulletManager() {

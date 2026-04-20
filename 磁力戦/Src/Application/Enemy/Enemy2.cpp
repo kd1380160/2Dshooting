@@ -43,7 +43,7 @@ void C_Enemy2::Update(Math::Vector2 playerpos)
 		isHit = false;
 	}
 
-	enemy.Scale = Math::Matrix::CreateScale(2, 2, 1);
+	enemy.Scale = Math::Matrix::CreateScale(2, -2, 1);
 	enemy.Trans = Math::Matrix::CreateTranslation(enemy.Pos.x, enemy.Pos.y, 0);
 	enemy.Mat = enemy.Scale * enemy.Trans;
 }

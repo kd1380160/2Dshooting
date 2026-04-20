@@ -249,7 +249,26 @@ void C_BulletManager::ShotMagBullet()
 	{
 		if (magneticBullets[i] != nullptr)
 		{
-			magneticBullets[i]->SetDestinationPos(ENEMY_MGR.GetEnemy1Pos());
+			switch (SCENE_MGR.GetNowWave())
+			{
+			case Wave1:
+				magneticBullets[i]->SetDestinationPos(ENEMY_MGR.GetEnemy1Pos());
+				break;
+			case Wave2:
+				magneticBullets[i]->SetDestinationPos(ENEMY_MGR.GetEnemy2Pos());
+				break;
+			case Wave3:
+				break;
+			case Wave4:
+				break;
+			case Wave5:
+				break;
+			case Boss:
+				break;
+			default:
+				break;
+			}
+			
 			
 		}
 	}

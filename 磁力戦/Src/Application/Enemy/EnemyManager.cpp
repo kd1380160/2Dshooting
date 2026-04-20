@@ -126,12 +126,12 @@ void C_EnemyManager::Update()
 				isClick = true;
 				for (int i = 0, j = 0;i < ENEMY1_MAX;i++)
 				{
-					LockOnEnemyPos[i] = { 0,-500 };
+					LockOnEnemy1Pos[i] = { 0,-500 };
 					if (enemy1[i] != nullptr)
 					{
 						if (enemy1[i]->GetIsLockOn())
 						{
-							LockOnEnemyPos[j] = enemy1[i]->GetPos();
+							LockOnEnemy1Pos[j] = enemy1[i]->GetPos();
 							j++;
 						}
 					}
@@ -205,12 +205,12 @@ void C_EnemyManager::Update()
 				isClick = true;
 				for (int i = 0, j = 0;i < ENEMY2_MAX;i++)
 				{
-					LockOnEnemyPos[i] = { 0,-500 };
+					LockOnEnemy2Pos[i] = { 0,-500 };
 					if (enemy2[i] != nullptr)
 					{
 						if (enemy2[i]->GetIsLockOn())
 						{
-							LockOnEnemyPos[j] = enemy2[i]->GetPos();
+							LockOnEnemy2Pos[j] = enemy2[i]->GetPos();
 							j++;
 						}
 					}
@@ -317,44 +317,60 @@ Math::Vector2 C_EnemyManager::GetEnemy1Pos()
 {
 	while (1)
 	{
-		if (!(LockOnEnemyPos[0].x == 0 && LockOnEnemyPos[0].y == -500)&&returnPosCnt==0)
+		if (!(LockOnEnemy1Pos[0].x == 0 && LockOnEnemy1Pos[0].y == -500)&&returnPosCnt==0)
 		{
 			returnPosCnt++;
-			return LockOnEnemyPos[0];
+			return LockOnEnemy1Pos[0];
 		}
-		else if (!(LockOnEnemyPos[1].x == 0 && LockOnEnemyPos[1].y == -500) && returnPosCnt == 1 )
+		else if (!(LockOnEnemy1Pos[1].x == 0 && LockOnEnemy1Pos[1].y == -500) && returnPosCnt == 1 )
 		{
 			returnPosCnt++;
-			return LockOnEnemyPos[1];
+			return LockOnEnemy1Pos[1];
 		}
-		else if (!(LockOnEnemyPos[2].x == 0 && LockOnEnemyPos[2].y == -500) && returnPosCnt == 2)
+		else if (!(LockOnEnemy1Pos[2].x == 0 && LockOnEnemy1Pos[2].y == -500) && returnPosCnt == 2)
 		{
 			returnPosCnt = 0;
-			return LockOnEnemyPos[2];
+			return LockOnEnemy1Pos[2];
 		}
 		else
 		{
 			returnPosCnt = 0;
 		}
 	}
+}
 
-
-	/*if (enemy1[0] != nullptr&&enemy1[0]->GetIsLockOn())
+Math::Vector2 C_EnemyManager::GetEnemy2Pos()
+{
+	while (1)
 	{
-
-		return enemy1[0]->GetPos();
+		if (!(LockOnEnemy2Pos[0].x == 0 && LockOnEnemy2Pos[0].y == -500) && returnPosCnt == 0)
+		{
+			returnPosCnt++;
+			return LockOnEnemy2Pos[0];
+		}
+		else if (!(LockOnEnemy2Pos[1].x == 0 && LockOnEnemy2Pos[1].y == -500) && returnPosCnt == 1)
+		{
+			returnPosCnt++;
+			return LockOnEnemy2Pos[1];
+		}
+		else if (!(LockOnEnemy2Pos[2].x == 0 && LockOnEnemy2Pos[2].y == -500) && returnPosCnt == 2)
+		{
+			returnPosCnt++;
+			return LockOnEnemy2Pos[2];
+		}
+		else if (!(LockOnEnemy2Pos[3].x == 0 && LockOnEnemy2Pos[3].y == -500) && returnPosCnt == 3)
+		{
+			returnPosCnt++;
+			return LockOnEnemy2Pos[3];
+		}
+		else if (!(LockOnEnemy2Pos[4].x == 0 && LockOnEnemy2Pos[4].y == -500) && returnPosCnt == 4)
+		{
+			returnPosCnt = 0;
+			return LockOnEnemy2Pos[4];
+		}
+		else
+		{
+			returnPosCnt = 0;
+		}
 	}
-	else if (enemy1[1] != nullptr && enemy1[1]->GetIsLockOn())
-	{
-		return enemy1[1]->GetPos();
-	}
-	else if (enemy1[2] != nullptr && enemy1[2]->GetIsLockOn())
-	{
-		return enemy1[2]->GetPos();
-	}
-	else
-	{
-		return { 0,0 };
-	}*/
-
 }
