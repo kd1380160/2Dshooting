@@ -4,7 +4,7 @@ void C_BackGround::Init()
 {
 	backgroundPos[0] = {0,0};
 	backgroundPos[1] = {0,720};
-	backgroundTex.Load("Assets/Image/BackGround/BackGround.png");
+	
 }
 
 void C_BackGround::Update()

@@ -35,7 +35,10 @@ private:
 
 private:
 
-	C_EnemyManager() {}
+	C_EnemyManager(){
+		enemy1Tex.Load("Assets/Image/Enemy/enemy.png");
+		bossTex.Load("Assets/Image/Enemy/Boss.png");
+	}
 
 public:
 	static C_EnemyManager& GetInstance()

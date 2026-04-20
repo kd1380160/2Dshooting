@@ -1,4 +1,5 @@
 #include "SceneManager.h"
+#include"../Scene.h"
 
 void C_SceneManager::Init()
 {
@@ -7,6 +8,9 @@ void C_SceneManager::Init()
 	case SceneList::Title:
 		break;
 	case SceneList::Game:
+		SCENE.GetPlayer()->Init();
+		BULLET_MGR.Init();
+		ENEMY_MGR.Init();
 		break;
 	case SceneList::Result:
 		break;
@@ -20,6 +24,13 @@ void C_SceneManager::Update()
 	case SceneList::Title:
 		break;
 	case SceneList::Game:
+
+		BACKGRND.Update();
+		SCENE.GetPlayer()->Update();
+
+		ENEMY_MGR.Update();
+
+		BULLET_MGR.Update();
 		break;
 	case SceneList::Result:
 		break;
@@ -33,8 +44,20 @@ void C_SceneManager::Draw()
 	case SceneList::Title:
 		break;
 	case SceneList::Game:
+		BACKGRND.Draw();
+		SCENE.GetPlayer()->Draw();
+		ENEMY_MGR.Draw();
+
+		BULLET_MGR.Draw();
 		break;
 	case SceneList::Result:
 		break;
 	}
+}
+
+void C_SceneManager::SetNowScene(SceneList now)
+{
+	NowScene = now;
+
+	Init();
 }

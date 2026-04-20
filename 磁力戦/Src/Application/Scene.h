@@ -1,8 +1,4 @@
 #pragma once
-#include "Player/Player.h"
-#include"BackGround/BackGround.h"
-#include"Bullet/BulletManager.h"
-#include"Enemy/EnemyManager.h"
 #include"Scene/SceneManager.h"
 
 class Scene
@@ -20,9 +16,8 @@ private:
 	bool clickFlg;		//クリック入力用フラグ
 
 	//プレイヤー
-	C_Player player;
 	KdTexture playerTex;
-
+	C_Player player;
 	
 
 public:

@@ -3,15 +3,13 @@
 
 void Scene::Draw2D()
 {
-	BACKGRND.Draw();
+	
 
-	player.Draw();
+	
 
 
-	//SCENE_MGR.Draw();
-	ENEMY_MGR.Draw();
-
-	BULLET_MGR.Draw();
+	SCENE_MGR.Draw();
+	
 	
 	/*for (int i = 0;i < ENEMY1_MAX;i++)
 	{
@@ -31,12 +29,21 @@ void Scene::Draw2D()
 
 void Scene::Update()
 {
-	BACKGRND.Update();
-	player.Update();
+	SCENE_MGR.Update();
 
-	ENEMY_MGR.Update();
 
-	BULLET_MGR.Update();
+	if (GetAsyncKeyState('1') & 0x8000)
+	{
+		SCENE_MGR.SetNowScene(Title);
+	}
+	else if (GetAsyncKeyState('2') & 0x8000)
+	{
+		SCENE_MGR.SetNowScene(Game);
+	}
+	else if (GetAsyncKeyState('3') & 0x8000)
+	{
+		SCENE_MGR.SetNowScene(Result);
+	}
 }
 
 void Scene::Init()
@@ -47,9 +54,10 @@ void Scene::Init()
 	releasePos = { 0,0 };
 	clickFlg = false;
 	
-
+	SCENE_MGR.SetNowScene(Game);
 	player.Init();
 	LoadTexture();
+
 	ENEMY_MGR.Init();
 	BULLET_MGR.Init();
 	BACKGRND.Init();

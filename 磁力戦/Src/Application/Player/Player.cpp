@@ -1,6 +1,8 @@
 #include "Player.h"
 #include"../Bullet/BulletManager.h"
 
+
+
 void C_Player::Init()
 {
 	player.Pos = { 0,-200 };

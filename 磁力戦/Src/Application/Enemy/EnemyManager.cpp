@@ -23,8 +23,21 @@ void C_EnemyManager::Init()
 	isCallBoss = false;
 	enemyKillCnt = 0;
 	returnPosCnt = 0;
-	enemy1Tex.Load("Assets/Image/Enemy/enemy.png");
-	bossTex.Load("Assets/Image/Enemy/Boss.png");
+
+	for (int i = 0;i < ENEMY1_MAX;i++)
+	{
+		if (enemy1[i] != nullptr)
+		{
+			delete enemy1[i];
+			enemy1[i] = nullptr;
+		}
+	}
+
+	if (boss != nullptr)
+	{
+		delete boss;
+		boss = nullptr;
+	}
 }
 
 void C_EnemyManager::Update()

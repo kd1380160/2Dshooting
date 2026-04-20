@@ -17,7 +17,7 @@ private:
 
 private:
 
-	C_BackGround() {}
+	C_BackGround() { backgroundTex.Load("Assets/Image/BackGround/BackGround.png"); }
 
 public:
 	static C_BackGround& GetInstance()

@@ -44,7 +44,11 @@ private:
 	bool isLClick;
 private:
 
-	C_BulletManager() {}
+	C_BulletManager() {
+		normalBulletTex.Load("Assets/Image/Bullet/bullet.png");
+		magneticBulletTex.Load("Assets/Image/Bullet/GetMagBullet.png");
+		enemy1BulletTex.Load("Assets/Image/Bullet/MagBullet.png");
+	}
 
 public:
 	static C_BulletManager& GetInstance()

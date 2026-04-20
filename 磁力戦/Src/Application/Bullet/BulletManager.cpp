@@ -117,9 +117,34 @@ void C_BulletManager::Update()
 
 void C_BulletManager::Init()
 {
-	normalBulletTex.Load("Assets/Image/Bullet/bullet.png");
-	magneticBulletTex.Load("Assets/Image/Bullet/GetMagBullet.png");
-	enemy1BulletTex.Load("Assets/Image/Bullet/MagBullet.png");
+	isLClick = false;
+
+	for (int i = 0;i < NORMAL_BULLET_MAX;i++)
+	{
+		if (normalBullets[i] != nullptr)
+		{
+			delete normalBullets[i];
+			normalBullets[i] = nullptr;
+		}
+	}
+
+	for (int i = 0;i < MAGNETIC_BULLET_MAX;i++)
+	{
+		if (magneticBullets[i] != nullptr)
+		{
+			delete magneticBullets[i];
+			magneticBullets[i] = nullptr;
+		}
+	}
+
+	for (int i = 0;i < ENEMY1_BULLET_MAX;i++)
+	{
+		if (enemy1Bullets[i] != nullptr)
+		{
+			delete enemy1Bullets[i];
+			enemy1Bullets[i] = nullptr;
+		}
+	}
 }
 
 void C_BulletManager::SpawnMagBullet(Math::Vector2 enemyPos)

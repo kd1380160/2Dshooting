@@ -6,6 +6,8 @@ class C_Player
 {
 public:
 
+
+
 	void Init();
 	void Update();
 	void Draw();
