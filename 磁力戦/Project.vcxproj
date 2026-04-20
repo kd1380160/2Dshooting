@@ -163,9 +163,11 @@
     <ClInclude Include="Src\Application\Bullet\BulletBase.h" />
     <ClInclude Include="Src\Application\Bullet\BulletManager.h" />
     <ClInclude Include="Src\Application\Bullet\Enemy1Bullet.h" />
+    <ClInclude Include="Src\Application\Bullet\Enemy2Bullet.h" />
     <ClInclude Include="Src\Application\Bullet\MagneticBullet.h" />
     <ClInclude Include="Src\Application\Enemy\Boss.h" />
     <ClInclude Include="Src\Application\Enemy\Enemy1.h" />
+    <ClInclude Include="Src\Application\Enemy\Enemy2.h" />
     <ClInclude Include="Src\Application\Enemy\EnemyBase.h" />
     <ClInclude Include="Src\Application\Enemy\EnemyInfo.h" />
     <ClInclude Include="Src\Application\Bullet\BulletInfo.h" />
@@ -207,9 +209,11 @@
     <ClCompile Include="Src\Application\Bullet\BulletBase.cpp" />
     <ClCompile Include="Src\Application\Bullet\BulletManager.cpp" />
     <ClCompile Include="Src\Application\Bullet\Enemy1Bullet.cpp" />
+    <ClCompile Include="Src\Application\Bullet\Enemy2Bullet.cpp" />
     <ClCompile Include="Src\Application\Bullet\MagneticBullet.cpp" />
     <ClCompile Include="Src\Application\Enemy\Boss.cpp" />
     <ClCompile Include="Src\Application\Enemy\Enemy1.cpp" />
+    <ClCompile Include="Src\Application\Enemy\Enemy2.cpp" />
     <ClCompile Include="Src\Application\Enemy\EnemyBase.cpp" />
     <ClCompile Include="Src\Application\Bullet\NormalBullet.cpp" />
     <ClCompile Include="Src\Application\Enemy\EnemyManager.cpp" />

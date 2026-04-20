@@ -11,6 +11,14 @@ void C_EnemyManager::Draw()
 		}
 	}
 
+	for (int i = 0;i < ENEMY2_MAX;i++)
+	{
+		if (enemy2[i] != nullptr)
+		{
+			enemy2[i]->Draw();
+		}
+	}
+
 	if (boss!=nullptr)
 	{
 		boss->Draw();
@@ -34,6 +42,15 @@ void C_EnemyManager::Init()
 		}
 	}
 
+	for (int i = 0;i < ENEMY2_MAX;i++)
+	{
+		if (enemy2[i] != nullptr)
+		{
+			delete enemy2[i];
+			enemy2[i] = nullptr;
+		}
+	}
+
 	if (boss != nullptr)
 	{
 		delete boss;
@@ -48,8 +65,163 @@ void C_EnemyManager::Update()
 	switch (SCENE_MGR.GetNowWave())
 	{
 	case Wave1:
+
+		if (enemyKillCnt < 10)
+		{
+			for (int i = 0;i < ENEMY1_MAX;i++)
+			{
+				if (enemy1[i] == nullptr)
+				{
+					enemy1[i] = new C_Enemy1(&enemy1Tex, i);
+					break;
+				}
+			}
+		}
+		else
+		{
+
+			for (int i = 0;i < ENEMY1_MAX;i++)
+			{
+				if (enemy1[i] != nullptr)
+				{
+					break;
+				}
+
+				if (i == ENEMY1_MAX - 1)
+				{
+
+					isInterval = true;
+					//SCENE_MGR.SetNowWave(Wave2);
+					//isBoss = true;	
+					//boss = new C_Boss(&bossTex);
+					//isCallBoss = true;
+					//enemyKillCnt = 0;
+				}
+			}
+
+		}
+
+		for (int i = 0;i < ENEMY1_MAX;i++)
+		{
+			if (enemy1[i] != nullptr)
+			{
+				enemy1[i]->Update(SCENE.GetPlayer()->GetPlayerPos());
+				if (enemy1[i]->GetBulletHitCheck())
+				{
+					delete enemy1[i];
+					enemy1[i] = nullptr;
+					enemyKillCnt++;
+				}
+			}
+		}
+
+
+
+
+
+		if (GetAsyncKeyState(VK_LBUTTON) & 0x8000)
+		{
+			if (!isClick)
+			{
+				isClick = true;
+				for (int i = 0, j = 0;i < ENEMY1_MAX;i++)
+				{
+					LockOnEnemyPos[i] = { 0,-500 };
+					if (enemy1[i] != nullptr)
+					{
+						if (enemy1[i]->GetIsLockOn())
+						{
+							LockOnEnemyPos[j] = enemy1[i]->GetPos();
+							j++;
+						}
+					}
+				}
+			}
+		}
+		else
+		{
+			isClick = false;
+		}
 		break;
 	case Wave2:
+
+		if (enemyKillCnt < 10)
+		{
+			for (int i = 0;i < ENEMY2_MAX;i++)
+			{
+				if (enemy2[i] == nullptr)
+				{
+					enemy2[i] = new C_Enemy2(&enemy2Tex, i);
+					break;
+				}
+			}
+		}
+		else
+		{
+
+			for (int i = 0;i < ENEMY2_MAX;i++)
+			{
+				if (enemy2[i] != nullptr)
+				{
+					break;
+				}
+
+				if (i == ENEMY2_MAX - 1)
+				{
+
+					isInterval = true;
+					//SCENE_MGR.SetNowWave(Wave2);
+					//isBoss = true;	
+					//boss = new C_Boss(&bossTex);
+					//isCallBoss = true;
+					//enemyKillCnt = 0;
+				}
+			}
+
+		}
+
+		for (int i = 0;i < ENEMY2_MAX;i++)
+		{
+			if (enemy2[i] != nullptr)
+			{
+				enemy2[i]->Update(SCENE.GetPlayer()->GetPlayerPos());
+				if (enemy2[i]->GetBulletHitCheck())
+				{
+					delete enemy2[i];
+					enemy2[i] = nullptr;
+					enemyKillCnt++;
+				}
+			}
+		}
+
+
+
+
+
+		if (GetAsyncKeyState(VK_LBUTTON) & 0x8000)
+		{
+			if (!isClick)
+			{
+				isClick = true;
+				for (int i = 0, j = 0;i < ENEMY2_MAX;i++)
+				{
+					LockOnEnemyPos[i] = { 0,-500 };
+					if (enemy2[i] != nullptr)
+					{
+						if (enemy2[i]->GetIsLockOn())
+						{
+							LockOnEnemyPos[j] = enemy2[i]->GetPos();
+							j++;
+						}
+					}
+				}
+			}
+		}
+		else
+		{
+			isClick = false;
+		}
+
 		break;
 	case Wave3:
 		break;
@@ -72,90 +244,39 @@ void C_EnemyManager::Update()
 		}
 		break;
 	}
-	if (enemyKillCnt < 10)
-	{
-		for (int i = 0;i < ENEMY1_MAX;i++)
-		{
-			if (enemy1[i] == nullptr)
-			{
-				enemy1[i] = new C_Enemy1(&enemy1Tex, i);
-				break;
-			}
-		}
-	}
-	else
-	{
-		if (!isCallBoss)
-		{
-			for (int i = 0;i < ENEMY1_MAX;i++)
-			{
-				if (enemy1[i] != nullptr)
-				{
-					break;
-				}
-
-				if (i == ENEMY1_MAX - 1)
-				{
-					
-					isInterval = true;
-					//SCENE_MGR.SetNowWave(Wave2);
-					//isBoss = true;	
-					//boss = new C_Boss(&bossTex);
-					isCallBoss = true;
-					//enemyKillCnt = 0;
-				}
-			}
-		}
-	}
-
-	for (int i = 0;i < ENEMY1_MAX;i++)
-	{
-		if (enemy1[i] != nullptr)
-		{
-			enemy1[i]->Update(SCENE.GetPlayer()->GetPlayerPos());
-			if (enemy1[i]->GetBulletHitCheck())
-			{
-				delete enemy1[i];
-				enemy1[i] = nullptr;
-				enemyKillCnt++;
-			}
-		}
-	}
-
 	
-
-	
-
-	if (GetAsyncKeyState(VK_LBUTTON) & 0x8000)
-	{
-		if (!isClick)
-		{
-			isClick = true;
-			for (int i = 0, j = 0;i < ENEMY1_MAX;i++)
-			{
-				LockOnEnemyPos[i] = { 0,-500 };
-				if (enemy1[i] != nullptr)
-				{
-					if (enemy1[i]->GetIsLockOn())
-					{
-						LockOnEnemyPos[j] = enemy1[i]->GetPos();
-						j++;
-					}
-				}
-			}
-		}
-	}
-	else
-	{
-		isClick = false;
-	}
 
 
 }
 
 void C_EnemyManager::Release()
 {
+	for (int i = 0;i < ENEMY1_MAX;i++)
+	{
+		if (enemy1[i] != nullptr)
+		{
+			delete enemy1[i];
+			enemy1[i] = nullptr;
+		}
+	}
+
+	for (int i = 0;i < ENEMY2_MAX;i++)
+	{
+		if (enemy2[i] != nullptr)
+		{
+			delete enemy2[i];
+			enemy2[i] = nullptr;
+		}
+	}
+
+	if (boss != nullptr)
+	{
+		delete boss;
+		boss = nullptr;
+	}
+
 	enemy1Tex.Release();
+	enemy2Tex.Release();
 	bossTex.Release();
 }
 
@@ -166,6 +287,9 @@ void C_EnemyManager::WaveInterval()
 		intervalCnt++;
 		if (intervalCnt >= INTERVAL)
 		{
+			intervalCnt = 0;
+			isInterval = false;
+			enemyKillCnt = 0;
 			switch (SCENE_MGR.GetNowWave())
 			{
 			case Wave1:
@@ -184,8 +308,7 @@ void C_EnemyManager::WaveInterval()
 				SCENE_MGR.SetNowWave(Boss);
 				break;
 			}
-			intervalCnt = 0;
-			isInterval = false;
+			
 		}
 	}
 }

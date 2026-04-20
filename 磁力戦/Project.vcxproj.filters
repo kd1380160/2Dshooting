@@ -157,6 +157,8 @@
     <ClInclude Include="Src\Application\Scene\Result.h" />
     <ClInclude Include="Src\Application\Scene\SceneBase.h" />
     <ClInclude Include="Src\Application\Enemy\Boss.h" />
+    <ClInclude Include="Src\Application\Enemy\Enemy2.h" />
+    <ClInclude Include="Src\Application\Bullet\Enemy2Bullet.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Pch.cpp">
@@ -237,6 +239,8 @@
     <ClCompile Include="Src\Application\Scene\Game.cpp" />
     <ClCompile Include="Src\Application\Scene\Result.cpp" />
     <ClCompile Include="Src\Application\Enemy\Boss.cpp" />
+    <ClCompile Include="Src\Application\Enemy\Enemy2.cpp" />
+    <ClCompile Include="Src\Application\Bullet\Enemy2Bullet.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="説明.txt" />

@@ -12,12 +12,21 @@ void C_BulletManager::Draw()
 	}
 
 
-	//敵弾
+	//敵1弾
 	for (int i = 0;i < ENEMY1_BULLET_MAX;i++)
 	{
 		if (enemy1Bullets[i] != nullptr)
 		{
 			enemy1Bullets[i]->Draw();
+		}
+	}
+
+	//敵2弾
+	for (int i = 0;i < ENEMY2_BULLET_MAX;i++)
+	{
+		if (enemy2Bullets[i] != nullptr)
+		{
+			enemy2Bullets[i]->Draw();
 		}
 	}
 
@@ -75,6 +84,32 @@ void C_BulletManager::Update()
 			}
 		}
 	}
+
+	for (int i = 0;i < ENEMY2_BULLET_MAX;i++)
+	{
+		//弾が存在する場合のみ更新
+		if (enemy2Bullets[i] != nullptr)
+		{
+			enemy2Bullets[i]->Update(playerpos);
+
+			if (enemy2Bullets[i]->GetIsAbsorption())
+			{
+				delete  enemy2Bullets[i];
+				enemy2Bullets[i] = nullptr;
+
+				SpawnMagBullet(playerpos);
+				continue;
+			}
+
+			//画面外に出た弾は消去
+			if (enemy2Bullets[i]->GetPos().y <= -400)
+			{
+				delete enemy2Bullets[i];
+				enemy2Bullets[i] = nullptr;
+			}
+		}
+	}
+
 	if (GetAsyncKeyState(VK_LBUTTON) & 0x8000)
 	{
 		if (!isLClick)
@@ -145,6 +180,15 @@ void C_BulletManager::Init()
 			enemy1Bullets[i] = nullptr;
 		}
 	}
+
+	for (int i = 0;i < ENEMY2_BULLET_MAX;i++)
+	{
+		if (enemy2Bullets[i] != nullptr)
+		{
+			delete enemy2Bullets[i];
+			enemy2Bullets[i] = nullptr;
+		}
+	}
 }
 
 void C_BulletManager::SpawnMagBullet(Math::Vector2 enemyPos)
@@ -181,6 +225,19 @@ void C_BulletManager::ShotEnemy1Bullet(Math::Vector2 enemyPos)
 		if (enemy1Bullets[i] == nullptr)
 		{
 			enemy1Bullets[i] = new C_Enemy1Bullet(&enemy1BulletTex, enemyPos);
+			break;
+		}
+	}
+}
+
+void C_BulletManager::ShotEnemy2Bullet(Math::Vector2 enemyPos,int num)
+{
+	//弾が無ければ生成
+	for (int i = 0;i < ENEMY2_BULLET_MAX;i++)
+	{
+		if (enemy2Bullets[i] == nullptr)
+		{
+			enemy2Bullets[i] = new C_Enemy2Bullet(&enemy2BulletTex, enemyPos,num);
 			break;
 		}
 	}
@@ -252,7 +309,44 @@ bool  C_BulletManager::EnemyHitCheck(Math::Vector2 pos, int radius)
 
 void C_BulletManager::Release()
 {
+	for (int i = 0;i < NORMAL_BULLET_MAX;i++)
+	{
+		if (normalBullets[i] != nullptr)
+		{
+			delete normalBullets[i];
+			normalBullets[i] = nullptr;
+		}
+	}
+
+	for (int i = 0;i < MAGNETIC_BULLET_MAX;i++)
+	{
+		if (magneticBullets[i] != nullptr)
+		{
+			delete magneticBullets[i];
+			magneticBullets[i] = nullptr;
+		}
+	}
+
+	for (int i = 0;i < ENEMY1_BULLET_MAX;i++)
+	{
+		if (enemy1Bullets[i] != nullptr)
+		{
+			delete enemy1Bullets[i];
+			enemy1Bullets[i] = nullptr;
+		}
+	}
+
+	for (int i = 0;i < ENEMY2_BULLET_MAX;i++)
+	{
+		if (enemy2Bullets[i] != nullptr)
+		{
+			delete enemy2Bullets[i];
+			enemy2Bullets[i] = nullptr;
+		}
+	}
+
 	normalBulletTex.Release();
 	magneticBulletTex.Release();
 	enemy1BulletTex.Release();
+	enemy2BulletTex.Release();
 }
