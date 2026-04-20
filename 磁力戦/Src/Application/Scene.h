@@ -23,7 +23,7 @@ private:
 	C_Player player;
 	KdTexture playerTex;
 
-	
+	int test = 0;
 	
 
 public:
