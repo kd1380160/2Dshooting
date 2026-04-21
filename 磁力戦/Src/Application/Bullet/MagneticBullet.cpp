@@ -19,7 +19,7 @@ void C_MagneticBullet::Init()
 {
 }
 
-void C_MagneticBullet::Update(Math::Vector2 playerpos, Math::Vector2 enemypos)
+void C_MagneticBullet::Update(Math::Vector2 playerpos, Math::Vector2 enemypos,int degreeIncrease)
 {
 	/*if (enemypos.x == 0 && enemypos.y == 0)
 	{
@@ -35,7 +35,7 @@ void C_MagneticBullet::Update(Math::Vector2 playerpos, Math::Vector2 enemypos)
 		const float y = bullet.Pos.y - SCENE.GetPlayer()->GetPlayerPos().y;
 		const float z = sqrt(x * x + y * y);
 
-		magDeg += 5.0f;
+		magDeg += degreeIncrease;
 
 		float a = cos(magDeg * 3.14f / 180) * 100;
 		float b = sin(magDeg * 3.14f / 180) * 100;

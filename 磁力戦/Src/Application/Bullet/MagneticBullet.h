@@ -8,7 +8,7 @@ public:
 	C_MagneticBullet(KdTexture* tex, Math::Vector2 pos);
 
 	void Init();
-	void Update(Math::Vector2 playerpos, Math::Vector2 enemypos);
+	void Update(Math::Vector2 playerpos, Math::Vector2 enemypos, int degreeIncrease);
 	void Draw();
 
 	float GetAngleDeg(float srcX, float srcY, float destX, float destY);

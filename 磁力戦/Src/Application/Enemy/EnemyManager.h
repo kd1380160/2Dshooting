@@ -1,6 +1,7 @@
 #pragma once
 #include "../Enemy/Enemy1.h"
 #include "../Enemy/Enemy2.h"
+#include "../Enemy/Enemy3.h"
 #include"Boss.h"
 
 class C_EnemyManager
@@ -16,6 +17,9 @@ public:
 	int GetEnemyKillCnt() { return enemyKillCnt; }
 	Math::Vector2 GetEnemy1Pos();
 	Math::Vector2 GetEnemy2Pos();
+	Math::Vector2 GetEnemy3Pos();
+
+	bool GetEnemy3Annihilation();
 private:
 
 	bool isClick;
@@ -32,10 +36,17 @@ private:
 	C_Enemy2* enemy2[ENEMY2_MAX] = {};
 	KdTexture enemy2Tex;
 
+	//敵3
+	static const int ENEMY3_MAX = 4;
+	static const int ENEMY3_AMOUNT = 10;
+	C_Enemy3* enemy3[ENEMY3_MAX] = {};
+	KdTexture enemy3Tex;
+
 	int enemyKillCnt=0;
 	int returnPosCnt=0;
-	Math::Vector2 LockOnEnemy1Pos[3] = { {0,0},{0,0},{0,0} };
-	Math::Vector2 LockOnEnemy2Pos[5] = { {0,0},{0,0},{0,0},{0,0},{0,0} };
+	Math::Vector2 LockOnEnemy1Pos[ENEMY1_MAX] = { {0,0},{0,0},{0,0} };
+	Math::Vector2 LockOnEnemy2Pos[ENEMY2_MAX] = { {0,0},{0,0},{0,0},{0,0},{0,0} };
+	Math::Vector2 LockOnEnemy3Pos[ENEMY3_MAX] = { {0,0},{0,0},{0,0},{0,0} };
 
 	KdTexture bossTex;
 	C_Boss* boss = {};
@@ -52,6 +63,7 @@ private:
 	C_EnemyManager(){
 		enemy1Tex.Load("Assets/Image/Enemy/enemy.png");
 		enemy2Tex.Load("Assets/Image/Enemy/enemy2.png");
+		enemy3Tex.Load("Assets/Image/Enemy/enemy3.png");
 		bossTex.Load("Assets/Image/Enemy/Boss.png");
 	}
 

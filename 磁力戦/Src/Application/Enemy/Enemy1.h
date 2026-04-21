@@ -19,8 +19,6 @@ public:
 private:
 
 	static const int MAGNETIC_BULLET_MAX = 10;
-	KdTexture* magneticBulletTex;
-	KdTexture* magneticBulletGetTex;
 	int shotCnt;
 
 	static const int ENEMY_RADIUS = 32;

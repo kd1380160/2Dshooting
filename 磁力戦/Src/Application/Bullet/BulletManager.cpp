@@ -30,6 +30,15 @@ void C_BulletManager::Draw()
 		}
 	}
 
+	//敵3弾
+	for (int i = 0;i < ENEMY3_BULLET_MAX;i++)
+	{
+		if (enemy3Bullets[i] != nullptr)
+		{
+			enemy3Bullets[i]->Draw();
+		}
+	}
+
 	//磁力弾（プレイヤー発射）
 	for (int i = 0;i < MAGNETIC_BULLET_MAX;i++)
 	{
@@ -110,6 +119,30 @@ void C_BulletManager::Update()
 		}
 	}
 
+	for (int i = 0;i < ENEMY3_BULLET_MAX;i++)
+	{
+		//弾が存在する場合のみ更新
+		if (enemy3Bullets[i] != nullptr)
+		{
+			enemy3Bullets[i]->Update(playerpos);
+
+			if (enemy3Bullets[i]->GetIsAlpha())
+			{
+				delete enemy3Bullets[i];
+				enemy3Bullets[i] = nullptr;
+				continue;
+			}
+
+			//画面外に出た弾は消去
+			if (enemy3Bullets[i]->GetPos().y <= -400)
+			{
+				delete enemy3Bullets[i];
+				enemy3Bullets[i] = nullptr;
+			}
+		}
+	}
+
+
 	if (GetAsyncKeyState(VK_LBUTTON) & 0x8000)
 	{
 		if (!isLClick)
@@ -123,31 +156,39 @@ void C_BulletManager::Update()
 		isLClick = false;
 	}
 
+	
 	for (int i = 0;i < MAGNETIC_BULLET_MAX;i++)
 	{
 		//弾が存在する場合のみ更新
 		if (magneticBullets[i] != nullptr)
 		{
-			
 
-			if (isLClick)
+			if (ENEMY_MGR.GetEnemy3Annihilation())
 			{
-				magneticBullets[i]->SetIsShotFlg(true);
-				magneticBullets[i]->SetIsHomingTrue();
-				//magneticBullets[i]->Update(SCENE.GetPlayer()->GetPlayerPos(), ENEMY_MGR.GetEnemy1Pos());
-				//break;
+				if (isLClick)
+				{
+					magneticBullets[i]->SetIsShotFlg(true);
+					magneticBullets[i]->SetIsHomingTrue();
+					//magneticBullets[i]->Update(SCENE.GetPlayer()->GetPlayerPos(), ENEMY_MGR.GetEnemy1Pos());
+					//break;
+				}
+				magneticBullets[i]->Update(SCENE.GetPlayer()->GetPlayerPos(), { 100,100 }, 5);
 			}
-			magneticBullets[i]->Update(SCENE.GetPlayer()->GetPlayerPos(), {100,100});
+			else
+			{
+				magneticBullets[i]->Update(SCENE.GetPlayer()->GetPlayerPos(), { 100,100 }, 1);
+			}
 
 			//画面外に出た弾は消去
-			if (magneticBullets[i]->GetPos().y >= 376||magneticBullets[i]->GetPos().y<=-376
-				||magneticBullets[i]->GetPos().x>=676 || magneticBullets[i]->GetPos().x <= -676)
+			if (magneticBullets[i]->GetPos().y >= 450 || magneticBullets[i]->GetPos().y <= -450
+				|| magneticBullets[i]->GetPos().x >= 750 || magneticBullets[i]->GetPos().x <= -750)
 			{
 				delete magneticBullets[i];
 				magneticBullets[i] = nullptr;
 			}
 		}
 	}
+	
 }
 
 void C_BulletManager::Init()
@@ -187,6 +228,15 @@ void C_BulletManager::Init()
 		{
 			delete enemy2Bullets[i];
 			enemy2Bullets[i] = nullptr;
+		}
+	}
+
+	for (int i = 0;i < ENEMY3_BULLET_MAX;i++)
+	{
+		if (enemy3Bullets[i] != nullptr)
+		{
+			delete enemy3Bullets[i];
+			enemy3Bullets[i] = nullptr;
 		}
 	}
 }
@@ -243,6 +293,19 @@ void C_BulletManager::ShotEnemy2Bullet(Math::Vector2 enemyPos,int num)
 	}
 }
 
+void C_BulletManager::ShotEnemy3Bullet(Math::Vector2 enemyPos)
+{
+	//弾が無ければ生成
+	for (int i = 0;i < ENEMY3_BULLET_MAX;i++)
+	{
+		if (enemy3Bullets[i] == nullptr)
+		{
+			enemy3Bullets[i] = new C_Enemy3Bullet(&enemy3BulletTex, enemyPos);
+			break;
+		}
+	}
+}
+
 void C_BulletManager::ShotMagBullet()
 {
 	for (int i = 0;i < MAGNETIC_BULLET_MAX;i++)
@@ -258,6 +321,7 @@ void C_BulletManager::ShotMagBullet()
 				magneticBullets[i]->SetDestinationPos(ENEMY_MGR.GetEnemy2Pos());
 				break;
 			case Wave3:
+				magneticBullets[i]->SetDestinationPos(ENEMY_MGR.GetEnemy3Pos());
 				break;
 			case Wave4:
 				break;
@@ -364,8 +428,18 @@ void C_BulletManager::Release()
 		}
 	}
 
+	for (int i = 0;i < ENEMY3_BULLET_MAX;i++)
+	{
+		if (enemy3Bullets[i] != nullptr)
+		{
+			delete enemy3Bullets[i];
+			enemy3Bullets[i] = nullptr;
+		}
+	}
+
 	normalBulletTex.Release();
 	magneticBulletTex.Release();
 	enemy1BulletTex.Release();
 	enemy2BulletTex.Release();
+	enemy3BulletTex.Release();
 }

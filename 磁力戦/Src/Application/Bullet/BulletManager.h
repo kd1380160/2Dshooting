@@ -3,6 +3,7 @@
 #include "NormalBullet.h"
 #include"Enemy1Bullet.h"
 #include"Enemy2Bullet.h"
+#include"Enemy3Bullet.h"
 
 
 class C_BulletManager
@@ -18,6 +19,7 @@ public:
 	void ShotNormalBullet(Math::Vector2 playerPos);
 	void ShotEnemy1Bullet(Math::Vector2 enemyPos);
 	void ShotEnemy2Bullet(Math::Vector2 enemyPos, int num);
+	void ShotEnemy3Bullet(Math::Vector2 enemyPos);
 	void ShotMagBullet();
 
 	bool EnemyHitCheck(Math::Vector2 pos,int radius);
@@ -40,6 +42,11 @@ private:
 	static const int ENEMY2_BULLET_MAX = 60;
 	C_Enemy2Bullet* enemy2Bullets[ENEMY2_BULLET_MAX] = {};
 	KdTexture enemy2BulletTex;
+
+	//存在可能な敵3の弾の最大数(4)
+	static const int ENEMY3_BULLET_MAX = 8;
+	C_Enemy3Bullet* enemy3Bullets[ENEMY3_BULLET_MAX] = {};
+	KdTexture enemy3BulletTex;
 	
 	//存在可能な通常弾の最大数(30)
 	static const int NORMAL_BULLET_MAX = 30;
@@ -56,6 +63,7 @@ private:
 		magneticBulletTex.Load("Assets/Image/Bullet/GetMagBullet.png");
 		enemy1BulletTex.Load("Assets/Image/Bullet/MagBullet.png");
 		enemy2BulletTex.Load("Assets/Image/Bullet/MagBullet2.png");
+		enemy3BulletTex.Load("Assets/Image/Bullet/circle.png");
 	}
 
 public:
