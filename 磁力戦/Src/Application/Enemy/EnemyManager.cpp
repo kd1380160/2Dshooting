@@ -231,6 +231,15 @@ void C_EnemyManager::Update()
 					break;
 				}
 			}
+
+			for (int i = 0;i < ENEMY1_MAX;i++)
+			{
+				if (enemy1[i] == nullptr)
+				{
+					enemy1[i] = new C_Enemy1(&enemy1Tex, i);
+					break;
+				}
+			}
 		}
 		else
 		{
@@ -240,12 +249,31 @@ void C_EnemyManager::Update()
 
 				if (i == ENEMY3_MAX - 1)
 				{
-					isInterval = true;
-					//SCENE_MGR.SetNowWave(Wave2);
-					//isBoss = true;	
-					//boss = new C_Boss(&bossTex);
-					//isCallBoss = true;
-					//enemyKillCnt = 0;
+
+					for (int j = 0;j < ENEMY1_MAX;j++)
+					{
+						if (enemy1[j] != nullptr)break;
+						if (j == ENEMY1_MAX - 1)
+						{
+							isInterval = true;
+						}
+					
+					}
+					
+				}
+			}
+		}
+
+		for (int i = 0;i < ENEMY1_MAX;i++)
+		{
+			if (enemy1[i] != nullptr)
+			{
+				enemy1[i]->Update(SCENE.GetPlayer()->GetPlayerPos());
+				if (enemy1[i]->GetBulletHitCheck())
+				{
+					delete enemy1[i];
+					enemy1[i] = nullptr;
+					enemyKillCnt++;
 				}
 			}
 		}
@@ -269,7 +297,7 @@ void C_EnemyManager::Update()
 			if (!isClick)
 			{
 				isClick = true;
-				for (int i = 0, j = 0;i < ENEMY3_MAX;i++)
+				for (int i = 0, j = 0;i < ENEMY1_MAX;i++)
 				{
 					LockOnEnemy3Pos[i] = { 0,-500 };
 					if (enemy3[i] != nullptr)
@@ -277,6 +305,14 @@ void C_EnemyManager::Update()
 						if (enemy3[i]->GetIsLockOn())
 						{
 							LockOnEnemy3Pos[j] = enemy3[i]->GetPos();
+							j++;
+						}
+					}
+					if(enemy1[i] != nullptr)
+					{
+						if (enemy1[i]->GetIsLockOn())
+						{
+							LockOnEnemy3Pos[j] = enemy1[i]->GetPos();
 							j++;
 						}
 					}
@@ -305,8 +341,8 @@ void C_EnemyManager::Update()
 		}
 		break;
 	}
-}
 
+}
 void C_EnemyManager::Release()
 {
 	for (int i = 0;i < ENEMY1_MAX;i++)
@@ -383,6 +419,7 @@ void C_EnemyManager::WaveInterval()
 
 Math::Vector2 C_EnemyManager::GetEnemy1Pos()
 {
+	int cycleCnt = 0;
 	while (1)
 	{
 		if (!(LockOnEnemy1Pos[0].x == 0 && LockOnEnemy1Pos[0].y == -500)&&returnPosCnt==0)
@@ -403,12 +440,18 @@ Math::Vector2 C_EnemyManager::GetEnemy1Pos()
 		else
 		{
 			returnPosCnt = 0;
+			cycleCnt++;
+			if (cycleCnt >= 2)
+			{
+				return { 0,-500 };
+			}
 		}
 	}
 }
 
 Math::Vector2 C_EnemyManager::GetEnemy2Pos()
 {
+	int cycleCnt = 0;
 	while (1)
 	{
 		if (!(LockOnEnemy2Pos[0].x == 0 && LockOnEnemy2Pos[0].y == -500) && returnPosCnt == 0)
@@ -439,12 +482,18 @@ Math::Vector2 C_EnemyManager::GetEnemy2Pos()
 		else
 		{
 			returnPosCnt = 0;
+			cycleCnt++;
+			if (cycleCnt >= 2)
+			{
+				return { 0,-500 };
+			}
 		}
 	}
 }
 
 Math::Vector2 C_EnemyManager::GetEnemy3Pos()
 {
+	int cycleCnt = 0;
 	while (1)
 	{
 		if (!(LockOnEnemy3Pos[0].x == 0 && LockOnEnemy3Pos[0].y == -500) && returnPosCnt == 0)
@@ -452,7 +501,7 @@ Math::Vector2 C_EnemyManager::GetEnemy3Pos()
 			returnPosCnt++;
 			return LockOnEnemy3Pos[0];
 		}
-		else if (!(LockOnEnemy2Pos[1].x == 0 && LockOnEnemy3Pos[1].y == -500) && returnPosCnt == 1)
+		else if (!(LockOnEnemy3Pos[1].x == 0 && LockOnEnemy3Pos[1].y == -500) && returnPosCnt == 1)
 		{
 			returnPosCnt++;
 			return LockOnEnemy3Pos[1];
@@ -464,12 +513,32 @@ Math::Vector2 C_EnemyManager::GetEnemy3Pos()
 		}
 		else if (!(LockOnEnemy3Pos[3].x == 0 && LockOnEnemy3Pos[3].y == -500) && returnPosCnt == 3)
 		{
-			returnPosCnt=0;
+			returnPosCnt++;
 			return LockOnEnemy3Pos[3];
+		}
+		else if (!(LockOnEnemy3Pos[4].x == 0 && LockOnEnemy3Pos[4].y == -500) && returnPosCnt == 4)
+		{
+			returnPosCnt++;
+			return LockOnEnemy3Pos[4];
+		}
+		else if (!(LockOnEnemy3Pos[5].x == 0 && LockOnEnemy3Pos[5].y == -500) && returnPosCnt == 5)
+		{
+			returnPosCnt ++;
+			return LockOnEnemy3Pos[5];
+		}
+		else if (!(LockOnEnemy3Pos[6].x == 0 && LockOnEnemy3Pos[6].y == -500) && returnPosCnt == 6)
+		{
+			returnPosCnt = 0;
+			return LockOnEnemy3Pos[6];
 		}
 		else
 		{
 			returnPosCnt = 0;
+			cycleCnt++;
+			if (cycleCnt >= 2)
+			{
+				return { 0,-500 };
+			}
 		}
 	}
 	
@@ -477,6 +546,8 @@ Math::Vector2 C_EnemyManager::GetEnemy3Pos()
 
 bool C_EnemyManager::GetEnemy3Annihilation()
 {
+	//敵3が全滅しているかどうかを返す
+	//全滅している場合はtrue,していなければ（存在していなければ）falseを返す
 	for(int i=0;i<ENEMY3_MAX;i++)
 	{
 		if (enemy3[i] != nullptr)
@@ -484,6 +555,5 @@ bool C_EnemyManager::GetEnemy3Annihilation()
 			return false;
 		}
 	}
-
 	return true;
 }

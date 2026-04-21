@@ -8,7 +8,7 @@ void C_SceneManager::Init()
 	case SceneList::Title:
 		break;
 	case SceneList::Game:
-		NowWave = WaveList::Wave2;
+		NowWave = WaveList::Wave1;
 		SCENE.GetPlayer()->Init();
 		BULLET_MGR.Init();
 		ENEMY_MGR.Init();

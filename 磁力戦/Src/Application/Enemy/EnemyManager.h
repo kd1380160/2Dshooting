@@ -46,7 +46,7 @@ private:
 	int returnPosCnt=0;
 	Math::Vector2 LockOnEnemy1Pos[ENEMY1_MAX] = { {0,0},{0,0},{0,0} };
 	Math::Vector2 LockOnEnemy2Pos[ENEMY2_MAX] = { {0,0},{0,0},{0,0},{0,0},{0,0} };
-	Math::Vector2 LockOnEnemy3Pos[ENEMY3_MAX] = { {0,0},{0,0},{0,0},{0,0} };
+	Math::Vector2 LockOnEnemy3Pos[ENEMY3_MAX+ENEMY1_MAX] = { {0,0},{0,0},{0,0},{0,0}, {0,0},{0,0},{0,0} };
 
 	KdTexture bossTex;
 	C_Boss* boss = {};
