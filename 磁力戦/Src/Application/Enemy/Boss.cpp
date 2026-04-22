@@ -10,10 +10,6 @@ C_Boss::C_Boss(KdTexture* tex)
 	boss.Radius = 64;
 }
 
-C_Boss::~C_Boss()
-{
-
-}
 
 void C_Boss::Init()
 {

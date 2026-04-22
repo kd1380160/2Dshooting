@@ -27,6 +27,14 @@ void C_EnemyManager::Draw()
 		}
 	}
 
+	for (int i = 0;i < ENEMY4_MAX;i++)
+	{
+		if (enemy4[i] != nullptr)
+		{
+			enemy4[i]->Draw();
+		}
+	}
+
 	if (boss!=nullptr)
 	{
 		boss->Draw();
@@ -68,6 +76,15 @@ void C_EnemyManager::Init()
 		}
 	}
 
+	for (int i = 0;i < ENEMY4_MAX;i++)
+	{
+		if (enemy4[i] != nullptr)
+		{
+			delete enemy4[i];
+			enemy4[i] = nullptr;
+		}
+	}
+
 	if (boss != nullptr)
 	{
 		delete boss;
@@ -103,11 +120,6 @@ void C_EnemyManager::Update()
 				if (i == ENEMY1_MAX - 1)
 				{
 					isInterval = true;
-					//SCENE_MGR.SetNowWave(Wave2);
-					//isBoss = true;	
-					//boss = new C_Boss(&bossTex);
-					//isCallBoss = true;
-					//enemyKillCnt = 0;
 				}
 			}
 		}
@@ -172,11 +184,6 @@ void C_EnemyManager::Update()
 				if (i == ENEMY2_MAX - 1)
 				{
 					isInterval = true;
-					//SCENE_MGR.SetNowWave(Wave2);
-					//isBoss = true;	
-					//boss = new C_Boss(&bossTex);
-					//isCallBoss = true;
-					//enemyKillCnt = 0;
 				}
 			}
 		}
@@ -325,6 +332,77 @@ void C_EnemyManager::Update()
 		}
 		break;
 	case Wave4:
+		if (enemyKillCnt < 10)
+		{
+			for (int i = 0;i < ENEMY4_MAX;i++)
+			{
+				if (enemy4[i] == nullptr)
+				{
+					enemy4[i] = new C_Enemy4(&enemy4Tex);
+					break;
+				}
+			}
+
+			for (int i = 0;i < ENEMY2_MAX;i++)
+			{
+				if (enemy2[i] == nullptr)
+				{
+					enemy2[i] = new C_Enemy2(&enemy2Tex, i);
+					break;
+				}
+			}
+		}
+		else
+		{
+			for (int i = 0;i < ENEMY2_MAX;i++)
+			{
+				if (enemy2[i] != nullptr)break;
+
+				if (i == ENEMY2_MAX - 1)
+				{
+
+					for (int j = 0;j < ENEMY4_MAX;j++)
+					{
+						if (enemy4[j] != nullptr)break;
+						if (j == ENEMY4_MAX - 1)
+						{
+							isInterval = true;
+						}
+
+					}
+
+				}
+			}
+		}
+
+		for (int i = 0;i < ENEMY2_MAX;i++)
+		{
+			if (enemy2[i] != nullptr)
+			{
+				enemy2[i]->Update(SCENE.GetPlayer()->GetPlayerPos());
+				if (enemy2[i]->GetBulletHitCheck())
+				{
+					delete enemy2[i];
+					enemy2[i] = nullptr;
+					enemyKillCnt++;
+				}
+			}
+		}
+
+		for (int i = 0;i < ENEMY4_MAX;i++)
+		{
+			if (enemy4[i] != nullptr)
+			{
+				enemy4[i]->Update(SCENE.GetPlayer()->GetPlayerPos());
+				if (enemy4[i]->GetBulletHitCheck())
+				{
+					delete enemy4[i];
+					enemy4[i] = nullptr;
+					enemyKillCnt++;
+				}
+			}
+		}
+
 		break;
 	case Wave5:
 		break;
@@ -372,6 +450,15 @@ void C_EnemyManager::Release()
 		}
 	}
 
+	for (int i = 0;i < ENEMY4_MAX;i++)
+	{
+		if (enemy4[i] != nullptr)
+		{
+			delete enemy4[i];
+			enemy4[i] = nullptr;
+		}
+	}
+
 	if (boss != nullptr)
 	{
 		delete boss;
@@ -381,6 +468,7 @@ void C_EnemyManager::Release()
 	enemy1Tex.Release();
 	enemy2Tex.Release();
 	enemy3Tex.Release();
+	enemy4Tex.Release();
 	bossTex.Release();
 }
 

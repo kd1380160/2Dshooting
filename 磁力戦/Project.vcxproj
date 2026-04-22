@@ -170,6 +170,7 @@
     <ClInclude Include="Src\Application\Enemy\Enemy1.h" />
     <ClInclude Include="Src\Application\Enemy\Enemy2.h" />
     <ClInclude Include="Src\Application\Enemy\Enemy3.h" />
+    <ClInclude Include="Src\Application\Enemy\Enemy4.h" />
     <ClInclude Include="Src\Application\Enemy\EnemyBase.h" />
     <ClInclude Include="Src\Application\Enemy\EnemyInfo.h" />
     <ClInclude Include="Src\Application\Bullet\BulletInfo.h" />
@@ -218,6 +219,7 @@
     <ClCompile Include="Src\Application\Enemy\Enemy1.cpp" />
     <ClCompile Include="Src\Application\Enemy\Enemy2.cpp" />
     <ClCompile Include="Src\Application\Enemy\Enemy3.cpp" />
+    <ClCompile Include="Src\Application\Enemy\Enemy4.cpp" />
     <ClCompile Include="Src\Application\Enemy\EnemyBase.cpp" />
     <ClCompile Include="Src\Application\Bullet\NormalBullet.cpp" />
     <ClCompile Include="Src\Application\Enemy\EnemyManager.cpp" />

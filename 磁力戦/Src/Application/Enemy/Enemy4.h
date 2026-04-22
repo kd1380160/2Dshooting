@@ -1,23 +1,19 @@
 #pragma once
 #include "EnemyBase.h"
 
-
-class C_Enemy1 :public C_EnemyBase
+class C_Enemy4 : public C_EnemyBase
 {
 public:
-
-	C_Enemy1(KdTexture* enemy,int num);
+	C_Enemy4(KdTexture* tex);
 
 	void Init();
 	void Update(Math::Vector2 playerpos);
 	void Draw();
 
 	void LockOn();
-	bool GetBulletHitCheck() { return isHit; }
 
-
+	bool GetBulletHitCheck() const { return isHit; }
 private:
-	bool isHit;
-	int shotCnt;
 	static const int ENEMY_RADIUS = 32;
+	bool isHit;
 };
