@@ -3,13 +3,7 @@
 
 void Scene::Draw2D()
 {
-	
-
-	
-
-
 	SCENE_MGR.Draw();
-	
 	
 	/*for (int i = 0;i < ENEMY1_MAX;i++)
 	{
@@ -28,6 +22,12 @@ void Scene::Draw2D()
 
 	sprintf_s(str, sizeof(str), "¡‚ÌWave: %d", SCENE_MGR.GetNowWave()+1);
 	SHADER.m_spriteShader.DrawString(-600, 250, str, Math::Vector4{1,1,1,1});
+
+	sprintf_s(str, sizeof(str), "“G”Ô†: %d,%d,%d,%d,%d", ENEMY_MGR.GetLockonEnemyNum(0), ENEMY_MGR.GetLockonEnemyNum(1), ENEMY_MGR.GetLockonEnemyNum(2), ENEMY_MGR.GetLockonEnemyNum(3), ENEMY_MGR.GetLockonEnemyNum(4));
+	//SHADER.m_spriteShader.DrawString(-600, 200, str, Math::Vector4{ 1,1,1,1 });
+
+	sprintf_s(str, sizeof(str), "“G‚ÌŽí—Þ: %d,%d,%d,%d,%d", ENEMY_MGR.GetLockonEnemyType(0), ENEMY_MGR.GetLockonEnemyType(1), ENEMY_MGR.GetLockonEnemyType(2), ENEMY_MGR.GetLockonEnemyType(3), ENEMY_MGR.GetLockonEnemyType(4));
+	//SHADER.m_spriteShader.DrawString(-600, 150, str, Math::Vector4{ 1,1,1,1 });
 }
 
 void Scene::Update()
@@ -57,7 +57,7 @@ void Scene::Init()
 	releasePos = { 0,0 };
 	clickFlg = false;
 	
-	SCENE_MGR.SetNowScene(Game);
+	SCENE_MGR.SetNowScene(Title);
 	player.Init();
 	LoadTexture();
 
@@ -70,17 +70,22 @@ void Scene::LoadTexture()
 {
 	//‰æ‘œ“Ç‚Ýž‚Ý
 	playerTex.Load("Assets/Image/Player/player.png");
-	
+	playerEngineTex.Load("Assets/Image/Player/playerEngine.png");
+	playerEngineBaseTex.Load("Assets/Image/Player/playerEngineBase.png");
 
 
 
 	//‰æ‘œƒZƒbƒg
 	player.SetPlayerTex(&playerTex);
+	player.SetPlayerEngineTex(&playerEngineTex);
+	player.SetPlayerEngineBaseTex(&playerEngineBaseTex);
 }
 
 void Scene::Release()
 {
 	playerTex.Release();
+	playerEngineTex.Release();
+	playerEngineBaseTex.Release();
 	ENEMY_MGR.Release();
 	BULLET_MGR.Release();
 	BACKGRND.Release();
@@ -88,7 +93,7 @@ void Scene::Release()
 
 void Scene::ImGuiUpdate()
 {
-	return;
+	//return;
 
 	ImGui::SetNextWindowPos(ImVec2(20, 20), ImGuiSetCond_Once);
 	ImGui::SetNextWindowSize(ImVec2(200, 100), ImGuiSetCond_Once);

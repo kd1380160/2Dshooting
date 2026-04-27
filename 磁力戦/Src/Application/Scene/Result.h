@@ -10,4 +10,5 @@ public:
 
 private:
 
+	bool isClick;
 };

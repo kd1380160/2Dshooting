@@ -6,6 +6,7 @@
 #include"../BackGround/BackGround.h"
 #include"../Bullet/BulletManager.h"
 #include"../Enemy/EnemyManager.h"
+#include"../GameSystem/Text/Text.h"
 
 
 enum SceneList
@@ -21,7 +22,6 @@ enum WaveList
 	Wave2,
 	Wave3,
 	Wave4,
-	Wave5,
 	Boss,
 	WaveNum
 };
@@ -37,17 +37,22 @@ public:
 	void SetNowScene(SceneList now);
 
 	WaveList	GetNowWave() { return NowWave; }
+	SceneList	GetNowScene() { return NowScene; }
 	void		SetNowWave(WaveList now) { NowWave = now; }
 private:
 
 	SceneList NowScene;
 	WaveList NowWave;
 	
-
-
+	C_Title title;
+	C_Result result;
+	C_Text text;
 private:
 
-	C_SceneManager() { NowWave = WaveList::Wave1; }
+	C_SceneManager() { 
+		NowWave = WaveList::Wave1; 
+		NowScene = SceneList::Title;
+	}
 
 public:
 	static C_SceneManager& GetInstance()

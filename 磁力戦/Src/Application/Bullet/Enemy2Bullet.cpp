@@ -1,11 +1,11 @@
 #include "Enemy2Bullet.h"
 #include "../Scene.h"
 
-C_Enemy2Bullet::C_Enemy2Bullet(KdTexture* tex, Math::Vector2 pos,int num)
+C_Enemy2Bullet::C_Enemy2Bullet(KdTexture* tex, Math::Vector2 pos,Math::Vector2 move)
 {
 	bullet.Tex = tex;
 	bullet.Pos = pos;
-	bullet.Move = bulletMoveList[num];
+	bullet.Move = move;
 	isAbsorption = false;
 }
 

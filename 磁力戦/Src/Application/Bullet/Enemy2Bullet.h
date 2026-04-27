@@ -5,7 +5,7 @@ class C_Enemy2Bullet :public C_BulletBase
 {
 public:
 
-	C_Enemy2Bullet(KdTexture* tex, Math::Vector2 pos, int num);
+	C_Enemy2Bullet(KdTexture* tex, Math::Vector2 pos, Math::Vector2 move);
 
 	void Update(Math::Vector2 playerpos);
 	void Draw();
@@ -15,7 +15,7 @@ public:
 
 private:
 
-	const Math::Vector2 bulletMoveList[3] = { {-3,-5},{0,-7},{3,-5} };
+	
 
 	bool isAbsorption;	//プレイヤーに吸収されたかどうか
 

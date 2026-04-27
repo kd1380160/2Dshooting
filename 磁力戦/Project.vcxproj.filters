@@ -162,6 +162,10 @@
     <ClInclude Include="Src\Application\Enemy\Enemy3.h" />
     <ClInclude Include="Src\Application\Bullet\Enemy3Bullet.h" />
     <ClInclude Include="Src\Application\Enemy\Enemy4.h" />
+    <ClInclude Include="Src\Application\Bullet\BossBullet.h" />
+    <ClInclude Include="Src\Application\Enemy\Generator.h" />
+    <ClInclude Include="Src\Application\Bullet\BossBullet2.h" />
+    <ClInclude Include="Src\Application\GameSystem\Text\Text.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Pch.cpp">
@@ -247,6 +251,10 @@
     <ClCompile Include="Src\Application\Enemy\Enemy3.cpp" />
     <ClCompile Include="Src\Application\Bullet\Enemy3Bullet.cpp" />
     <ClCompile Include="Src\Application\Enemy\Enemy4.cpp" />
+    <ClCompile Include="Src\Application\Bullet\BossBullet.cpp" />
+    <ClCompile Include="Src\Application\Enemy\Generator.cpp" />
+    <ClCompile Include="Src\Application\Bullet\BossBullet2.cpp" />
+    <ClCompile Include="Src\Application\GameSystem\Text\Text.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="説明.txt" />

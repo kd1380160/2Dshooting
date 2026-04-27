@@ -5,18 +5,21 @@ class C_Enemy2 :public C_EnemyBase
 {
 public:
 
-	C_Enemy2(KdTexture* tex, int num);
+	C_Enemy2(KdTexture* tex,KdTexture* breaktex, int num);
 
 	void Init();
 	void Update(Math::Vector2 playerpos);
 	void Draw();
 
 	void LockOn();
-
+	
 	bool GetBulletHitCheck() const { return isHit; }
+	
 private:
 
+	int shotRedBulletCnt;
 	bool isHit;
 	static const int ENEMY_RADIUS = 32;
 	int shotCnt;
+	const Math::Vector2 bulletMoveList[3] = { {-3,-5},{0,-7},{3,-5} };
 };

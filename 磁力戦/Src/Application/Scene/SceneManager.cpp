@@ -6,14 +6,17 @@ void C_SceneManager::Init()
 	switch (NowScene)
 	{
 	case SceneList::Title:
+		title.Init();
 		break;
 	case SceneList::Game:
 		NowWave = WaveList::Wave4;
 		SCENE.GetPlayer()->Init();
 		BULLET_MGR.Init();
 		ENEMY_MGR.Init();
+		text.Init();
 		break;
 	case SceneList::Result:
+		result.Init();
 		break;
 	}
 }
@@ -23,17 +26,17 @@ void C_SceneManager::Update()
 	switch (NowScene)
 	{
 	case SceneList::Title:
+		title.Update();
 		break;
 	case SceneList::Game:
-
 		BACKGRND.Update();
 		SCENE.GetPlayer()->Update();
-
 		ENEMY_MGR.Update();
-
 		BULLET_MGR.Update();
+		text.Update();
 		break;
 	case SceneList::Result:
+		result.Update();
 		break;
 	}
 }
@@ -43,15 +46,18 @@ void C_SceneManager::Draw()
 	switch (NowScene)
 	{
 	case SceneList::Title:
+		title.Draw();
 		break;
 	case SceneList::Game:
 		BACKGRND.Draw();
+		text.Draw();
 		SCENE.GetPlayer()->Draw();
-		ENEMY_MGR.Draw();
-
 		BULLET_MGR.Draw();
+		ENEMY_MGR.Draw();
+		
 		break;
 	case SceneList::Result:
+		result.Draw();
 		break;
 	}
 }

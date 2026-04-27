@@ -1,6 +1,7 @@
 #pragma once
 #include"BulletInfo.h"
 
+
 class C_BulletBase
 {
 public:

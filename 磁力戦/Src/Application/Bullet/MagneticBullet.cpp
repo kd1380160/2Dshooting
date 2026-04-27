@@ -76,8 +76,10 @@ void C_MagneticBullet::Update(Math::Vector2 playerpos, Math::Vector2 enemypos,in
 
 void C_MagneticBullet::Draw()
 {
+	Math::Color color = { 5,5,5,1 };
+
 	SHADER.m_spriteShader.SetMatrix(bullet.Mat);
-	SHADER.m_spriteShader.DrawTex(bullet.Tex, Math::Rectangle(0, 0, 16, 16));
+	SHADER.m_spriteShader.DrawTex(bullet.Tex, Math::Rectangle(0, 0, 16, 16), &color);
 }
 
 float C_MagneticBullet::GetAngleDeg(float srcX, float srcY, float destX, float destY)
@@ -104,4 +106,15 @@ float C_MagneticBullet::GetAngleDeg(float srcX, float srcY, float destX, float d
 	}
 
 	return deg;
+}
+
+void C_MagneticBullet::Shot()
+{
+	isShot = true;
+}
+
+void C_MagneticBullet::SetTarget(int enemytype, int enemynum)
+{
+	targetEnemyType = enemytype;
+	targetEnemyNum = enemynum;
 }

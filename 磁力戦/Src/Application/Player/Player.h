@@ -6,6 +6,8 @@ class C_Player
 {
 public:
 
+	C_Player();
+
 	void Init();
 	void Update();
 	void Draw();
@@ -15,6 +17,8 @@ public:
 
 	//セッター
 	void SetPlayerTex(KdTexture* tex) { player.Tex = tex; }
+	void SetPlayerEngineTex(KdTexture* tex) { player.EngineTex = tex; }
+	void SetPlayerEngineBaseTex(KdTexture* tex) { player.EngineBaseTex = tex; }
 
 	//ゲッター
 	Math::Vector2 GetPlayerPos() { return player.Pos; }
@@ -24,7 +28,14 @@ private:
 	//プレイヤー構造体
 	S_player player;
 	
-	int shotCnt;
+	Math::Matrix engineBaseMat;
+	Math::Matrix engineMat;
 
-	
+	int shotCnt;
+	int animCnt;
+	const int PLAYER_MAX_HP = 3;
+	const int PLAYER_RADIUS = 24;
+	float playerAlpha;
+	bool isInvincible;
+	int invincibleCnt;
 };

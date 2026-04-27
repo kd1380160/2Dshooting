@@ -1,15 +1,18 @@
 #include "Enemy3.h"
 #include "../Scene.h"
 
-C_Enemy3::C_Enemy3(KdTexture* tex, int num)
+C_Enemy3::C_Enemy3(KdTexture* tex,KdTexture* breaktex, int num)
 {
 	enemy.Tex = tex;
+	enemy.BreakTex = breaktex;
 	//enemy.Pos = { (float)( - 300 + 200 * num),400};
 	enemy.Pos = { (float)(rand() % (1280 - ENEMY_RADIUS) - 640),400 };
 	enemy.Move = { 0,-10 };
 	shotCnt = 0;
 	isLockOn = false;
 	isHit = false;
+	enemy.animCnt = 0;
+	enemy.isFinishAnim = false;
 }
 
 void C_Enemy3::Init()
@@ -30,15 +33,27 @@ void C_Enemy3::Update(Math::Vector2 playerpos)
 		shotCnt = 0;
 	}
 
+
 	if (BULLET_MGR.EnemyHitCheck(enemy.Pos, ENEMY_RADIUS))
 	{
-		isHit = true;
-	}
-	else
-	{
-		isHit = false;
+		if (isHit == false)
+		{
+			isHit = true;
+			enemy.animCnt = 0;
+		}
 	}
 
+
+	enemy.animCnt++;
+
+	if (isHit)
+	{
+		if (enemy.animCnt >= 18)
+		{
+			enemy.animCnt = 18;
+			enemy.isFinishAnim = true;
+		}
+	}
 	enemy.Scale = Math::Matrix::CreateScale(2, -2, 1);
 	enemy.Trans = Math::Matrix::CreateTranslation(enemy.Pos.x, enemy.Pos.y, 0);
 	enemy.Mat = enemy.Scale * enemy.Trans;
@@ -46,11 +61,20 @@ void C_Enemy3::Update(Math::Vector2 playerpos)
 
 void C_Enemy3::Draw()
 {
-	Math::Color col = { 1,1,1,1 };
+	Math::Color col = { 2,2,2,1 };
 	if (isLockOn)col = { 10,10,10,1 };
 
-	SHADER.m_spriteShader.SetMatrix(enemy.Mat);
-	SHADER.m_spriteShader.DrawTex(enemy.Tex, Math::Rectangle(0, 0, 64, 64), &col);
+	if (isHit)
+	{
+		Math::Color col = { 1,1,1,1 };
+		SHADER.m_spriteShader.SetMatrix(enemy.Mat);
+		SHADER.m_spriteShader.DrawTex(enemy.BreakTex, Math::Rectangle(64 * (enemy.animCnt / 2), 0, 64, 64), &col);
+	}
+	else
+	{
+		SHADER.m_spriteShader.SetMatrix(enemy.Mat);
+		SHADER.m_spriteShader.DrawTex(enemy.Tex, Math::Rectangle(64 * (enemy.animCnt / 5), 0, 64, 64), &col);
+	}
 }
 
 void C_Enemy3::LockOn()

@@ -17,6 +17,8 @@ private:
 
 	//ƒvƒŒƒCƒ„[
 	KdTexture playerTex;
+	KdTexture playerEngineTex;
+	KdTexture playerEngineBaseTex;
 	C_Player player;
 	
 

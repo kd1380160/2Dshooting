@@ -1,17 +1,39 @@
 #include "Player.h"
 #include"../Bullet/BulletManager.h"
+#include "../Scene.h"
 
 
+C_Player::C_Player()
+{
+	player.Pos = { 0,-200 };
+	player.Move = { 0,0 };
+	shotCnt = 0;
+	player.Hp = PLAYER_MAX_HP;
+	isInvincible = false;
+	playerAlpha = 1.0f;
+	invincibleCnt = 0;
+	player.Color = { 1,1,1,1 };
+}
 
 void C_Player::Init()
 {
 	player.Pos = { 0,-200 };
 	player.Move = { 0,0 };
 	shotCnt = 0;
+	animCnt = 0;
+	player.Hp = PLAYER_MAX_HP;
+	isInvincible = false;
+	playerAlpha = 1.0f;
 }
 
 void C_Player::Update()
 {
+	animCnt++;
+	if (animCnt >= 12)
+	{
+		animCnt = 0;
+	}
+	
 	player.Move = { 0,0 };
 
 	KeyProcess();
@@ -19,23 +41,92 @@ void C_Player::Update()
 	//ç¿ïWämíË
 	player.Pos += player.Move;
 
+	if (BULLET_MGR.PlayerHitCHeck(player.Pos, PLAYER_RADIUS))
+	{
+		if (!isInvincible)
+		{
+			player.Hp -= 1;
+			if (player.Hp <= 0)player.Hp = 0;
+			isInvincible = true;
+		}
+	}
+
 	
-	//í èÌíeî≠éÀ
-	ShotNormalBullet();
-	
+
+	//ñ≥ìGéûä‘ÇÃì_ñ≈
+	if (isInvincible)
+	{
+		invincibleCnt++;
+
+		if (invincibleCnt % 7 == 0)
+		{
+			if (playerAlpha == 1.0f)
+			{
+				playerAlpha = 0.2f;
+				player.Color = { 0.8,0.8,0.8,playerAlpha };
+			}
+			else if (playerAlpha == 0.2f)
+			{
+				playerAlpha = 1.0f;
+				player.Color = { 6,6,6,playerAlpha };
+			}
+		}
+
+		//120fÇ≈ñ≥ìGâèú
+		if (invincibleCnt >= 120)
+		{
+			isInvincible = false;
+			playerAlpha = 1.0f;
+			invincibleCnt = 0;
+			player.Color = { 1,1,1,playerAlpha };
+		}
+	}
+
+	if (SCENE_MGR.GetNowWave() == Boss)
+	{
+		if (ENEMY_MGR.GetBossHp() > 0)
+		{
+			//í èÌíeî≠éÀ
+			ShotNormalBullet();
+		}
+	}
+	else
+	{
+		ShotNormalBullet();
+	}
 	
 
 	//çsóÒçÏê¨
-	player.Scale = Math::Matrix::CreateScale(5, 5, 1);
+	player.Scale = Math::Matrix::CreateScale(2, 2, 1);
 	player.Trans = Math::Matrix::CreateTranslation(player.Pos.x, player.Pos.y, 0);
 	player.Mat = player.Scale * player.Trans;
+
+	Math::Matrix trans,scale;
+	trans= Math::Matrix::CreateTranslation(player.Pos.x, player.Pos.y - 11, 0);
+	scale = Math::Matrix::CreateScale(2, 2, 1);
+	engineBaseMat = scale * trans;
+
+	engineMat = scale * trans;
 }
 
 void C_Player::Draw()
 {
+	//player.Color = { 1,1,1,playerAlpha };
+	Math::Color color = { 2,2,2,playerAlpha };
 	//ÉvÉåÉCÉÑÅ[
-	SHADER.m_spriteShader.SetMatrix(player.Mat);
-	SHADER.m_spriteShader.DrawTex(player.Tex, Math::Rectangle{ 8,0,8,8 });
+	if (player.Hp > 0)
+	{
+		SHADER.m_spriteShader.SetMatrix(engineBaseMat);
+		SHADER.m_spriteShader.DrawTex(player.EngineBaseTex, Math::Rectangle{ 0,0,48,48 }, &color);
+
+		SHADER.m_spriteShader.SetMatrix(player.Mat);
+		SHADER.m_spriteShader.DrawTex(player.Tex, Math::Rectangle{ 0,0,48,48 },&player.Color);
+
+		SHADER.m_spriteShader.SetMatrix(engineBaseMat);
+		SHADER.m_spriteShader.DrawTex(player.EngineTex, Math::Rectangle{ 48*(animCnt/4),0,48,48}, &player.Color);
+
+		
+	}
 }
 
 void C_Player::ShotNormalBullet()
