@@ -6,6 +6,7 @@ class C_Enemy2Bullet :public C_BulletBase
 public:
 
 	C_Enemy2Bullet(KdTexture* tex, Math::Vector2 pos, Math::Vector2 move);
+	C_Enemy2Bullet(KdTexture* tex, Math::Vector2 pos, int angle);
 
 	void Update(Math::Vector2 playerpos);
 	void Draw();

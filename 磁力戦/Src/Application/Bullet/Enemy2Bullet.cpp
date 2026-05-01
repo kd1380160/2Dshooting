@@ -7,6 +7,17 @@ C_Enemy2Bullet::C_Enemy2Bullet(KdTexture* tex, Math::Vector2 pos,Math::Vector2 m
 	bullet.Pos = pos;
 	bullet.Move = move;
 	isAbsorption = false;
+	bullet.AnimCnt = 0;
+}
+
+C_Enemy2Bullet::C_Enemy2Bullet(KdTexture* tex, Math::Vector2 pos, int angle)
+{
+	bullet.Tex = tex;
+	bullet.Pos = pos;
+	bullet.Move.x= cos(DirectX::XMConvertToRadians(angle)) * 7;
+	bullet.Move.y= sin(DirectX::XMConvertToRadians(angle)) * 7;
+	isAbsorption = false;
+	bullet.AnimCnt = 0;
 }
 
 void C_Enemy2Bullet::Update(Math::Vector2 playerpos)
@@ -28,11 +39,9 @@ void C_Enemy2Bullet::Update(Math::Vector2 playerpos)
 	//ある程度まで近づいたら回転運動に移行
 	if (z < 100)isAbsorption = true;
 
-	/*if (!isAbsorption)
-	{
-		座標確定
-		bullet.Pos += bulletMove;
-	}*/
+
+	bullet.AnimCnt++;
+	if (bullet.AnimCnt >= 12)bullet.AnimCnt = 0;
 
 	bullet.Pos += bullet.Move;
 
@@ -45,7 +54,7 @@ void C_Enemy2Bullet::Update(Math::Vector2 playerpos)
 void C_Enemy2Bullet::Draw()
 {
 	SHADER.m_spriteShader.SetMatrix(bullet.Mat);
-	SHADER.m_spriteShader.DrawTex(bullet.Tex, Math::Rectangle(0, 0, 16, 16));
+	SHADER.m_spriteShader.DrawTex(bullet.Tex, Math::Rectangle(16*(bullet.AnimCnt/4), 0, 16, 16));
 }
 
 float C_Enemy2Bullet::GetAngleDeg(float srcX, float srcY, float destX, float destY)

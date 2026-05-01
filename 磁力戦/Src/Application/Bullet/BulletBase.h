@@ -6,8 +6,8 @@ class C_BulletBase
 {
 public:
 
-	void Draw();
-	void Update();
+	 void Draw();
+	 void Update();
 
 	//ゲッター
 	Math::Vector2 GetPos() { return bullet.Pos; }

@@ -1,5 +1,6 @@
 #include "BulletManager.h"
 #include"../Scene.h"
+#include"../Effect/EffectManager.h"
 void C_BulletManager::Draw()
 {
 	//通常弾（プレイヤー発射）
@@ -65,7 +66,13 @@ void C_BulletManager::Draw()
 			magneticBullets[i]->Draw();
 		}
 	}
-
+	if (isJamming) {
+		for (int i = 0; i < 5; i++) {
+			int y = rand() % 721-360;
+			SHADER.m_spriteShader.SetMatrix(Math::Matrix::CreateTranslation(-640, 0, 0));
+			SHADER.m_spriteShader.DrawLine(0, y, 1280, y, &Math::Color(100, 100, 255, 128)); // 半透明の青い線
+		}
+	}
 }
 
 void C_BulletManager::Update()
@@ -160,6 +167,19 @@ void C_BulletManager::Update()
 		}
 	}
 
+	for (int i = 0;i < ENEMY3_BULLET_MAX;++i)
+	{
+		if (enemy3Bullets[i] != nullptr)
+		{
+			break;
+		}
+
+		if (i == ENEMY3_BULLET_MAX - 1)
+		{
+			isJamming = false;
+		}
+	}
+
 	for (int i = 0;i < BOSS_BULLET_MAX;i++)
 	{
 		//弾が存在する場合のみ更新
@@ -226,7 +246,7 @@ void C_BulletManager::Update()
 				{
 					if (magneticBullets[i] != nullptr)
 					{
-						if (ENEMY_MGR.GetEnemy3Annihilation()) //磁力弾阻害が入っていない場合（敵3が全滅）
+						if (!isJamming) //磁力弾阻害が入っていない場合（敵3の弾が存在していない）
 						{
 							magneticBullets[i]->Shot();
 							magneticBullets[i]->SetIsHomingTrue();
@@ -250,7 +270,7 @@ void C_BulletManager::Update()
 		if (magneticBullets[i] != nullptr)
 		{
 			//磁力弾阻害が入っているかどうか
-			if (ENEMY_MGR.GetEnemy3Annihilation()) //磁力弾阻害が入っていない場合（敵3が全滅）
+			if (!isJamming) //磁力弾阻害が入っていない場合（敵3の弾が存在していない）
 			{
 				if (magneticBullets[i]->GetIsShotFlg())
 				{
@@ -298,39 +318,23 @@ void C_BulletManager::TrackingUpdate(int num)
 		case Wave3:
 			break;
 		case Wave4:
-			
-			if(ENEMY_MGR.GetIsEnemyAlive(magneticBullets[num]->GetTargetEnemyType(), magneticBullets[num]->GetTargetEnemyNum()))
+
+			if (ENEMY_MGR.GetIsEnemyAlive(magneticBullets[num]->GetTargetEnemyType(), magneticBullets[num]->GetTargetEnemyNum()))
 			{
 				magneticBullets[num]->SetDestinationPos(ENEMY_MGR.GetLockOnEnemyPos(magneticBullets[num]->GetTargetEnemyType(), magneticBullets[num]->GetTargetEnemyNum()));
 			}
 
-
-			/*if (lockonEnemyNum[lockonEnemy4Cnt] != 999)
-			{
-				if (ENEMY_MGR.GetIsEnemy4Alive(lockonEnemy4Num[lockonEnemy4Cnt]))
-				{
-					magneticBullets[num]->SetDestinationPos(ENEMY_MGR.GetEnemy4Pos(lockonEnemy4Num[lockonEnemy4Cnt]));
-					break;
-				}
-				else
-				{
-					lockonEnemy4Cnt++;
-					if (lockonEnemy4Cnt >= 5)
-					{
-						lockonEnemy4Cnt = 0;
-					}
-				}
-			}
-			else
-			{
-				lockonEnemy4Cnt++;
-				if (lockonEnemy4Cnt >= 5)
-				{
-					lockonEnemy4Cnt = 0;
-				}
-			}*/
 			break;
 		case Boss:
+
+			if (!ENEMY_MGR.GetIsGeneratorAlive(0) && !ENEMY_MGR.GetIsGeneratorAlive(1))
+			{
+				if (ENEMY_MGR.GetIsBossSecond())
+				{
+					magneticBullets[num]->SetDestinationPos(ENEMY_MGR.GetBossPos());
+				}
+			}
+
 			break;
 		default:
 			break;
@@ -390,6 +394,19 @@ void C_BulletManager::ShotEnemy2Bullet(Math::Vector2 enemyPos, Math::Vector2 mov
 	}
 }
 
+void C_BulletManager::ShotEnemy2Bullet(Math::Vector2 enemyPos, int angle)
+{
+	//弾が無ければ生成
+	for (int i = 0;i < ENEMY2_BULLET_MAX;i++)
+	{
+		if (enemy2Bullets[i] == nullptr)
+		{
+			enemy2Bullets[i] = new C_Enemy2Bullet(&enemy2BulletTex, enemyPos,angle);
+			break;
+		}
+	}
+}
+
 void C_BulletManager::ShotEnemy3Bullet(Math::Vector2 enemyPos)
 {
 	//弾が無ければ生成
@@ -397,6 +414,7 @@ void C_BulletManager::ShotEnemy3Bullet(Math::Vector2 enemyPos)
 	{
 		if (enemy3Bullets[i] == nullptr)
 		{
+			isJamming = true;
 			enemy3Bullets[i] = new C_Enemy3Bullet(&enemy3BulletTex, enemyPos);
 			break;
 		}
@@ -472,80 +490,86 @@ void C_BulletManager::ShotMagBullet()
 	{
 		if (magneticBullets[i] != nullptr)
 		{
-			if (SCENE_MGR.GetNowWave() != Boss)
+			if (!magneticBullets[i]->GetIsHaveTarget())
 			{
-				while (1)
+				if (SCENE_MGR.GetNowWave() != Boss)
 				{
-					if ((lockonEnemyNumType[lockonCnt][1] == 0 || lockonEnemyNumType[lockonCnt][1] == 1 || lockonEnemyNumType[lockonCnt][1] == 2 || lockonEnemyNumType[lockonCnt][1] == 3 || lockonEnemyNumType[lockonCnt][1] == 4)
-						&& (lockonEnemyNumType[lockonCnt][0] == 0 || lockonEnemyNumType[lockonCnt][0] == 1 || lockonEnemyNumType[lockonCnt][0] == 2 || lockonEnemyNumType[lockonCnt][0] == 3 || lockonEnemyNumType[lockonCnt][0] == 4))
+					while (1)
 					{
-						magneticBullets[i]->SetTarget(lockonEnemyNumType[lockonCnt][1], lockonEnemyNumType[lockonCnt][0]);
-						magneticBullets[i]->SetDestinationPos(ENEMY_MGR.GetLockOnEnemyPos(magneticBullets[i]->GetTargetEnemyType(), magneticBullets[i]->GetTargetEnemyNum()));
-						lockonCnt++;
-						break;
+						if ((lockonEnemyNumType[lockonCnt][1] == 0 || lockonEnemyNumType[lockonCnt][1] == 1 || lockonEnemyNumType[lockonCnt][1] == 2 || lockonEnemyNumType[lockonCnt][1] == 3 || lockonEnemyNumType[lockonCnt][1] == 4)
+							&& (lockonEnemyNumType[lockonCnt][0] == 0 || lockonEnemyNumType[lockonCnt][0] == 1 || lockonEnemyNumType[lockonCnt][0] == 2 || lockonEnemyNumType[lockonCnt][0] == 3 || lockonEnemyNumType[lockonCnt][0] == 4))
+						{
+							magneticBullets[i]->SetTarget(lockonEnemyNumType[lockonCnt][1], lockonEnemyNumType[lockonCnt][0]);
+							magneticBullets[i]->SetDestinationPos(ENEMY_MGR.GetLockOnEnemyPos(magneticBullets[i]->GetTargetEnemyType(), magneticBullets[i]->GetTargetEnemyNum()));
+							magneticBullets[i]->SetIsHaveTarget();
+							lockonCnt++;
+							break;
+						}
+						else
+						{
+							checkCnt++;
+							lockonCnt++;
+						}
+						if (lockonCnt >= 5)
+						{
+							lockonCnt = 0;
+						}
+						if (checkCnt >= 6)
+						{
+							//break;
+						}
 					}
-					else
+				}
+				else
+				{
+					if (generatorAlive[0] && generatorAlive[1])
 					{
-						checkCnt++;
-						lockonCnt++;
+						if (ENEMY_MGR.GetIsLockonGenerator(0) && ENEMY_MGR.GetIsLockonGenerator(1))
+						{
+							magneticBullets[i]->SetDestinationPos(ENEMY_MGR.GetGeneratorPos(generatorCnt));
+							magneticBullets[i]->SetIsHaveTarget();
+							generatorCnt++;
+							if (generatorCnt >= 2)generatorCnt = 0;
+						}
+						else if (ENEMY_MGR.GetIsLockonGenerator(0))
+						{
+							magneticBullets[i]->SetDestinationPos(ENEMY_MGR.GetGeneratorPos(0));
+							magneticBullets[i]->SetIsHaveTarget();
+						}
+						else if (ENEMY_MGR.GetIsLockonGenerator(1))
+						{
+							magneticBullets[i]->SetDestinationPos(ENEMY_MGR.GetGeneratorPos(1));
+							magneticBullets[i]->SetIsHaveTarget();
+						}
 					}
-					if (lockonCnt >= 5)
+					else if (generatorAlive[0])
 					{
-						lockonCnt = 0;
+						if (ENEMY_MGR.GetIsLockonGenerator(0))
+						{
+							magneticBullets[i]->SetDestinationPos(ENEMY_MGR.GetGeneratorPos(0));
+							magneticBullets[i]->SetIsHaveTarget();
+						}
 					}
-					if (checkCnt >= 6)
+					else if (generatorAlive[1])
 					{
-						//break;
+						if (ENEMY_MGR.GetIsLockonGenerator(1))
+						{
+							magneticBullets[i]->SetDestinationPos(ENEMY_MGR.GetGeneratorPos(1));
+							magneticBullets[i]->SetIsHaveTarget();
+						}
+					}
+					else if (!generatorAlive[0] && !generatorAlive[1])//ジェネレーターが両方死ん出る場合（ボスの第2形態）
+					{
+						magneticBullets[i]->SetDestinationPos(ENEMY_MGR.GetBossPos());
+						magneticBullets[i]->SetIsHaveTarget();
 					}
 				}
 			}
-			else
-			{
-				if (generatorAlive[0] && generatorAlive[1])
-				{
-					if (ENEMY_MGR.GetIsLockonGenerator(0) && ENEMY_MGR.GetIsLockonGenerator(1))
-					{
-						magneticBullets[i]->SetDestinationPos(ENEMY_MGR.GetGeneratorPos(generatorCnt));
-						generatorCnt++;
-						if (generatorCnt >= 2)generatorCnt = 0;
-					}
-					else if (ENEMY_MGR.GetIsLockonGenerator(0))
-					{
-						magneticBullets[i]->SetDestinationPos(ENEMY_MGR.GetGeneratorPos(0));
-					}
-					else if (ENEMY_MGR.GetIsLockonGenerator(1))
-					{
-						magneticBullets[i]->SetDestinationPos(ENEMY_MGR.GetGeneratorPos(1));
-					}
-				}
-				else if (generatorAlive[0])
-				{
-					if (ENEMY_MGR.GetIsLockonGenerator(0))
-					{
-						magneticBullets[i]->SetDestinationPos(ENEMY_MGR.GetGeneratorPos(0));
-					}
-				}
-				else if (generatorAlive[1])
-				{
-					if (ENEMY_MGR.GetIsLockonGenerator(1))
-					{
-						magneticBullets[i]->SetDestinationPos(ENEMY_MGR.GetGeneratorPos(1));
-					}
-				}
-				else if (!generatorAlive[0] && !generatorAlive[1])//ジェネレーターが両方死ん出る場合（ボスの第2形態）
-				{
-					magneticBullets[i]->SetDestinationPos(ENEMY_MGR.GetBossPos());
-				}
-				
-			}
-			
-
-			if (lockonCnt >= 5)lockonCnt = 0;
 		}
 	}
 }
 
-bool  C_BulletManager::EnemyHitCheck(Math::Vector2 pos, int radius)
+bool  C_BulletManager::EnemyHitCheck(Math::Vector2 pos, int radius, bool shieldhit)
 {
 	//通常弾との当たり判定
 	for (int i = 0;i < NORMAL_BULLET_MAX;i++)
@@ -561,9 +585,16 @@ bool  C_BulletManager::EnemyHitCheck(Math::Vector2 pos, int radius)
 			//当たってたらtrue
 			if (c < sumRadius)
 			{
+				if (shieldhit)
+				{
+					EFFECT_MGR.SpawnBulletExplosion(normalBullets[i]->GetPos());
+				}
+				else
+				{
+					EFFECT_MGR.SpawnBulletExplosion(pos);
+				}
 				delete normalBullets[i];
 				normalBullets[i] = nullptr;
-
 				return true;
 			}
 		}
@@ -581,13 +612,24 @@ bool  C_BulletManager::EnemyHitCheck(Math::Vector2 pos, int radius)
 			const float c = sqrt(a * a + b * b);
 			const float sumRadius = magneticBullets[i]->GetRadius() + radius;
 
-			//当たってたらtrue
-			if (c < sumRadius)
+			if (magneticBullets[i]->GetIsShotFlg())
 			{
-				delete magneticBullets[i];
-				magneticBullets[i] = nullptr;
+				//当たってたらtrue
+				if (c < sumRadius)
+				{
+					if (shieldhit)
+					{
+						EFFECT_MGR.SpawnBulletExplosion(magneticBullets[i]->GetPos());
+					}
+					else
+					{
+						EFFECT_MGR.SpawnBulletExplosion(pos);
+					}
 
-				return true;
+					delete magneticBullets[i];
+					magneticBullets[i] = nullptr;
+					return true;
+				}
 			}
 		}
 

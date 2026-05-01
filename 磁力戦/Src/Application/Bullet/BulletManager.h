@@ -22,6 +22,7 @@ public:
 	void ShotNormalBullet(Math::Vector2 playerPos);
 	void ShotEnemy1Bullet(Math::Vector2 enemyPos);
 	void ShotEnemy2Bullet(Math::Vector2 enemyPos, Math::Vector2 move);
+	void ShotEnemy2Bullet(Math::Vector2 enemyPos, int angle);
 	void ShotEnemy3Bullet(Math::Vector2 enemyPos);
 	void ShotBossBullet(Math::Vector2 bossPos, int degree, int speed);
 	void ShotBossBullet2(Math::Vector2 bossPos, int degree);
@@ -29,10 +30,11 @@ public:
 	void ShotBossBullet2(Math::Vector2 bossPos, int moveX, int moveY);
 	void ShotMagBullet();
 
-	bool EnemyHitCheck(Math::Vector2 pos,int radius);
+	bool EnemyHitCheck(Math::Vector2 pos,int radius,bool shieldhit);
 	bool PlayerHitCHeck(Math::Vector2 pos, int radius);
 	bool EnemyBulletAliveCheck();
 	bool MagneticBulletAliveCheck();
+	bool GetIsJamming()const { return isJamming; }
 
 	void Release();
 	void ClearAllBullet();
@@ -79,6 +81,7 @@ private:
 	int lockonCnt=0;
 
 	bool isLClick = false;
+	bool isJamming = false;
 	bool isMagShot = false;
 
 private:

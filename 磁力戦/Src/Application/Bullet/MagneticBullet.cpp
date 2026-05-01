@@ -13,6 +13,7 @@ C_MagneticBullet::C_MagneticBullet(KdTexture* tex, Math::Vector2 pos)
 	isAbsorption = false;
 	isShot = false;
 	isHoming = false;
+	isHaveTarget = false;
 }
 
 void C_MagneticBullet::Init()
@@ -21,13 +22,6 @@ void C_MagneticBullet::Init()
 
 void C_MagneticBullet::Update(Math::Vector2 playerpos, Math::Vector2 enemypos,int degreeIncrease)
 {
-	/*if (enemypos.x == 0 && enemypos.y == 0)
-	{
-		isShot = false;
-	}*/
-
-	
-
 	if (!isShot) //•ú‚Â‘O
 	{
 		//Ž©‹@‚ÌŽü‚è‚ð‚Ü‚í‚é

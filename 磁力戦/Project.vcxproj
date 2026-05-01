@@ -168,6 +168,8 @@
     <ClInclude Include="Src\Application\Bullet\Enemy2Bullet.h" />
     <ClInclude Include="Src\Application\Bullet\Enemy3Bullet.h" />
     <ClInclude Include="Src\Application\Bullet\MagneticBullet.h" />
+    <ClInclude Include="Src\Application\Effect\BulletExplosion.h" />
+    <ClInclude Include="Src\Application\Effect\EffectManager.h" />
     <ClInclude Include="Src\Application\Enemy\Boss.h" />
     <ClInclude Include="Src\Application\Enemy\Enemy1.h" />
     <ClInclude Include="Src\Application\Enemy\Enemy2.h" />
@@ -185,10 +187,12 @@
     <ClInclude Include="Src\Application\Scene.h" />
     <ClInclude Include="Src\Application\main.h" />
     <ClInclude Include="Src\Application\Scene\Game.h" />
+    <ClInclude Include="Src\Application\Scene\GameOver.h" />
     <ClInclude Include="Src\Application\Scene\Result.h" />
     <ClInclude Include="Src\Application\Scene\SceneBase.h" />
     <ClInclude Include="Src\Application\Scene\SceneManager.h" />
     <ClInclude Include="Src\Application\Scene\Title.h" />
+    <ClInclude Include="Src\Application\UI\UI.h" />
     <ClInclude Include="Src\System\Audio\KdAudio.h" />
     <ClInclude Include="src\System\Direct3D\KdDirect3D.h" />
     <ClInclude Include="Src\System\Direct3D\KdDirect3DHelper.h" />
@@ -221,6 +225,8 @@
     <ClCompile Include="Src\Application\Bullet\Enemy2Bullet.cpp" />
     <ClCompile Include="Src\Application\Bullet\Enemy3Bullet.cpp" />
     <ClCompile Include="Src\Application\Bullet\MagneticBullet.cpp" />
+    <ClCompile Include="Src\Application\Effect\BulletExplosion.cpp" />
+    <ClCompile Include="Src\Application\Effect\EffectManager.cpp" />
     <ClCompile Include="Src\Application\Enemy\Boss.cpp" />
     <ClCompile Include="Src\Application\Enemy\Enemy1.cpp" />
     <ClCompile Include="Src\Application\Enemy\Enemy2.cpp" />
@@ -235,9 +241,11 @@
     <ClCompile Include="Src\Application\Scene.cpp" />
     <ClCompile Include="Src\Application\main.cpp" />
     <ClCompile Include="Src\Application\Scene\Game.cpp" />
+    <ClCompile Include="Src\Application\Scene\GameOver.cpp" />
     <ClCompile Include="Src\Application\Scene\Result.cpp" />
     <ClCompile Include="Src\Application\Scene\SceneManager.cpp" />
     <ClCompile Include="Src\Application\Scene\Title.cpp" />
+    <ClCompile Include="Src\Application\UI\UI.cpp" />
     <ClCompile Include="Src\System\Audio\KdAudio.cpp" />
     <ClCompile Include="src\System\Direct3D\KdDirect3D.cpp" />
     <ClCompile Include="Src\System\Direct3D\KdDirect3DHelper.cpp" />

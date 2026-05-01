@@ -5,25 +5,32 @@
 
 C_Player::C_Player()
 {
-	player.Pos = { 0,-200 };
-	player.Move = { 0,0 };
+	player.Pos = { 0,-500 };
+	player.Move = { 0,2.5 };
 	shotCnt = 0;
+	animCnt = 0;
 	player.Hp = PLAYER_MAX_HP;
 	isInvincible = false;
+	canStartGame = true;
 	playerAlpha = 1.0f;
 	invincibleCnt = 0;
+	
+	player.Speed = 4;
 	player.Color = { 1,1,1,1 };
 }
 
 void C_Player::Init()
 {
-	player.Pos = { 0,-200 };
-	player.Move = { 0,0 };
+	player.Pos = { 0,-500 };
+	player.Move = { 0,2.5 };
 	shotCnt = 0;
 	animCnt = 0;
+	finishAnimCnt = 0;
 	player.Hp = PLAYER_MAX_HP;
 	isInvincible = false;
+	canStartGame = false;
 	playerAlpha = 1.0f;
+	invincibleCnt = 0;
 }
 
 void C_Player::Update()
@@ -33,76 +40,130 @@ void C_Player::Update()
 	{
 		animCnt = 0;
 	}
-	
-	player.Move = { 0,0 };
 
-	KeyProcess();
 
-	//ç¿ïWämíË
-	player.Pos += player.Move;
-
-	if (BULLET_MGR.PlayerHitCHeck(player.Pos, PLAYER_RADIUS))
+	if (canStartGame)
 	{
-		if (!isInvincible)
+		if (!ENEMY_MGR.GetIsBossDead())
 		{
-			player.Hp -= 1;
-			if (player.Hp <= 0)player.Hp = 0;
-			isInvincible = true;
+			//WASDà⁄ìÆÇÃèàóù	
+			KeyProcess();
 		}
-	}
 
-	
-
-	//ñ≥ìGéûä‘ÇÃì_ñ≈
-	if (isInvincible)
-	{
-		invincibleCnt++;
-
-		if (invincibleCnt % 7 == 0)
+		if (BULLET_MGR.PlayerHitCHeck(player.Pos, PLAYER_RADIUS))
 		{
-			if (playerAlpha == 1.0f)
+			if (!isInvincible)
 			{
-				playerAlpha = 0.2f;
-				player.Color = { 0.8,0.8,0.8,playerAlpha };
+				player.Hp -= 1;
+				if (player.Hp <= 0)player.Hp = 0;
+				isInvincible = true;
 			}
-			else if (playerAlpha == 0.2f)
+		}
+
+		if (ENEMY_MGR.PlayerEnemyHitCheck(player.Pos, PLAYER_RADIUS))
+		{
+			if (!isInvincible)
 			{
+				player.Hp -= 1;
+				if (player.Hp <= 0)player.Hp = 0;
+				isInvincible = true;
+			}
+		}
+
+		if (player.Hp <= 0)
+		{
+			SCENE_MGR.SetNowScene(GameOver);
+		}
+
+		//ñ≥ìGéûä‘ÇÃì_ñ≈
+		if (isInvincible)
+		{
+			invincibleCnt++;
+
+			if (invincibleCnt % 7 == 0)
+			{
+				if (playerAlpha == 1.0f)
+				{
+					playerAlpha = 0.2f;
+					player.Color = { 0.8,0.8,0.8,playerAlpha };
+				}
+				else if (playerAlpha == 0.2f)
+				{
+					playerAlpha = 1.0f;
+					player.Color = { 6,6,6,playerAlpha };
+				}
+			}
+
+			//120fÇ≈ñ≥ìGâèú
+			if (invincibleCnt >= 120)
+			{
+				isInvincible = false;
 				playerAlpha = 1.0f;
-				player.Color = { 6,6,6,playerAlpha };
+				invincibleCnt = 0;
+				player.Color = { 1,1,1,playerAlpha };
 			}
 		}
 
-		//120fÇ≈ñ≥ìGâèú
-		if (invincibleCnt >= 120)
-		{
-			isInvincible = false;
-			playerAlpha = 1.0f;
-			invincibleCnt = 0;
-			player.Color = { 1,1,1,playerAlpha };
-		}
-	}
 
-	if (SCENE_MGR.GetNowWave() == Boss)
-	{
-		if (ENEMY_MGR.GetBossHp() > 0)
+		if (SCENE_MGR.GetNowWave() == Boss)
 		{
-			//í èÌíeî≠éÀ
+			if (ENEMY_MGR.GetBossHp() > 0)
+			{
+				//í èÌíeî≠éÀ
+				ShotNormalBullet();
+			}
+		}
+		else
+		{
 			ShotNormalBullet();
 		}
 	}
 	else
 	{
-		ShotNormalBullet();
-	}
-	
+		if (player.Pos.y >= -200)
+		{
+			player.Pos.y = -200;
 
+			canStartGame = true;
+		}
+	}
+
+	if (ENEMY_MGR.GetIsBossDead())
+	{
+		if (finishAnimCnt == 0)
+		{
+			player.Move = {};
+		}
+
+		finishAnimCnt++;
+
+
+		if (finishAnimCnt >= 150)
+		{
+			player.Move.y += 0.05;
+		}
+
+		player.Pos += player.Move;
+
+		if (player.Pos.y >= 900)
+		{
+			SCENE_MGR.SetNowScene(Result);
+		}
+	}
+	else
+	{
+		player.Pos += player.Move * player.Speed;
+	}
+
+
+	
 	//çsóÒçÏê¨
 	player.Scale = Math::Matrix::CreateScale(2, 2, 1);
 	player.Trans = Math::Matrix::CreateTranslation(player.Pos.x, player.Pos.y, 0);
 	player.Mat = player.Scale * player.Trans;
 
-	Math::Matrix trans,scale;
-	trans= Math::Matrix::CreateTranslation(player.Pos.x, player.Pos.y - 11, 0);
+	Math::Matrix trans, scale;
+	trans = Math::Matrix::CreateTranslation(player.Pos.x, player.Pos.y - 11, 0);
 	scale = Math::Matrix::CreateScale(2, 2, 1);
 	engineBaseMat = scale * trans;
 
@@ -125,7 +186,23 @@ void C_Player::Draw()
 		SHADER.m_spriteShader.SetMatrix(engineBaseMat);
 		SHADER.m_spriteShader.DrawTex(player.EngineTex, Math::Rectangle{ 48*(animCnt/4),0,48,48}, &player.Color);
 
-		
+		//íeÇà¯Ç´äÒÇπÇÈîÕàÕÇâ~Ç≈ï\é¶
+		if (!BULLET_MGR.GetIsJamming())
+		{
+			if (!ENEMY_MGR.GetIsBossDead())
+			{
+				//îÒÉWÉÉÉ~ÉìÉO
+				SHADER.m_spriteShader.SetMatrix(Math::Matrix::CreateTranslation(0, 0, 0));
+				SHADER.m_spriteShader.DrawCircle(player.Pos.x, player.Pos.y, 100, &Math::Color(0, 0, 10, 0.7), false); // îºìßñæÇÃê¬Ç¢ê¸
+			}
+		}
+		else
+		{
+			//ÉWÉÉÉ~ÉìÉOíÜ
+			SHADER.m_spriteShader.SetMatrix(Math::Matrix::CreateTranslation(0, 0, 0));
+			SHADER.m_spriteShader.DrawCircle(player.Pos.x, player.Pos.y, 100, &Math::Color(10, 0, 0, 0.7), false); // îºìßñæÇÃê‘Ç¢ê¸
+		}
+
 	}
 }
 
@@ -137,18 +214,17 @@ void C_Player::ShotNormalBullet()
 		BULLET_MGR.ShotNormalBullet(player.Pos);
 		shotCnt = 0;
 	}
-
-
-	
-
-
 }
 
 void C_Player::KeyProcess()
 {
+	player.Move = { 0,0 };
+
 	//WASDÇ≈è„â∫ç∂âEà⁄ìÆ
-	if (GetAsyncKeyState('W') & 0x8000)	player.Move.y += 4;
-	if (GetAsyncKeyState('S') & 0x8000)	player.Move.y += -4;
-	if (GetAsyncKeyState('D') & 0x8000)	player.Move.x += 5;
-	if (GetAsyncKeyState('A') & 0x8000)	player.Move.x += -5;
+	if (GetAsyncKeyState('W') & 0x8000)	player.Move.y = 1;
+	if (GetAsyncKeyState('S') & 0x8000)	player.Move.y = -1;
+	if (GetAsyncKeyState('D') & 0x8000)	player.Move.x = 1;
+	if (GetAsyncKeyState('A') & 0x8000)	player.Move.x = -1;
+	
+	player.Move.Normalize();//ê≥ãKâª
 }

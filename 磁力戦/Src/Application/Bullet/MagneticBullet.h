@@ -14,10 +14,12 @@ public:
 	float GetAngleDeg(float srcX, float srcY, float destX, float destY);
 	bool GetIsAbsorption() { return isAbsorption; }
 	bool GetIsShotFlg() { return isShot; }
+	bool GetIsHaveTarget() { return isHaveTarget; }
 	void Shot();
 	void SetIsHomingTrue() { isHoming = true; }
 	void SetDestinationPos(Math::Vector2 destpos) { destinationPos = destpos; }
 	void SetTarget(int enemytype, int enemynum);
+	void SetIsHaveTarget() { isHaveTarget = true; }
 
 	int GetTargetEnemyType() const { return targetEnemyType; }
 	int GetTargetEnemyNum() const { return targetEnemyNum; }
@@ -32,6 +34,7 @@ private:
 	bool isShot;	//•ú‚½‚ê‚½‚©‚Ç‚¤‚©
 	bool isAbsorption;	//ƒvƒŒƒCƒ„[‚É‹zû‚³‚ê‚½‚©‚Ç‚¤‚©
 	bool isHoming;
+	bool isHaveTarget;
 
 	int targetEnemyNum ;	//’Ç”ö‚·‚é“G‚Ì”Ô†
 	int targetEnemyType	;	//’Ç”ö‚·‚é“G‚Ìí—Ş

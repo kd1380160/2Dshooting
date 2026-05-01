@@ -23,4 +23,5 @@ void C_Result::Update()
 
 void C_Result::Draw()
 {
+	
 }

@@ -18,10 +18,10 @@ void Scene::Draw2D()
 
 	char str[80];
 	sprintf_s(str, sizeof(str),"ìGÇì|ÇµÇΩêî: %d", ENEMY_MGR.GetEnemyKillCnt());
-	SHADER.m_spriteShader.DrawString(-600, 300, str, Math::Vector4{ 1,1,1,1 });
+	//SHADER.m_spriteShader.DrawString(-600, 300, str, Math::Vector4{ 1,1,1,1 });
 
 	sprintf_s(str, sizeof(str), "ç°ÇÃWave: %d", SCENE_MGR.GetNowWave()+1);
-	SHADER.m_spriteShader.DrawString(-600, 250, str, Math::Vector4{1,1,1,1});
+	//SHADER.m_spriteShader.DrawString(-600, 250, str, Math::Vector4{1,1,1,1});
 
 	sprintf_s(str, sizeof(str), "ìGî‘çÜ: %d,%d,%d,%d,%d", ENEMY_MGR.GetLockonEnemyNum(0), ENEMY_MGR.GetLockonEnemyNum(1), ENEMY_MGR.GetLockonEnemyNum(2), ENEMY_MGR.GetLockonEnemyNum(3), ENEMY_MGR.GetLockonEnemyNum(4));
 	//SHADER.m_spriteShader.DrawString(-600, 200, str, Math::Vector4{ 1,1,1,1 });
@@ -34,7 +34,6 @@ void Scene::Update()
 {
 	SCENE_MGR.Update();
 
-
 	if (GetAsyncKeyState('1') & 0x8000)
 	{
 		SCENE_MGR.SetNowScene(Title);
@@ -46,6 +45,10 @@ void Scene::Update()
 	else if (GetAsyncKeyState('3') & 0x8000)
 	{
 		SCENE_MGR.SetNowScene(Result);
+	}
+	else if (GetAsyncKeyState('4') & 0x8000)
+	{
+		SCENE_MGR.SetNowScene(GameOver);
 	}
 }
 
@@ -89,11 +92,13 @@ void Scene::Release()
 	ENEMY_MGR.Release();
 	BULLET_MGR.Release();
 	BACKGRND.Release();
+	EFFECT_MGR.Release();
+	SCENE_MGR.Release();
 }
 
 void Scene::ImGuiUpdate()
 {
-	//return;
+	return;
 
 	ImGui::SetNextWindowPos(ImVec2(20, 20), ImGuiSetCond_Once);
 	ImGui::SetNextWindowSize(ImVec2(200, 100), ImGuiSetCond_Once);

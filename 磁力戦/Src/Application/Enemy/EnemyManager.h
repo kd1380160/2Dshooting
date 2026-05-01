@@ -27,15 +27,17 @@ public:
 	bool GetIsGeneratorAlive(int num);
 	bool GetIsEnemyAlive(int type, int num);
 	bool GetIsLockonGenerator(int num){ return generator[num]->GetIsLockOn(); }
-	void RegisterLockonEnemyNum();
-	bool GetEnemy3Annihilation();//磁力弾阻害のため全滅チェック
-	int GetLockonEnemyNum(int num);
-	int GetLockonEnemyType(int num);
-	int GetGeneratorHp();//ボスのお供（ジェネレーター）のHPを返す
-	int GetBossHp();//ボスのHPを返す
-	bool GetBossFinisher();//ボスのフィニッシャー可能かどうかを返す
-	bool GetCanShotMagBullet();//磁力弾発射可能かどうかを返す（ロックオン対象がいるかどうか）
-
+	void RegisterLockonEnemyNum();								//ロックオンしている敵の情報を登録
+	bool GetEnemy3Annihilation();								//磁力弾阻害のため全滅チェック
+	int GetLockonEnemyNum(int num);								//ロックオンした敵の番号を返す
+	int GetLockonEnemyType(int num);							//ロックオンした敵の種類を返す
+	int GetGeneratorHp();										//ボスのお供（ジェネレーター）のHPを返す
+	int GetBossHp();											//ボスのHPを返す
+	bool GetBossFinisher();										//ボスのフィニッシャー可能かどうかを返す
+	bool GetCanShotMagBullet();									//磁力弾発射可能かどうかを返す（ロックオン対象がいるかどうか）
+	bool PlayerEnemyHitCheck(Math::Vector2 pos, int radius);	//敵と自機の当たり判定チェック
+	bool GetIsBossSecond();										//ボスが第二形態に移行したかどうかを返す
+	bool GetIsBossDead();										//ボスを倒したかどうかを返す
 	Math::Vector2 GetLockOnEnemyPos(int type, int number);
 private:
 
@@ -47,6 +49,8 @@ private:
 	C_Enemy1* enemy1[ENEMY1_MAX] = {};
 	KdTexture enemy1Tex;
 	KdTexture enemy1BreakTex;
+	KdTexture enemy1EngineTex;
+
 
 	//敵２
 	static const int ENEMY2_MAX = 5;
@@ -54,13 +58,17 @@ private:
 	C_Enemy2* enemy2[ENEMY2_MAX] = {};
 	KdTexture enemy2Tex;
 	KdTexture enemy2BreakTex;
+	KdTexture enemy2EngineTex;
 
 	//敵3
-	static const int ENEMY3_MAX = 5;
+	static const int ENEMY3_MAX = 1;
 	static const int ENEMY3_AMOUNT = 10;
-	C_Enemy3* enemy3[ENEMY3_MAX] = {};
+	C_Enemy3* enemy3= {};
 	KdTexture enemy3Tex;
 	KdTexture enemy3BreakTex;
+	KdTexture enemy3EngineTex;
+	int setCnt;
+	bool spawnEnemy;
 
 	//敵4
 	static const int ENEMY4_MAX = 5;
@@ -68,6 +76,7 @@ private:
 	C_Enemy4* enemy4[ENEMY4_MAX] = {};
 	KdTexture enemy4Tex;
 	KdTexture enemy4BreakTex;
+	KdTexture enemy4EngineTex;
 
 	//ボスのお供(バリア発生装置)
 	static const int GENERATOR_MAX = 2;
@@ -87,29 +96,38 @@ private:
 	KdTexture bossShieldTex;
 	KdTexture bossBreakTex;
 	C_Boss* boss;
-	
+
+	KdTexture lockOnTex;
+
 	bool isCallBoss;
 	bool isBoss;
 	bool isInterval;
 
+
+	int SpawnCnt;
 	int intervalCnt;
 	static const int  INTERVAL = 120;
 
 private:
 
 	C_EnemyManager(){
-		enemy1Tex.Load("Assets/Image/Enemy/enemy.png");
-		enemy1BreakTex.Load("Assets/Image/Enemy/enemyBreak.png");
-		enemy2Tex.Load("Assets/Image/Enemy/enemy2.png");
-		enemy2BreakTex.Load("Assets/Image/Enemy/enemy2Break.png");
-		enemy3Tex.Load("Assets/Image/Enemy/enemy3.png");
-		enemy3BreakTex.Load("Assets/Image/Enemy/enemy3Break.png");
-		enemy4Tex.Load("Assets/Image/Enemy/enemy4.png");
-		enemy4BreakTex.Load("Assets/Image/Enemy/enemy4Break.png");
-		generatorTex.Load("Assets/Image/Enemy/generator.png");
-		bossTex.Load("Assets/Image/Enemy/Boss.png");
-		bossShieldTex.Load("Assets/Image/Enemy/BossShield.png");
-		bossBreakTex.Load("Assets/Image/Enemy/BossBreak.png");
+		enemy1Tex.Load			("Assets/Image/Enemy/enemy.png");
+		enemy1BreakTex.Load		("Assets/Image/Enemy/enemyBreak.png");
+		enemy1EngineTex.Load	("Assets/Image/Enemy/enemyEngine.png");
+		enemy2Tex.Load			("Assets/Image/Enemy/enemy2.png");
+		enemy2BreakTex.Load		("Assets/Image/Enemy/enemy2Break.png");
+		enemy2EngineTex.Load	("Assets/Image/Enemy/enemy2Engine.png");
+		enemy3Tex.Load			("Assets/Image/Enemy/enemy3.png");
+		enemy3BreakTex.Load		("Assets/Image/Enemy/enemy3Break.png");
+		enemy3EngineTex.Load	("Assets/Image/Enemy/enemy3Engine.png");
+		enemy4Tex.Load			("Assets/Image/Enemy/enemy4.png");
+		enemy4BreakTex.Load		("Assets/Image/Enemy/enemy4Break.png");
+		enemy4EngineTex.Load	("Assets/Image/Enemy/enemy4Engine.png");
+		generatorTex.Load		("Assets/Image/Enemy/generator.png");
+		bossTex.Load			("Assets/Image/Enemy/Boss.png");
+		bossShieldTex.Load		("Assets/Image/Enemy/BossShield.png");
+		bossBreakTex.Load		("Assets/Image/Enemy/BossBreak.png");
+		lockOnTex.Load			("Assets/Image/Reticle/LockOn.png");
 	}
 
 public:

@@ -4,7 +4,7 @@
 class C_Generator :public C_EnemyBase
 {
 public:
-	C_Generator(KdTexture* tex, int num);
+	C_Generator(KdTexture* tex,KdTexture* lockontex, int num);
 	void Init();
 	void Update();
 	void Draw();

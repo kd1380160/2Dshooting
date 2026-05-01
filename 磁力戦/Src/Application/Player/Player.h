@@ -22,7 +22,10 @@ public:
 
 	//ゲッター
 	Math::Vector2 GetPlayerPos() { return player.Pos; }
-
+	bool GetCanStartGame() const { return canStartGame; }
+	int GetPlayerRadius()const { return PLAYER_RADIUS; }
+	bool GetisInvincible()const { return isInvincible; }
+	int GetPlayerHp() const { return player.Hp; }
 private:
 
 	//プレイヤー構造体
@@ -33,9 +36,12 @@ private:
 
 	int shotCnt;
 	int animCnt;
+	int finishAnimCnt;
+
 	const int PLAYER_MAX_HP = 3;
 	const int PLAYER_RADIUS = 24;
 	float playerAlpha;
 	bool isInvincible;
+	bool canStartGame;
 	int invincibleCnt;
 };

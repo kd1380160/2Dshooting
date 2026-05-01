@@ -2,18 +2,20 @@
 #include"Game.h"
 #include"Result.h"
 #include"Title.h"
+#include"GameOver.h"
 #include "../Player/Player.h"
 #include"../BackGround/BackGround.h"
 #include"../Bullet/BulletManager.h"
 #include"../Enemy/EnemyManager.h"
 #include"../GameSystem/Text/Text.h"
-
+#include"../Effect/EffectManager.h"
 
 enum SceneList
 {
 	Title,
 	Game,
-	Result
+	Result,
+	GameOver
 };
 
 enum WaveList
@@ -34,6 +36,7 @@ public:
 	void Update();
 	void Draw();
 
+	void Release();
 	void SetNowScene(SceneList now);
 
 	WaveList	GetNowWave() { return NowWave; }
@@ -47,6 +50,7 @@ private:
 	C_Title title;
 	C_Result result;
 	C_Text text;
+	C_GameOver gameOver;
 private:
 
 	C_SceneManager() { 

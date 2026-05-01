@@ -12,4 +12,5 @@ struct S_player
 	Math::Vector2 Move;
 	Math::Color Color;
 	int Hp;
+	int Speed;
 };

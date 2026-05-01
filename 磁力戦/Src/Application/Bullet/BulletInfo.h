@@ -9,4 +9,5 @@ struct S_Bullet
 	Math::Vector2 Pos;
 	Math::Vector2 Move;
 	int Radius;
+	int AnimCnt;
 };

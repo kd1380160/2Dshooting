@@ -4,7 +4,11 @@ struct S_Enemy
 {
 	KdTexture* Tex;
 	KdTexture* BreakTex;
+	KdTexture* EngineTex;
+	KdTexture* LockOnTex;
 	Math::Matrix Mat;
+	Math::Matrix EngineMat;
+	Math::Matrix LockOnMat;
 	Math::Matrix Trans;
 	Math::Matrix Scale;
 	Math::Matrix Rot;
@@ -15,4 +19,5 @@ struct S_Enemy
 	int Shield;
 	bool isFinishAnim;
 	int animCnt;
+	int engineAnimCnt;
 };

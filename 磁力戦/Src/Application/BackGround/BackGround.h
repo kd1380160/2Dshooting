@@ -12,12 +12,16 @@ public:
 private:
 
 	KdTexture backgroundTex;
+	
 	Math::Vector2 backgroundPos[2];
 	Math::Matrix backgroundMat[2];
 
 private:
 
-	C_BackGround() { backgroundTex.Load("Assets/Image/BackGround/BackGround.png"); }
+	C_BackGround() { 
+		backgroundTex.Load("Assets/Image/BackGround/BackGround.png");
+		
+	}
 
 public:
 	static C_BackGround& GetInstance()

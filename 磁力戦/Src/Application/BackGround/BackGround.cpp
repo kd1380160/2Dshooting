@@ -1,4 +1,5 @@
 #include "BackGround.h"
+#include "../Scene/SceneManager.h"
 
 void C_BackGround::Init()
 {
@@ -21,14 +22,19 @@ void C_BackGround::Update()
 
 void C_BackGround::Draw()
 {
+	
+
 	SHADER.m_spriteShader.SetMatrix(backgroundMat[0]);
 	SHADER.m_spriteShader.DrawTex(&backgroundTex, Math::Rectangle{ 0,0,1280,720 });
 
 	SHADER.m_spriteShader.SetMatrix(backgroundMat[1]);
 	SHADER.m_spriteShader.DrawTex(&backgroundTex, Math::Rectangle{ 0,0,1280,720 });
+
+	
 }
 
 void C_BackGround::Release()
 {
 	backgroundTex.Release();
+	
 }

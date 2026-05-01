@@ -166,6 +166,10 @@
     <ClInclude Include="Src\Application\Enemy\Generator.h" />
     <ClInclude Include="Src\Application\Bullet\BossBullet2.h" />
     <ClInclude Include="Src\Application\GameSystem\Text\Text.h" />
+    <ClInclude Include="Src\Application\Effect\BulletExplosion.h" />
+    <ClInclude Include="Src\Application\Effect\EffectManager.h" />
+    <ClInclude Include="Src\Application\Scene\GameOver.h" />
+    <ClInclude Include="Src\Application\UI\UI.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Pch.cpp">
@@ -255,6 +259,10 @@
     <ClCompile Include="Src\Application\Enemy\Generator.cpp" />
     <ClCompile Include="Src\Application\Bullet\BossBullet2.cpp" />
     <ClCompile Include="Src\Application\GameSystem\Text\Text.cpp" />
+    <ClCompile Include="Src\Application\Effect\BulletExplosion.cpp" />
+    <ClCompile Include="Src\Application\Effect\EffectManager.cpp" />
+    <ClCompile Include="Src\Application\Scene\GameOver.cpp" />
+    <ClCompile Include="Src\Application\UI\UI.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="説明.txt" />
