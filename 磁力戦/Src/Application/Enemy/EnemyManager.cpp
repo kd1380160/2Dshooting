@@ -52,6 +52,8 @@ void C_EnemyManager::Init()
 	isBoss = false;
 	isCallBoss = false;
 	isInterval = false;
+	isTutorialEnemySpawn = false;
+	isTutorialEnemyDead = false;
 	enemyKillCnt = 0;
 	returnPosCnt = 0;
 	SpawnCnt = 0;
@@ -109,511 +111,538 @@ void C_EnemyManager::Init()
 
 void C_EnemyManager::Update()
 {
-	//ボス戦へのデバッグキー
-	if (GetAsyncKeyState(VK_F1) & 0x8000)
+	if (SCENE_MGR.GetNowScene() == Game)
 	{
-		for (int i = 0;i < ENEMY4_MAX;i++)
+		//ボス戦へのデバッグキー
+		if (GetAsyncKeyState(VK_F1) & 0x8000)
 		{
-			if (enemy4[i] != nullptr)
+			for (int i = 0;i < ENEMY4_MAX;i++)
 			{
-				delete enemy4[i];
-				enemy4[i] = nullptr;
-			}
-		}
-
-		for (int i = 0;i < ENEMY2_MAX;i++)
-		{
-			if (enemy2[i] != nullptr)
-			{
-				delete enemy2[i];
-				enemy2[i] = nullptr;
-			}
-		}
-
-		SCENE_MGR.SetNowWave(Boss);
-
-		if (boss == nullptr)
-		{
-			boss = new C_Boss(&bossTex, &bossShieldTex, &bossBreakTex, &lockOnTex);
-		}
-		for (int i = 0;i < GENERATOR_MAX;i++)
-		{
-			if (generator[i] == nullptr)
-			{
-				generator[i] = new C_Generator(&generatorTex,&lockOnTex, i);
-			}
-		}
-	}
-
-	SpawnCnt++;
-
-	WaveInterval();
-
-	switch (SCENE_MGR.GetNowWave())
-	{
-	case Wave1:
-
-		if (enemyKillCnt < 10)
-		{
-			if (SpawnCnt >= 20)
-			{
-				//敵1の生成
-				for (int i = 0;i < ENEMY1_MAX;i++)
+				if (enemy4[i] != nullptr)
 				{
-					if (enemy1[i] == nullptr)
-					{
-						SpawnCnt = 0;
-						enemy1[i] = new C_Enemy1(&enemy1Tex, &enemy1BreakTex, &enemy1EngineTex,&lockOnTex, i,WaveList::Wave1,setCnt);
-						break;
-					}
+					delete enemy4[i];
+					enemy4[i] = nullptr;
 				}
 			}
-		}
-		else
-		{
-			//敵1が全滅したら次のウェーブへ
-			for (int i = 0;i < ENEMY1_MAX;i++)
-			{
-				if (enemy1[i] != nullptr)break;
 
-				if (i == ENEMY1_MAX - 1)
-				{
-					isInterval = true;
-				}
-			}
-		}
-
-		for (int i = 0;i < ENEMY1_MAX;i++)
-		{
-			//敵1の更新
-			if (enemy1[i] != nullptr)
-			{
-				enemy1[i]->Update(SCENE.GetPlayer()->GetPlayerPos());
-				if (enemy1[i]->GetFinishAnim())
-				{
-					delete enemy1[i];
-					enemy1[i] = nullptr;
-					enemyKillCnt++;
-				}
-			}
-		}
-
-		if (GetAsyncKeyState(VK_LBUTTON) & 0x8000)
-		{
-			if (!isClick)
-			{
-				isClick = true;
-				for (int i = 0, j = 0;i < LOCKON_ENEMY_MAX;i++)
-				{
-					LockOnEnemyPos[i] = { 0,-500 };
-					if (enemy1[i] != nullptr)
-					{
-						if (enemy1[i]->GetIsLockOn())
-						{
-							LockOnEnemyPos[j] = enemy1[i]->GetPos();
-							j++;
-						}
-					}
-				}
-			}
-		}
-		else
-		{
-			isClick = false;
-		}
-		break;
-	case Wave2:
-
-		if (enemyKillCnt < 10)
-		{
-			if (SpawnCnt >= 20)
-			{
-				//敵2の生成
-				for (int i = 0;i < ENEMY2_MAX;i++)
-				{
-					if (enemy2[i] == nullptr)
-					{
-						SpawnCnt = 0;
-						enemy2[i] = new C_Enemy2(&enemy2Tex, &enemy2BreakTex, &enemy2EngineTex,&lockOnTex, i);
-						break;
-					}
-				}
-			}
-		}
-		else
-		{
-			//敵2が全滅したら次のウェーブへ
 			for (int i = 0;i < ENEMY2_MAX;i++)
 			{
-				if (enemy2[i] != nullptr)break;
-
-				if (i == ENEMY2_MAX - 1)
-				{
-					isInterval = true;
-				}
-			}
-		}
-
-		for (int i = 0;i < ENEMY2_MAX;i++)
-		{
-			if (enemy2[i] != nullptr)
-			{
-				enemy2[i]->Update(SCENE.GetPlayer()->GetPlayerPos());
-				if (enemy2[i]->GetFinishAnim())
+				if (enemy2[i] != nullptr)
 				{
 					delete enemy2[i];
 					enemy2[i] = nullptr;
-					enemyKillCnt++;
+				}
+			}
+
+			SCENE_MGR.SetNowWave(Boss);
+
+			if (boss == nullptr)
+			{
+				boss = new C_Boss(&bossTex, &bossShieldTex, &bossBreakTex, &lockOnTex, &bossEngineTex);
+			}
+			for (int i = 0;i < GENERATOR_MAX;i++)
+			{
+				if (generator[i] == nullptr)
+				{
+					generator[i] = new C_Generator(&generatorTex, &lockOnTex, i);
 				}
 			}
 		}
 
-		if (GetAsyncKeyState(VK_LBUTTON) & 0x8000)
+		SpawnCnt++;
+
+		WaveInterval();
+
+		switch (SCENE_MGR.GetNowWave())
 		{
-			if (!isClick)
+		case Wave1:
+
+			if (enemyKillCnt < 10)
 			{
-				isClick = true;
-				for (int i = 0, j = 0;i < LOCKON_ENEMY_MAX;i++)
-				{
-					LockOnEnemyPos[i] = { 0,-500 };
-					if (enemy2[i] != nullptr)
-					{
-						if (enemy2[i]->GetIsLockOn())
-						{
-							LockOnEnemyPos[j] = enemy2[i]->GetPos();
-							j++;
-						}
-					}
-				}
-			}
-		}
-		else
-		{
-			isClick = false;
-		}
-
-		break;
-	case Wave3:
-
-		if (setCnt == 1)
-		{
-			if (!spawnEnemy)
-			{
-				//敵3の生成
-				if (enemy3 == nullptr)
-				{
-					enemy3 = new C_Enemy3(&enemy3Tex, &enemy3BreakTex, &enemy3EngineTex, &lockOnTex);
-					
-				}
-
-				for (int i = 0;i < ENEMY1_MAX;i++)
+				if (SpawnCnt >= 20)
 				{
 					//敵1の生成
-					if (enemy1[i] == nullptr)
+					for (int i = 0;i < ENEMY1_MAX;i++)
 					{
-						enemy1[i] = new C_Enemy1(&enemy1Tex, &enemy1BreakTex, &enemy1EngineTex, &lockOnTex, i, WaveList::Wave3, setCnt);
-
-						//1セット目は2体だけ
-						if (setCnt == 1)
+						if (enemy1[i] == nullptr)
 						{
-							if (i == 1)break;
+							SpawnCnt = 0;
+							enemy1[i] = new C_Enemy1(&enemy1Tex, &enemy1BreakTex, &enemy1EngineTex, &lockOnTex, i, WaveList::Wave1, setCnt);
+							break;
 						}
 					}
 				}
-				spawnEnemy = true;
 			}
 			else
 			{
-				for (int i = 0;i < ENEMY1_MAX;++i)
-				{
-					if (enemy1[i] != nullptr)
-					{
-						break;
-					}
-
-					if (i == ENEMY1_MAX - 1)
-					{
-						if (enemy3 ==nullptr )
-						{
-							spawnEnemy = false;
-							setCnt = 2;
-						}
-					}
-				}
-			}
-
-		}
-		else if (setCnt == 2)
-		{
-			if (!spawnEnemy)
-			{
+				//敵1が全滅したら次のウェーブへ
 				for (int i = 0;i < ENEMY1_MAX;i++)
 				{
-					//敵1の生成
-					if (enemy1[i] == nullptr)
-					{
-						enemy1[i] = new C_Enemy1(&enemy1Tex, &enemy1BreakTex, &enemy1EngineTex, &lockOnTex, i, WaveList::Wave3, setCnt);
-
-						//2セット目は4体だけ
-						if (setCnt == 2)
-						{
-							if (i == 3)break;
-						}
-					}
-				}
-				spawnEnemy = true;
-			}
-			else
-			{
-				for (int i = 0;i < ENEMY1_MAX;++i)
-				{
-					if (enemy1[i] != nullptr)
-					{
-						break;
-					}
+					if (enemy1[i] != nullptr)break;
 
 					if (i == ENEMY1_MAX - 1)
 					{
-						spawnEnemy = false;
-						setCnt = 3;
-					}
-				}
-			}
-		}
-		else if (setCnt == 3)
-		{
-			if (!spawnEnemy)
-			{
-				//敵3の生成
-				if (enemy3 == nullptr)
-				{
-					enemy3 = new C_Enemy3(&enemy3Tex, &enemy3BreakTex, &enemy3EngineTex, &lockOnTex);
-				}
-
-				//3セット目はフルで出現
-				for (int i = 0;i < ENEMY1_MAX;i++)
-				{
-					//敵1の生成
-					if (enemy1[i] == nullptr)
-					{
-						enemy1[i] = new C_Enemy1(&enemy1Tex, &enemy1BreakTex, &enemy1EngineTex, &lockOnTex, i, WaveList::Wave3, setCnt);
-					}
-				}
-				spawnEnemy = true;
-			}
-			else
-			{
-				for (int i = 0;i < ENEMY1_MAX;++i)
-				{
-					if (enemy1[i] != nullptr)
-					{
-						break;
-					}
-
-					if (i == ENEMY1_MAX - 1)
-					{
-						spawnEnemy = false;
 						isInterval = true;
-						setCnt = 0;
 					}
 				}
 			}
-		}
 
-		for (int i = 0;i < ENEMY1_MAX;i++)
-		{
-			if (enemy1[i] != nullptr)
+			for (int i = 0;i < ENEMY1_MAX;i++)
 			{
-				enemy1[i]->Update(SCENE.GetPlayer()->GetPlayerPos());
-				if (enemy1[i]->GetFinishAnim())
+				//敵1の更新
+				if (enemy1[i] != nullptr)
 				{
-					delete enemy1[i];
-					enemy1[i] = nullptr;
-					enemyKillCnt++;
+					enemy1[i]->Update(SCENE.GetPlayer()->GetPlayerPos());
+					if (enemy1[i]->GetFinishAnim())
+					{
+						delete enemy1[i];
+						enemy1[i] = nullptr;
+						enemyKillCnt++;
+					}
 				}
 			}
-		}
 
-		if (enemy3 != nullptr)
-		{
-			enemy3->Update(SCENE.GetPlayer()->GetPlayerPos());
-			if (enemy3->GetFinishAnim())
+			if (GetAsyncKeyState(VK_LBUTTON) & 0x8000)
 			{
-				delete enemy3;
-				enemy3 = nullptr;
-				enemyKillCnt++;
-			}
-		}
-
-		if (GetAsyncKeyState(VK_LBUTTON) & 0x8000)
-		{
-			if (!isClick)
-			{
-				isClick = true;
-				for (int i = 0, j = 0;i < LOCKON_ENEMY_MAX;i++)
+				if (!isClick)
 				{
-					LockOnEnemyPos[i] = { 0,-500 };
-					if (i < ENEMY3_MAX)
+					isClick = true;
+					for (int i = 0, j = 0;i < LOCKON_ENEMY_MAX;i++)
 					{
-						if (enemy3 != nullptr)
+						LockOnEnemyPos[i] = { 0,-500 };
+						if (enemy1[i] != nullptr)
 						{
-							if (enemy3->GetIsLockOn())
+							if (enemy1[i]->GetIsLockOn())
 							{
-								LockOnEnemyPos[j] = enemy3->GetPos();
+								LockOnEnemyPos[j] = enemy1[i]->GetPos();
 								j++;
 							}
 						}
 					}
-					if(enemy1[i] != nullptr)
-					{
-						if (enemy1[i]->GetIsLockOn())
-						{
-							LockOnEnemyPos[j] = enemy1[i]->GetPos();
-							j++;
-						}
-					}
 				}
 			}
-		}
-		else
-		{
-			isClick = false;
-		}
-		break;
-	case Wave4:
-		if (enemyKillCnt < 10)
-		{
-			if (SpawnCnt >= 20)
+			else
 			{
-				for (int i = 0;i < ENEMY4_MAX;i++)
-				{
-					//敵4の生成
-					if (enemy4[i] == nullptr)
-					{
-						SpawnCnt = 0;
-						enemy4[i] = new C_Enemy4(&enemy4Tex, &enemy4BreakTex, &enemy4EngineTex, &lockOnTex);
-						break;
-					}
-				}
+				isClick = false;
+			}
+			break;
+		case Wave2:
 
-				for (int i = 0;i < ENEMY2_MAX;i++)
+			if (enemyKillCnt < 10)
+			{
+				if (SpawnCnt >= 20)
 				{
 					//敵2の生成
-					if (enemy2[i] == nullptr)
+					for (int i = 0;i < ENEMY2_MAX;i++)
 					{
-						SpawnCnt = 0;
-						enemy2[i] = new C_Enemy2(&enemy2Tex, &enemy2BreakTex, &enemy2EngineTex, &lockOnTex, i);
-						break;
+						if (enemy2[i] == nullptr)
+						{
+							SpawnCnt = 0;
+							enemy2[i] = new C_Enemy2(&enemy2Tex, &enemy2BreakTex, &enemy2EngineTex, &lockOnTex, i);
+							break;
+						}
 					}
 				}
 			}
-		}
-		else
-		{
+			else
+			{
+				//敵2が全滅したら次のウェーブへ
+				for (int i = 0;i < ENEMY2_MAX;i++)
+				{
+					if (enemy2[i] != nullptr)break;
+
+					if (i == ENEMY2_MAX - 1)
+					{
+						isInterval = true;
+					}
+				}
+			}
+
 			for (int i = 0;i < ENEMY2_MAX;i++)
 			{
-				if (enemy2[i] != nullptr)break;
-
-				if (i == ENEMY2_MAX - 1)
+				if (enemy2[i] != nullptr)
 				{
-					for (int j = 0;j < ENEMY4_MAX;j++)
+					enemy2[i]->Update(SCENE.GetPlayer()->GetPlayerPos());
+					if (enemy2[i]->GetFinishAnim())
 					{
-						if (enemy4[j] != nullptr)break;
-						if (j == ENEMY4_MAX - 1)
+						delete enemy2[i];
+						enemy2[i] = nullptr;
+						enemyKillCnt++;
+					}
+				}
+			}
+
+			if (GetAsyncKeyState(VK_LBUTTON) & 0x8000)
+			{
+				if (!isClick)
+				{
+					isClick = true;
+					for (int i = 0, j = 0;i < LOCKON_ENEMY_MAX;i++)
+					{
+						LockOnEnemyPos[i] = { 0,-500 };
+						if (enemy2[i] != nullptr)
 						{
+							if (enemy2[i]->GetIsLockOn())
+							{
+								LockOnEnemyPos[j] = enemy2[i]->GetPos();
+								j++;
+							}
+						}
+					}
+				}
+			}
+			else
+			{
+				isClick = false;
+			}
+
+			break;
+		case Wave3:
+
+			if (setCnt == 1)
+			{
+				if (!spawnEnemy)
+				{
+					//敵3の生成
+					if (enemy3 == nullptr)
+					{
+						enemy3 = new C_Enemy3(&enemy3Tex, &enemy3BreakTex, &enemy3EngineTex, &lockOnTex);
+
+					}
+
+					for (int i = 0;i < ENEMY1_MAX;i++)
+					{
+						//敵1の生成
+						if (enemy1[i] == nullptr)
+						{
+							enemy1[i] = new C_Enemy1(&enemy1Tex, &enemy1BreakTex, &enemy1EngineTex, &lockOnTex, i, WaveList::Wave3, setCnt);
+
+							//1セット目は2体だけ
+							if (setCnt == 1)
+							{
+								if (i == 1)break;
+							}
+						}
+					}
+					spawnEnemy = true;
+				}
+				else
+				{
+					for (int i = 0;i < ENEMY1_MAX;++i)
+					{
+						if (enemy1[i] != nullptr)
+						{
+							break;
+						}
+
+						if (i == ENEMY1_MAX - 1)
+						{
+							if (enemy3 == nullptr)
+							{
+								spawnEnemy = false;
+								setCnt = 2;
+							}
+						}
+					}
+				}
+
+			}
+			else if (setCnt == 2)
+			{
+				if (!spawnEnemy)
+				{
+					for (int i = 0;i < ENEMY1_MAX;i++)
+					{
+						//敵1の生成
+						if (enemy1[i] == nullptr)
+						{
+							enemy1[i] = new C_Enemy1(&enemy1Tex, &enemy1BreakTex, &enemy1EngineTex, &lockOnTex, i, WaveList::Wave3, setCnt);
+
+							//2セット目は4体だけ
+							if (setCnt == 2)
+							{
+								if (i == 3)break;
+							}
+						}
+					}
+					spawnEnemy = true;
+				}
+				else
+				{
+					for (int i = 0;i < ENEMY1_MAX;++i)
+					{
+						if (enemy1[i] != nullptr)
+						{
+							break;
+						}
+
+						if (i == ENEMY1_MAX - 1)
+						{
+							spawnEnemy = false;
+							setCnt = 3;
+						}
+					}
+				}
+			}
+			else if (setCnt == 3)
+			{
+				if (!spawnEnemy)
+				{
+					//敵3の生成
+					if (enemy3 == nullptr)
+					{
+						enemy3 = new C_Enemy3(&enemy3Tex, &enemy3BreakTex, &enemy3EngineTex, &lockOnTex);
+					}
+
+					//3セット目はフルで出現
+					for (int i = 0;i < ENEMY1_MAX;i++)
+					{
+						//敵1の生成
+						if (enemy1[i] == nullptr)
+						{
+							enemy1[i] = new C_Enemy1(&enemy1Tex, &enemy1BreakTex, &enemy1EngineTex, &lockOnTex, i, WaveList::Wave3, setCnt);
+						}
+					}
+					spawnEnemy = true;
+				}
+				else
+				{
+					for (int i = 0;i < ENEMY1_MAX;++i)
+					{
+						if (enemy1[i] != nullptr)
+						{
+							break;
+						}
+
+						if (i == ENEMY1_MAX - 1)
+						{
+							spawnEnemy = false;
 							isInterval = true;
+							setCnt = 0;
 						}
 					}
 				}
 			}
-		}
 
-		for (int i = 0;i < ENEMY2_MAX;i++)
-		{
-			if (enemy2[i] != nullptr)
+			for (int i = 0;i < ENEMY1_MAX;i++)
 			{
-				enemy2[i]->Update(SCENE.GetPlayer()->GetPlayerPos());
-				if (enemy2[i]->GetFinishAnim())
+				if (enemy1[i] != nullptr)
 				{
-					delete enemy2[i];
-					enemy2[i] = nullptr;
+					enemy1[i]->Update(SCENE.GetPlayer()->GetPlayerPos());
+					if (enemy1[i]->GetFinishAnim())
+					{
+						delete enemy1[i];
+						enemy1[i] = nullptr;
+						enemyKillCnt++;
+					}
+				}
+			}
+
+			if (enemy3 != nullptr)
+			{
+				enemy3->Update(SCENE.GetPlayer()->GetPlayerPos());
+				if (enemy3->GetFinishAnim())
+				{
+					delete enemy3;
+					enemy3 = nullptr;
 					enemyKillCnt++;
 				}
 			}
-		}
 
-		for (int i = 0;i < ENEMY4_MAX;i++)
-		{
-			if (enemy4[i] != nullptr)
+			if (GetAsyncKeyState(VK_LBUTTON) & 0x8000)
 			{
-				enemy4[i]->Update(SCENE.GetPlayer()->GetPlayerPos());
-				if (enemy4[i]->GetFinishAnim())
+				if (!isClick)
 				{
-					delete enemy4[i];
-					enemy4[i] = nullptr;
-					enemyKillCnt++;
-				}
-			}
-		}
-		if (GetAsyncKeyState(VK_LBUTTON) & 0x8000)
-		{
-			if (!isClick)
-			{
-				isClick = true;
-				int j = 0;
-				for (int i = 0;i < LOCKON_ENEMY_MAX;i++)
-				{
-					LockOnEnemyPos[i] = { 0,-500 };
-					if (enemy2[i] != nullptr)
+					isClick = true;
+					for (int i = 0, j = 0;i < LOCKON_ENEMY_MAX;i++)
 					{
-						if (enemy2[i]->GetIsLockOn())
+						LockOnEnemyPos[i] = { 0,-500 };
+						if (i < ENEMY3_MAX)
 						{
-							LockOnEnemyPos[j] = enemy2[i]->GetPos();
-							j++;
+							if (enemy3 != nullptr)
+							{
+								if (enemy3->GetIsLockOn())
+								{
+									LockOnEnemyPos[j] = enemy3->GetPos();
+									j++;
+								}
+							}
 						}
-					}
-					if (enemy4[i] != nullptr)
-					{
-						if (enemy4[i]->GetIsLockOn())
+						if (enemy1[i] != nullptr)
 						{
-							LockOnEnemyPos[j] = enemy4[i]->GetPos();
-							j++;
+							if (enemy1[i]->GetIsLockOn())
+							{
+								LockOnEnemyPos[j] = enemy1[i]->GetPos();
+								j++;
+							}
 						}
 					}
 				}
 			}
-		}
-		else
-		{
-			isClick = false;
-		}
-		break;
-	case Boss:
-		for (int i = 0;i < GENERATOR_MAX;i++)
-		{
-			if (generator[i] != nullptr)
+			else
 			{
-				generator[i]->Update();
-				if (generator[i]->GetHp() <= 0)
+				isClick = false;
+			}
+			break;
+		case Wave4:
+			if (enemyKillCnt < 10)
+			{
+				if (SpawnCnt >= 20)
 				{
-					delete generator[i];
-					generator[i] = nullptr;
+					for (int i = 0;i < ENEMY4_MAX;i++)
+					{
+						//敵4の生成
+						if (enemy4[i] == nullptr)
+						{
+							SpawnCnt = 0;
+							enemy4[i] = new C_Enemy4(&enemy4Tex, &enemy4BreakTex, &enemy4EngineTex, &lockOnTex);
+							break;
+						}
+					}
+
+					for (int i = 0;i < ENEMY2_MAX;i++)
+					{
+						//敵2の生成
+						if (enemy2[i] == nullptr)
+						{
+							SpawnCnt = 0;
+							enemy2[i] = new C_Enemy2(&enemy2Tex, &enemy2BreakTex, &enemy2EngineTex, &lockOnTex, i);
+							break;
+						}
+					}
 				}
 			}
-		}
-
-		if (boss != nullptr)
-		{
-			boss->Update(GetGeneratorHp());
-			if (boss->GetIsFinishAnim()==true)
+			else
 			{
-				delete boss;
-				boss = nullptr;
-				//isInterval = true;
+				for (int i = 0;i < ENEMY2_MAX;i++)
+				{
+					if (enemy2[i] != nullptr)break;
+
+					if (i == ENEMY2_MAX - 1)
+					{
+						for (int j = 0;j < ENEMY4_MAX;j++)
+						{
+							if (enemy4[j] != nullptr)break;
+							if (j == ENEMY4_MAX - 1)
+							{
+								isInterval = true;
+							}
+						}
+					}
+				}
 			}
+
+			for (int i = 0;i < ENEMY2_MAX;i++)
+			{
+				if (enemy2[i] != nullptr)
+				{
+					enemy2[i]->Update(SCENE.GetPlayer()->GetPlayerPos());
+					if (enemy2[i]->GetFinishAnim())
+					{
+						delete enemy2[i];
+						enemy2[i] = nullptr;
+						enemyKillCnt++;
+					}
+				}
+			}
+
+			for (int i = 0;i < ENEMY4_MAX;i++)
+			{
+				if (enemy4[i] != nullptr)
+				{
+					enemy4[i]->Update(SCENE.GetPlayer()->GetPlayerPos());
+					if (enemy4[i]->GetFinishAnim())
+					{
+						delete enemy4[i];
+						enemy4[i] = nullptr;
+						enemyKillCnt++;
+					}
+				}
+			}
+			if (GetAsyncKeyState(VK_LBUTTON) & 0x8000)
+			{
+				if (!isClick)
+				{
+					isClick = true;
+					int j = 0;
+					for (int i = 0;i < LOCKON_ENEMY_MAX;i++)
+					{
+						LockOnEnemyPos[i] = { 0,-500 };
+						if (enemy2[i] != nullptr)
+						{
+							if (enemy2[i]->GetIsLockOn())
+							{
+								LockOnEnemyPos[j] = enemy2[i]->GetPos();
+								j++;
+							}
+						}
+						if (enemy4[i] != nullptr)
+						{
+							if (enemy4[i]->GetIsLockOn())
+							{
+								LockOnEnemyPos[j] = enemy4[i]->GetPos();
+								j++;
+							}
+						}
+					}
+				}
+			}
+			else
+			{
+				isClick = false;
+			}
+			break;
+		case Boss:
+			for (int i = 0;i < GENERATOR_MAX;i++)
+			{
+				if (generator[i] != nullptr)
+				{
+					generator[i]->Update();
+					if (generator[i]->GetHp() <= 0)
+					{
+						delete generator[i];
+						generator[i] = nullptr;
+					}
+				}
+			}
+
+			if (boss != nullptr)
+			{
+				boss->Update(GetGeneratorHp());
+				if (boss->GetIsFinishAnim() == true)
+				{
+					delete boss;
+					boss = nullptr;
+					//isInterval = true;
+				}
+			}
+			break;
 		}
-		break;
 	}
+	else if (SCENE_MGR.GetNowScene() == Tutorial)
+	{
+		if (!isTutorialEnemySpawn)
+		{
+			if (enemy1[0] == nullptr)
+			{
+				enemy1[0] = new C_Enemy1(&enemy1Tex, &enemy1BreakTex, &enemy1EngineTex, &lockOnTex,true);
+				isTutorialEnemySpawn = true;
+			}
+		}
+
+		if (enemy1[0] != nullptr)
+		{
+			enemy1[0]->Update(SCENE.GetPlayer()->GetPlayerPos());
+			if (enemy1[0]->GetFinishAnim())
+			{
+				delete enemy1[0];
+				enemy1[0] = nullptr;
+				isTutorialEnemyDead = true;
+			}
+		}
+		
+	}
+
 }
 void C_EnemyManager::Release()
 {
@@ -684,6 +713,7 @@ void C_EnemyManager::Release()
 	bossTex.Release();
 	bossBreakTex.Release();
 	bossShieldTex.Release();
+	bossEngineTex.Release();
 	lockOnTex.Release();
 }
 
@@ -713,7 +743,7 @@ void C_EnemyManager::WaveInterval()
 
 				if (boss == nullptr)
 				{
-					boss = new C_Boss(&bossTex, &bossShieldTex, &bossBreakTex,&lockOnTex);
+					boss = new C_Boss(&bossTex, &bossShieldTex, &bossBreakTex,&lockOnTex,&bossEngineTex);
 				}
 				for (int i = 0;i < GENERATOR_MAX;i++)
 				{
@@ -1258,6 +1288,29 @@ bool C_EnemyManager::GetIsBossDead()
 		}
 	}
 	return isBoss;
+}
+
+bool C_EnemyManager::GetIsEnemy1Lockon()
+{
+	if (SCENE_MGR.GetNowScene() == Tutorial)
+	{
+		if (enemy1[0] != nullptr)
+		{
+			return enemy1[0]->GetIsLockOn();
+		}
+	}
+	
+	return false;
+}
+
+bool C_EnemyManager::GetIsEnemy1Dead()const 
+{
+	if (SCENE_MGR.GetNowScene() == Tutorial)
+	{
+		return isTutorialEnemyDead;
+	}
+
+	return false;
 }
 
 

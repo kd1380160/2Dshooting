@@ -269,20 +269,26 @@ void C_BulletManager::Update()
 		//弾が存在する場合のみ更新
 		if (magneticBullets[i] != nullptr)
 		{
-			//磁力弾阻害が入っているかどうか
-			if (!isJamming) //磁力弾阻害が入っていない場合（敵3の弾が存在していない）
+			if (SCENE_MGR.GetNowScene() == Game)
 			{
-				if (magneticBullets[i]->GetIsShotFlg())
+				//磁力弾阻害が入っているかどうか
+				if (!isJamming) //磁力弾阻害が入っていない場合（敵3の弾が存在していない）
 				{
-					TrackingUpdate(i);
+					if (magneticBullets[i]->GetIsShotFlg())
+					{
+						TrackingUpdate(i);
+					}
+					magneticBullets[i]->Update(SCENE.GetPlayer()->GetPlayerPos(), { 100,100 }, 5);
 				}
+				else //磁力弾阻害が入っている場合（敵3が生存）
+				{
+					magneticBullets[i]->Update(SCENE.GetPlayer()->GetPlayerPos(), { 100,100 }, 1);
+				}
+			}
+			else if (SCENE_MGR.GetNowScene() == Tutorial)
+			{
 				magneticBullets[i]->Update(SCENE.GetPlayer()->GetPlayerPos(), { 100,100 }, 5);
 			}
-			else //磁力弾阻害が入っている場合（敵3が生存）
-			{
-				magneticBullets[i]->Update(SCENE.GetPlayer()->GetPlayerPos(), { 100,100 }, 1);
-			}
-
 			
 
 			//画面外に出た弾は消去
@@ -569,6 +575,17 @@ void C_BulletManager::ShotMagBullet()
 	}
 }
 
+void C_BulletManager::ShotMagBulletTutorial()
+{
+	for (int i = 0;i < MAGNETIC_BULLET_MAX;i++)
+	{
+		if (magneticBullets[i] != nullptr)
+		{
+			magneticBullets[i]->Shot();
+		}
+	}
+}
+
 bool  C_BulletManager::EnemyHitCheck(Math::Vector2 pos, int radius, bool shieldhit)
 {
 	//通常弾との当たり判定
@@ -830,4 +847,18 @@ float C_BulletManager::GetAngleDeg(float srcX, float srcY, float destX, float de
 	}
 
 	return deg;
+}
+
+int C_BulletManager::GetMagBulletHaveAmount()
+{
+	int cnt=0;
+	for (int i = 0;i < MAGNETIC_BULLET_MAX;++i)
+	{
+		if (magneticBullets[i] != nullptr)
+		{
+			cnt++;
+		}
+	}
+
+	return cnt;
 }

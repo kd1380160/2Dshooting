@@ -4,7 +4,7 @@
 class C_Boss : public C_EnemyBase
 {
 public:
-	C_Boss(KdTexture* tex, KdTexture* shieldTex, KdTexture* breakTex, KdTexture* LockOnTex);
+	C_Boss(KdTexture* tex, KdTexture* shieldTex, KdTexture* breakTex, KdTexture* LockOnTex,KdTexture* engineTex);
 
 	void Init();
 	void Update(int generatorHp);
@@ -42,6 +42,7 @@ private:
 	int shotToPlayerCnt;
 	int shieldCutoutPos;
 	int canFinisher;
+	int attackAnimCnt;
 	bool isShield;
 	bool isMove;
 	bool isDead;

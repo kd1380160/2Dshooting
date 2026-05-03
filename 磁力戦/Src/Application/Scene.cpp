@@ -20,6 +20,9 @@ void Scene::Draw2D()
 	sprintf_s(str, sizeof(str),"敵を倒した数: %d", ENEMY_MGR.GetEnemyKillCnt());
 	//SHADER.m_spriteShader.DrawString(-600, 300, str, Math::Vector4{ 1,1,1,1 });
 
+	sprintf_s(str, sizeof(str), "クリアタイム: %d", SCENE_MGR.GePlayTime());
+	//SHADER.m_spriteShader.DrawString(-600, 300, str, Math::Vector4{ 1,1,1,1 });
+
 	sprintf_s(str, sizeof(str), "今のWave: %d", SCENE_MGR.GetNowWave()+1);
 	//SHADER.m_spriteShader.DrawString(-600, 250, str, Math::Vector4{1,1,1,1});
 
@@ -54,6 +57,7 @@ void Scene::Update()
 
 void Scene::Init()
 {
+	ShowCursor(false);
 	srand(timeGetTime());
 	mouse = { 0,0 };
 	clickPos = { 0,0 };

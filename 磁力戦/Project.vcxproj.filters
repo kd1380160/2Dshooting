@@ -170,6 +170,8 @@
     <ClInclude Include="Src\Application\Effect\EffectManager.h" />
     <ClInclude Include="Src\Application\Scene\GameOver.h" />
     <ClInclude Include="Src\Application\UI\UI.h" />
+    <ClInclude Include="Src\Application\Scene\Tutorial.h" />
+    <ClInclude Include="Src\Application\GameSystem\Cursor\Cursor.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Pch.cpp">
@@ -263,6 +265,8 @@
     <ClCompile Include="Src\Application\Effect\EffectManager.cpp" />
     <ClCompile Include="Src\Application\Scene\GameOver.cpp" />
     <ClCompile Include="Src\Application\UI\UI.cpp" />
+    <ClCompile Include="Src\Application\Scene\Tutorial.cpp" />
+    <ClCompile Include="Src\Application\GameSystem\Cursor\Cursor.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="説明.txt" />

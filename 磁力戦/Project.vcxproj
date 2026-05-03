@@ -181,6 +181,7 @@
     <ClInclude Include="Src\Application\Bullet\NormalBullet.h" />
     <ClInclude Include="Src\Application\Enemy\EnemyManager.h" />
     <ClInclude Include="Src\Application\Enemy\Generator.h" />
+    <ClInclude Include="Src\Application\GameSystem\Cursor\Cursor.h" />
     <ClInclude Include="Src\Application\GameSystem\Text\Text.h" />
     <ClInclude Include="Src\Application\Player\Player.h" />
     <ClInclude Include="Src\Application\Player\PlayerInfo.h" />
@@ -192,6 +193,7 @@
     <ClInclude Include="Src\Application\Scene\SceneBase.h" />
     <ClInclude Include="Src\Application\Scene\SceneManager.h" />
     <ClInclude Include="Src\Application\Scene\Title.h" />
+    <ClInclude Include="Src\Application\Scene\Tutorial.h" />
     <ClInclude Include="Src\Application\UI\UI.h" />
     <ClInclude Include="Src\System\Audio\KdAudio.h" />
     <ClInclude Include="src\System\Direct3D\KdDirect3D.h" />
@@ -236,6 +238,7 @@
     <ClCompile Include="Src\Application\Bullet\NormalBullet.cpp" />
     <ClCompile Include="Src\Application\Enemy\EnemyManager.cpp" />
     <ClCompile Include="Src\Application\Enemy\Generator.cpp" />
+    <ClCompile Include="Src\Application\GameSystem\Cursor\Cursor.cpp" />
     <ClCompile Include="Src\Application\GameSystem\Text\Text.cpp" />
     <ClCompile Include="Src\Application\Player\Player.cpp" />
     <ClCompile Include="Src\Application\Scene.cpp" />
@@ -245,6 +248,7 @@
     <ClCompile Include="Src\Application\Scene\Result.cpp" />
     <ClCompile Include="Src\Application\Scene\SceneManager.cpp" />
     <ClCompile Include="Src\Application\Scene\Title.cpp" />
+    <ClCompile Include="Src\Application\Scene\Tutorial.cpp" />
     <ClCompile Include="Src\Application\UI\UI.cpp" />
     <ClCompile Include="Src\System\Audio\KdAudio.cpp" />
     <ClCompile Include="src\System\Direct3D\KdDirect3D.cpp" />

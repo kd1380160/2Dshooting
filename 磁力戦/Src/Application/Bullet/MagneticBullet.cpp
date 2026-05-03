@@ -31,11 +31,13 @@ void C_MagneticBullet::Update(Math::Vector2 playerpos, Math::Vector2 enemypos,in
 
 		magDeg += degreeIncrease;
 
-		float a = cos(magDeg * 3.14f / 180) * 100;
-		float b = sin(magDeg * 3.14f / 180) * 100;
+		moveAmount.x = cos(magDeg * 3.14f / 180) * 100;
+		moveAmount.y = sin(magDeg * 3.14f / 180) * 100;
 
-		bullet.Pos.x = SCENE.GetPlayer()->GetPlayerPos().x + a;
-		bullet.Pos.y = SCENE.GetPlayer()->GetPlayerPos().y + b;
+
+
+		bullet.Pos.x = SCENE.GetPlayer()->GetPlayerPos().x + moveAmount.x;
+		bullet.Pos.y = SCENE.GetPlayer()->GetPlayerPos().y + moveAmount.y;
 	}
 	else //ï˙ÇΩÇÍÇΩå„
 	{
@@ -51,17 +53,12 @@ void C_MagneticBullet::Update(Math::Vector2 playerpos, Math::Vector2 enemypos,in
 		if(isHoming)
 		{
 			degree = GetAngleDeg(bullet.Pos.x, bullet.Pos.y, destinationPos.x, destinationPos.y);
-
 			moveAmount.x = cos(DirectX::XMConvertToRadians(degree)) * SPEED;
 			moveAmount.y = sin(DirectX::XMConvertToRadians(degree)) * SPEED;
 		}
-	
-
 		bullet.Pos += moveAmount;
 	}
 	
-	
-
 	//çsóÒçÏê¨
 	bullet.Trans = Math::Matrix::CreateTranslation(bullet.Pos.x, bullet.Pos.y, 0);
 	bullet.Scale = Math::Matrix::CreateScale(1, 1, 1);

@@ -38,7 +38,12 @@ public:
 	bool PlayerEnemyHitCheck(Math::Vector2 pos, int radius);	//敵と自機の当たり判定チェック
 	bool GetIsBossSecond();										//ボスが第二形態に移行したかどうかを返す
 	bool GetIsBossDead();										//ボスを倒したかどうかを返す
+	bool GetIsEnemy1Lockon();
+	bool GetIsEnemy1Dead()const;
 	Math::Vector2 GetLockOnEnemyPos(int type, int number);
+
+	KdTexture* GetEnemy1Tex() { return &enemy1Tex; }
+	KdTexture* GetLockOnTex() { return &lockOnTex; }
 private:
 
 	bool isClick;
@@ -95,6 +100,7 @@ private:
 	KdTexture bossTex;
 	KdTexture bossShieldTex;
 	KdTexture bossBreakTex;
+	KdTexture bossEngineTex;
 	C_Boss* boss;
 
 	KdTexture lockOnTex;
@@ -102,7 +108,8 @@ private:
 	bool isCallBoss;
 	bool isBoss;
 	bool isInterval;
-
+	bool isTutorialEnemySpawn;
+	bool isTutorialEnemyDead;
 
 	int SpawnCnt;
 	int intervalCnt;
@@ -127,6 +134,7 @@ private:
 		bossTex.Load			("Assets/Image/Enemy/Boss.png");
 		bossShieldTex.Load		("Assets/Image/Enemy/BossShield.png");
 		bossBreakTex.Load		("Assets/Image/Enemy/BossBreak.png");
+		bossEngineTex.Load		("Assets/Image/Enemy/BossEngine.png");
 		lockOnTex.Load			("Assets/Image/Reticle/LockOn.png");
 	}
 

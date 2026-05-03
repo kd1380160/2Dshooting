@@ -2,17 +2,19 @@
 #include"../Bullet/BulletManager.h"
 #include"../Scene.h"
 
-C_Boss::C_Boss(KdTexture* tex, KdTexture* shieldTex, KdTexture* breakTex, KdTexture* LockOnTex)
+C_Boss::C_Boss(KdTexture* tex, KdTexture* shieldTex, KdTexture* breakTex, KdTexture* LockOnTex, KdTexture* engineTex)
 {
 	boss.Tex = tex;
 	boss.BreakTex = breakTex;
 	boss.LockOnTex = LockOnTex;
+	boss.EngineTex = engineTex;
 	boss.Pos = { 0,400 };
 	boss.Move = { 0,-3 };
 	boss.HP = BOSS_HP_MAX;
-	boss.HP = 100;
+	//boss.HP = 1;
 	boss.Shield = 10;
 	boss.Radius = 64;
+	boss.engineAnimCnt = 0;
 	bossShieldTex = shieldTex;
 	isShield = true;
 	isMove = true;
@@ -34,6 +36,7 @@ C_Boss::C_Boss(KdTexture* tex, KdTexture* shieldTex, KdTexture* breakTex, KdText
 	bossLV1AngleAdd = 2;
 	phaseInterval = 0;
 	deadCnt = 0;
+	attackAnimCnt = 0;
 }
 
 
@@ -46,6 +49,12 @@ void C_Boss::Update(int generatorHp)
 {	
 	if (boss.HP > 0)
 	{
+		attackAnimCnt+=1;
+		if (attackAnimCnt >= 40)
+		{
+			attackAnimCnt = 0;
+		}
+	
 
 		if (boss.Pos.y < 250)
 		{
@@ -95,7 +104,10 @@ void C_Boss::Update(int generatorHp)
 		{
 			angle = 40;
 			bullet2angleAdd = 100;
+			attackAnimCnt += 3;
+		
 		}
+		
 
 		shieldCutoutPos = generatorHp / 5;
 		if (shieldCutoutPos >= 7)shieldCutoutPos = 7;
@@ -220,6 +232,7 @@ void C_Boss::Update(int generatorHp)
 	}
 	else //ボスのHPが0になったら
 	{
+		attackAnimCnt = 5 * 23;
 		BULLET_MGR.EnemyHitCheck(boss.Pos, boss.Radius, false);
 		deadCnt++;
 
@@ -247,9 +260,16 @@ void C_Boss::Update(int generatorHp)
 				{
 					isDead = true;
 					boss.animCnt = 8;
+					SCENE_MGR.StopTimeCnt();
 				}
 			}
 		}
+	}
+
+	boss.engineAnimCnt++;
+	if (boss.engineAnimCnt >= 21)
+	{
+		boss.engineAnimCnt = 0;
 	}
 
 	
@@ -281,6 +301,10 @@ void C_Boss::Update(int generatorHp)
 	bossShieldScaleMat = Math::Matrix::CreateScale(2.5f, 2.5f, 1);
 	bossShieldMat = bossShieldScaleMat *bossShieldRotateMat* boss.Trans;
 
+	boss.Scale = Math::Matrix::CreateScale(2.5f, -2.5f, 1);
+	boss.Trans = Math::Matrix::CreateTranslation(boss.Pos.x, boss.Pos.y, 0);
+	boss.EngineMat = boss.Scale * boss.Rot * boss.Trans;
+
 	if (!isDead)
 	{
 		//boss.Rot = Math::Matrix::CreateRotationZ(DirectX::XMConvertToRadians((bullet2angle + 90) / 2));
@@ -295,9 +319,14 @@ void C_Boss::Draw()
 	
 	if (!isDead)
 	{
+		
+
 		//ボス描画
 		SHADER.m_spriteShader.SetMatrix(boss.Mat);
-		SHADER.m_spriteShader.DrawTex(boss.Tex, Math::Rectangle{ 0,0,128,128 }, &color);	
+		SHADER.m_spriteShader.DrawTex(boss.Tex, Math::Rectangle{ 128*(attackAnimCnt/5),0,128,128}, &color);
+
+		SHADER.m_spriteShader.SetMatrix(boss.EngineMat);
+		SHADER.m_spriteShader.DrawTex(boss.EngineTex, Math::Rectangle{ 128 * (boss.engineAnimCnt / 3),0,128,128 });
 	}
 	else
 	{

@@ -38,7 +38,7 @@ private:
 	int animCnt;
 	int finishAnimCnt;
 
-	const int PLAYER_MAX_HP = 3;
+	const int PLAYER_MAX_HP = 4;
 	const int PLAYER_RADIUS = 24;
 	float playerAlpha;
 	bool isInvincible;

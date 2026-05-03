@@ -29,6 +29,7 @@ public:
 	void ShotBossBullet2(Math::Vector2 bossPos, Math::Vector2 playerPos);
 	void ShotBossBullet2(Math::Vector2 bossPos, int moveX, int moveY);
 	void ShotMagBullet();
+	void ShotMagBulletTutorial();
 
 	bool EnemyHitCheck(Math::Vector2 pos,int radius,bool shieldhit);
 	bool PlayerHitCHeck(Math::Vector2 pos, int radius);
@@ -39,6 +40,9 @@ public:
 	void Release();
 	void ClearAllBullet();
 	float GetAngleDeg(float srcX, float srcY, float destX, float destY);
+	KdTexture* GetMagBulletTex() { return &enemy1BulletTex; }
+	KdTexture* GetBossBulletTex() { return &bossBullet2Tex; }
+	int GetMagBulletHaveAmount();
 private:
 
 	//存在可能な磁力弾の最大数(50)

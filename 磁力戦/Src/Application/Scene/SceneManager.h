@@ -3,6 +3,8 @@
 #include"Result.h"
 #include"Title.h"
 #include"GameOver.h"
+#include"Tutorial.h"
+#include"../GameSystem/Cursor/Cursor.h"
 #include "../Player/Player.h"
 #include"../BackGround/BackGround.h"
 #include"../Bullet/BulletManager.h"
@@ -15,7 +17,8 @@ enum SceneList
 	Title,
 	Game,
 	Result,
-	GameOver
+	GameOver,
+	Tutorial
 };
 
 enum WaveList
@@ -39,9 +42,14 @@ public:
 	void Release();
 	void SetNowScene(SceneList now);
 
-	WaveList	GetNowWave() { return NowWave; }
-	SceneList	GetNowScene() { return NowScene; }
+	WaveList	GetNowWave()			 { return NowWave; }
+	SceneList	GetNowScene()			 { return NowScene; }
 	void		SetNowWave(WaveList now) { NowWave = now; }
+	bool		GetIsFinishPage2()		 { return tutorial.GetIsFinishPage2(); }
+
+	void StartTimeCnt() { isTime = true; }
+	void StopTimeCnt()	{ isTime = false;}
+	int GePlayTime()	{ return timeCnt/60; }
 private:
 
 	SceneList NowScene;
@@ -51,6 +59,12 @@ private:
 	C_Result result;
 	C_Text text;
 	C_GameOver gameOver;
+	C_Tutorial tutorial;
+	C_Cursor cursor;
+
+	int timeCnt=60*61;
+	bool isTime;
+
 private:
 
 	C_SceneManager() { 

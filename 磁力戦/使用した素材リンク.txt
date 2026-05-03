@@ -10,3 +10,6 @@ https://deep-fold.itch.io/space-background-generator
 https://prinbles.itch.io/legend-buttons
 https://reactorcore.itch.io/explosion-spriteanim-sheet-minipack
 https://fliflifly.itch.io/hearts-and-health-bar
+https://manaframe.itch.io/simple-2d-pixel-ui-stuff
+https://datagoblin.itch.io/monogram
+https://kenney-assets.itch.io/ui-pack

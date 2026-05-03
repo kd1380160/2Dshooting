@@ -11,7 +11,7 @@ C_Player::C_Player()
 	animCnt = 0;
 	player.Hp = PLAYER_MAX_HP;
 	isInvincible = false;
-	canStartGame = true;
+	canStartGame = false;
 	playerAlpha = 1.0f;
 	invincibleCnt = 0;
 	
@@ -113,6 +113,7 @@ void C_Player::Update()
 				ShotNormalBullet();
 			}
 		}
+		else if (SCENE_MGR.GetNowScene() == Tutorial){}
 		else
 		{
 			ShotNormalBullet();
@@ -125,6 +126,7 @@ void C_Player::Update()
 			player.Pos.y = -200;
 
 			canStartGame = true;
+			SCENE_MGR.StartTimeCnt();
 		}
 	}
 

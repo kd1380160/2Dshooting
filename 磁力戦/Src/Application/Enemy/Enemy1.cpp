@@ -39,9 +39,31 @@ C_Enemy1::C_Enemy1(KdTexture* tex,KdTexture* breakTex, KdTexture* enginetex, KdT
 	enemy.HP = ENEMY_HP_MAX;
 	isLockOn = false;
 	isHit = false;
+	isTutorial = false;
+	isAppear = false;
 	enemy.isFinishAnim = false;
 	enemy.animCnt = 0;
 	enemy.engineAnimCnt = 0;
+}
+
+C_Enemy1::C_Enemy1(KdTexture* tex, KdTexture* breakTex, KdTexture* enginetex, KdTexture* lockonTex, bool istutorial)
+{
+	enemy.Tex = tex;
+	enemy.BreakTex = breakTex;
+	enemy.EngineTex = enginetex;
+	enemy.LockOnTex = lockonTex;
+	isTutorial = istutorial;
+	enemy.Radius = ENEMY_RADIUS;
+	enemy.Pos = { 0,500 };
+	enemy.Move = { 0,-10 };
+	enemy.HP = ENEMY_HP_MAX;
+	isLockOn = false;
+	isHit = false;
+	enemy.isFinishAnim = false;
+	isAppear = false;
+	enemy.animCnt = 0;
+	enemy.engineAnimCnt = 0;
+	shotCnt = 0;
 }
 
 void C_Enemy1::Init()
@@ -50,84 +72,150 @@ void C_Enemy1::Init()
 
 void C_Enemy1::Update(Math::Vector2 playerpos)
 {
-	enemy.Pos += enemy.Move;
-	if (nowWave == Wave1)
+	if (!isTutorial)
 	{
-		if (enemy.Pos.y <= 200)enemy.Pos.y = 200;
-	}
-	else if (nowWave == Wave3)
-	{
-		if (enemy.Pos.y <= 150)enemy.Pos.y = 150;
-	}
-
-	LockOn();
-
-	shotRandCnt++;
-	if (shotRandCnt >= rand() % 16 + 30)
-	{
-		shotCnt++;
-		if (shotCnt == 10)
+		enemy.Pos += enemy.Move;
+		if (nowWave == Wave1)
 		{
-			//íeÇ™ñ≥ÇØÇÍÇŒê∂ê¨
-			BULLET_MGR.ShotEnemy1Bullet(enemy.Pos);
+			if (enemy.Pos.y <= 200)enemy.Pos.y = 200;
 		}
-		else if (shotCnt == 20)
+		else if (nowWave == Wave3)
 		{
-			//íeÇ™ñ≥ÇØÇÍÇŒê∂ê¨
-			BULLET_MGR.ShotEnemy1Bullet(enemy.Pos);
-		}
-		else if (shotCnt == 30)
-		{
-			BULLET_MGR.ShotBossBullet2(enemy.Pos, 0, -5);
-			shotRandCnt = 0;
-			shotCnt = 0;
+			if (enemy.Pos.y <= 150)enemy.Pos.y = 150;
 		}
 
+		LockOn();
 
-
-	}
-
-
-	if (BULLET_MGR.EnemyHitCheck(enemy.Pos, ENEMY_RADIUS, false))
-	{
-		enemy.HP--;
-		if (enemy.HP <= 0)
+		shotRandCnt++;
+		if (shotRandCnt >= rand() % 16 + 30)
 		{
-			enemy.HP = 0;
-			if (isHit == false)
+			shotCnt++;
+			if (shotCnt == 10)
 			{
-				isHit = true;
-				enemy.animCnt = 0;
+				//íeÇ™ñ≥ÇØÇÍÇŒê∂ê¨
+				BULLET_MGR.ShotEnemy1Bullet(enemy.Pos);
+			}
+			else if (shotCnt == 20)
+			{
+				//íeÇ™ñ≥ÇØÇÍÇŒê∂ê¨
+				BULLET_MGR.ShotEnemy1Bullet(enemy.Pos);
+			}
+			else if (shotCnt == 30)
+			{
+				BULLET_MGR.ShotBossBullet2(enemy.Pos, 0, -5);
+				shotRandCnt = 0;
+				shotCnt = 0;
 			}
 		}
-	}
 
-
-	enemy.engineAnimCnt++;
-	if (enemy.engineAnimCnt >= 21)
-	{
-		enemy.engineAnimCnt = 0;
-	}
-
-	enemy.animCnt++;
-	if (isHit)
-	{
-		if (enemy.animCnt >= 24)
+		if (BULLET_MGR.EnemyHitCheck(enemy.Pos, ENEMY_RADIUS, false))
 		{
-			enemy.animCnt = 24;
-			enemy.isFinishAnim = true;
+			enemy.HP--;
+			if (enemy.HP <= 0)
+			{
+				enemy.HP = 0;
+				if (isHit == false)
+				{
+					isHit = true;
+					enemy.animCnt = 0;
+				}
+			}
+		}
+
+
+		enemy.engineAnimCnt++;
+		if (enemy.engineAnimCnt >= 21)
+		{
+			enemy.engineAnimCnt = 0;
+		}
+
+		enemy.animCnt++;
+		if (isHit)
+		{
+			if (enemy.animCnt >= 24)
+			{
+				enemy.animCnt = 24;
+				enemy.isFinishAnim = true;
+			}
+		}
+
+		if (isLockOn)
+		{
+			LockOnAnimUpdate();
+		}
+		if (isFinishLockOnAnim)
+		{
+			lockOnBlinkingCnt++;
 		}
 	}
-
-	if (isLockOn)
+	else
 	{
-		LockOnAnimUpdate();
-	}
-	if (isFinishLockOnAnim)
-	{
-		lockOnBlinkingCnt++;
-	}
+		if (!isAppear)
+		{
+			enemy.Pos += enemy.Move;
+			if (enemy.Pos.y <= 200)
+			{
+				enemy.Pos.y = 200;
+				isAppear = true;
+			}
+		}
 
+		if (SCENE_MGR.GetIsFinishPage2())
+		{
+			LockOn();
+		}
+
+		if (isAppear)
+		{
+			shotCnt++;
+			if (shotCnt == 10)
+			{
+				//íeÇ™ñ≥ÇØÇÍÇŒê∂ê¨
+				BULLET_MGR.ShotEnemy1Bullet(enemy.Pos);
+				shotCnt = 0;
+			}
+		}
+
+		if (BULLET_MGR.EnemyHitCheck(enemy.Pos, ENEMY_RADIUS, false))
+		{
+			enemy.HP--;
+			if (enemy.HP <= 0)
+			{
+				enemy.HP = 0;
+				if (isHit == false)
+				{
+					isHit = true;
+					enemy.animCnt = 0;
+				}
+			}
+		}
+
+		enemy.engineAnimCnt++;
+		if (enemy.engineAnimCnt >= 21)
+		{
+			enemy.engineAnimCnt = 0;
+		}
+
+		enemy.animCnt++;
+		if (isHit)
+		{
+			if (enemy.animCnt >= 24)
+			{
+				enemy.animCnt = 24;
+				enemy.isFinishAnim = true;
+			}
+		}
+
+		if (isLockOn)
+		{
+			LockOnAnimUpdate();
+		}
+		if (isFinishLockOnAnim)
+		{
+			lockOnBlinkingCnt++;
+		}
+
+	}
 	enemy.Scale = Math::Matrix::CreateScale(2, -2, 1);
 	enemy.Trans = Math::Matrix::CreateTranslation(enemy.Pos.x, enemy.Pos.y, 0);
 	enemy.Mat = enemy.Scale * enemy.Trans;
@@ -143,9 +231,6 @@ void C_Enemy1::Update(Math::Vector2 playerpos)
 void C_Enemy1::Draw()
 {
 	Math::Color col = { 3,3,3,1 };
-
-
-	
 	if (isHit)
 	{
 		col = { 1,1,1,1 };
@@ -181,7 +266,6 @@ void C_Enemy1::Draw()
 		SHADER.m_spriteShader.SetMatrix(enemy.LockOnMat);
 		SHADER.m_spriteShader.DrawTex(enemy.LockOnTex, Math::Rectangle{ 0,0,17,17 },&col);
 	}
-
 }
 
 void C_Enemy1::LockOn()

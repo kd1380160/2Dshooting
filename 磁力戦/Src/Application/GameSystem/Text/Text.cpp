@@ -4,8 +4,7 @@
 C_Text::C_Text()
 {
 	shotTex.Load("Assets/Image/Game/Ute.png");
-	shotAlpha = 0.8f;
-	shotAlphaAdd = 0.02f;
+	
 }
 
 C_Text::~C_Text()
@@ -15,6 +14,8 @@ C_Text::~C_Text()
 
 void C_Text::Init()
 {
+	shotAlpha = 0.8f;
+	shotAlphaAdd = 0.02f;
 }
 
 void C_Text::Update()
@@ -37,11 +38,11 @@ void C_Text::Update()
 			}
 		}
 	}
-	Math::Matrix matScale, matTrans;
+	Math::Matrix scale, trans;
 
-	matScale = Math::Matrix::CreateScale(7, 7, 1);
-	matTrans = Math::Matrix::CreateTranslation(0, -100, 0);
-	shotMat = matScale * matTrans;
+	scale = Math::Matrix::CreateScale(7, 7, 1);
+	trans = Math::Matrix::CreateTranslation(0, -100, 0);
+	shotMat = scale * trans;
 }
 
 void C_Text::Draw()

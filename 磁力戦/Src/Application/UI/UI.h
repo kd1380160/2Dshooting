@@ -11,24 +11,40 @@ public:
 	void Update();
 	void Draw();
 
+	void ShakeEnergy();
 private:
 
-	static const int LIFE_MAX = 3;
+	static const int LIFE_MAX = 4;
 
 	bool isInvincible;
 
-	const float HEART_SIZE = 3.0f;
-	KdTexture heartTex;
-	Math::Matrix heartMat[LIFE_MAX];
-	Math::Vector2 heartPos[LIFE_MAX] = { {-50,-300},{0,-300},{50,-300} };
+	const float ENERGY_SIZE_X = 4.0f;
+	const float ENERGY_SIZE_Y = 7.0f;
+	KdTexture energyTex;
+	KdTexture redEnergyTex;
+	KdTexture redEnergyBlockTex;
+	Math::Matrix energyMat;
+	Math::Matrix redEnergyBlockMat;
+	Math::Vector2 energyPos = {0,-300};
+	Math::Vector2 redEnergyBlockPos = {94,-300};
+	Math::Color energyColor;
 	int life;
-	int heartAnimCnt[LIFE_MAX];
-	bool isDecreaseHeart[LIFE_MAX];
-	bool isFinishHeartAnim[LIFE_MAX];
+	float energyAlpha;
+	float redEnergyBlockAlpha;
+	bool isRedBlockDisappear;
 
-	KdTexture heartBackTex;
-	Math::Matrix heartBackMat[LIFE_MAX];
+	KdTexture SunTex;
+	Math::Matrix SunMat;
+	Math::Vector2 SunPos = { -95,-300 };
+	float sunAlpha;
+	float sunCnt;
 	
+	//揺らす用
+	int shakeLock;
+	bool isShake;
+	int shakeCnt;
+
+
 public:
 	static C_UI& GetInstance()
 	{

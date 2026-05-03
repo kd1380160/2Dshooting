@@ -24,7 +24,8 @@ void C_Title::Update()
 		if (!isClick)
 		{
 			isClick = true;
-			SCENE_MGR.SetNowScene(SceneList::Game);
+			SCENE_MGR.SetNowScene(SceneList::Tutorial);
+			//SCENE_MGR.SetNowScene(SceneList::Game);
 		}
 	}
 	else
