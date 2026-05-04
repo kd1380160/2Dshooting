@@ -111,7 +111,12 @@ void C_Tutorial::Update()
 		{
 			sceneChangeCnt++;
 
-			if (sceneChangeCnt >= 60)
+			if (sceneChangeCnt == 60)
+			{
+				SCENE_MGR.GetText()->ChangeWave(1);
+			}
+
+			if (SCENE_MGR.GetText()->GetIsFinishDirection())
 			{
 				SCENE_MGR.SetNowScene(Game);
 			}

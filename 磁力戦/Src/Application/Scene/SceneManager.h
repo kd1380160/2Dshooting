@@ -46,10 +46,11 @@ public:
 	SceneList	GetNowScene()			 { return NowScene; }
 	void		SetNowWave(WaveList now) { NowWave = now; }
 	bool		GetIsFinishPage2()		 { return tutorial.GetIsFinishPage2(); }
-
+	KdTexture* GetNumberTex()			 { return result.GetNumberTex(); }
 	void StartTimeCnt() { isTime = true; }
 	void StopTimeCnt()	{ isTime = false;}
 	int GePlayTime()	{ return timeCnt/60; }
+	C_Text* GetText()	{ return &text; }
 private:
 
 	SceneList NowScene;

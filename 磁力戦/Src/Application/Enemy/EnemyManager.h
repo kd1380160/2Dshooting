@@ -107,14 +107,14 @@ private:
 
 	bool isCallBoss;
 	bool isBoss;
-	bool isInterval;
+
+	bool isFinishWave;
 	bool isTutorialEnemySpawn;
 	bool isTutorialEnemyDead;
-
+	bool isStartChangeWave;
 	int SpawnCnt;
-	int intervalCnt;
-	static const int  INTERVAL = 120;
-
+	
+	
 private:
 
 	C_EnemyManager(){

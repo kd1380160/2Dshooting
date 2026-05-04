@@ -11,6 +11,7 @@ public:
 	void Update();
 	void Draw();
 
+	KdTexture* GetNumberTex() { return &numberTex; }
 private:
 
 	const float NUMBER_SIZE = 8.0f;

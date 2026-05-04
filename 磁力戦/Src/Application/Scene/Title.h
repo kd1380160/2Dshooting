@@ -22,6 +22,7 @@ private:
 	Math::Matrix titleMat;
 	Math::Matrix startMat;
 	
+	
 	float startTexAlpha;
 	float alphaAdd;
 };

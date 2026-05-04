@@ -20,7 +20,7 @@ void C_SceneManager::Init()
 		text.Init();
 		EFFECT_MGR.Init();
 		UI.Init();
-		NowWave = WaveList::Wave2;
+		NowWave = WaveList::Wave1;
 		
 		break;
 	case SceneList::Result:
@@ -61,11 +61,12 @@ void C_SceneManager::Update()
 
 		BACKGRND.Update();
 		SCENE.GetPlayer()->Update();
+		text.Update();
 		if (SCENE.GetPlayer()->GetCanStartGame())
 		{
 			ENEMY_MGR.Update();
 			BULLET_MGR.Update();
-			text.Update();
+			
 			EFFECT_MGR.Update();
 		}
 		UI.Update();
@@ -134,6 +135,7 @@ void C_SceneManager::Draw()
 		ENEMY_MGR.Draw();
 		EFFECT_MGR.Draw();
 		UI.Draw();
+		text.Draw();
 		tutorial.Draw();
 		break;
 	}
@@ -159,7 +161,7 @@ void C_SceneManager::SetNowScene(SceneList now)
 		text.Init();
 		EFFECT_MGR.Init();
 		UI.Init();
-		NowWave = WaveList::Wave4;
+		NowWave = WaveList::Wave1;
 	}
 	else
 	{
