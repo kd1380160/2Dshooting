@@ -20,7 +20,7 @@ C_Enemy4::C_Enemy4(KdTexture* tex, KdTexture* breaktex,KdTexture* enginetex, KdT
 		rotateAngle = -90;
 	}
 
-	enemy.HP = 1;
+	enemy.HP = 5;
 	enemy.Radius = ENEMY_RADIUS;
 	enemy.Pos.y = rand() % 301 - 200;
 	isLockOn = false;
@@ -54,20 +54,26 @@ void C_Enemy4::Update(Math::Vector2 playerpos)
 	enemy.Pos += enemy.Move;
 	
 	LockOn();
-	if (BULLET_MGR.EnemyHitCheck(enemy.Pos, ENEMY_RADIUS, false))
+	if (enemy.HP > 0)
 	{
-		enemy.HP -= 1;
-		if (enemy.HP <= 0)
+		if (BULLET_MGR.EnemyHitCheck(enemy.Pos, ENEMY_RADIUS, false))
 		{
-			if (isHit == false)
+			enemy.HP -= 1;
+			if (enemy.HP <= 0)
 			{
-				isHit = true;
-				enemy.animCnt = 0;
+				if (isHit == false)
+				{
+					isHit = true;
+					enemy.animCnt = 0;
+				}
+
+				for (int j = 0;j < 40;++j)
+				{
+					EFFECT_MGR.SpawnEnemyDebri(enemy.Pos, { 1.0f,0.6f,0.0f,1.0f });
+				}
 			}
 		}
-
 	}
-
 
 	enemy.animCnt++;
 	enemy.engineAnimCnt++;
@@ -92,17 +98,39 @@ void C_Enemy4::Update(Math::Vector2 playerpos)
 	}
 	if (isFinishLockOnAnim)
 	{
-		lockOnBlinkingCnt++;
+		if (!isReduction)
+		{
+			lockOnSize -= 0.4f;
+			if (lockOnSize <= 5.0f)
+			{
+				lockOnSize = 5.0f;
+				isReduction = true;
+			}
+		}
+		else
+		{
+			lockOnSize += 0.4f;
+			if (lockOnSize >= 7.0f)
+			{
+				lockOnSize = 7.0f;
+				isFinishReduction = true;
+			}
+		}
+
+		if (isFinishReduction)
+		{
+			lockOnBlinkingCnt++;
+		}
 	}
 
 	enemy.Rot = Math::Matrix::CreateRotationZ(DirectX::XMConvertToRadians(rotateAngle));
 	enemy.Scale = Math::Matrix::CreateScale(2, -2, 1);
-	enemy.Trans = Math::Matrix::CreateTranslation(enemy.Pos.x, enemy.Pos.y, 0);
+	enemy.Trans = Math::Matrix::CreateTranslation(enemy.Pos.x + SCENE.GetPlayer()->GetShakeAmount(), enemy.Pos.y + SCENE.GetPlayer()->GetShakeAmount(), 0);
 	enemy.Mat = enemy.Scale * enemy.Rot * enemy.Trans;
 
 	enemy.EngineMat = enemy.Scale * enemy.Rot * enemy.Trans;
 
-	enemy.Scale = Math::Matrix::CreateScale(7, 7, 1);
+	enemy.Scale = Math::Matrix::CreateScale(lockOnSize, lockOnSize, 1);
 	enemy.LockOnMat = enemy.Scale * enemy.Trans;
 
 	

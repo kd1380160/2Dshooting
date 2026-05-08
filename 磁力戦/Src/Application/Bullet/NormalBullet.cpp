@@ -1,4 +1,5 @@
 #include "NormalBullet.h"
+#include "../Scene.h"
 
 C_NormalBullet::C_NormalBullet(Math::Vector2 pos, KdTexture* tex)
 {
@@ -15,7 +16,7 @@ void C_NormalBullet::Update()
 	bullet.Pos += bullet.Move;
 
 	bullet.Scale = Math::Matrix::CreateScale(1, 1, 1);
-	bullet.Trans = Math::Matrix::CreateTranslation(bullet.Pos.x, bullet.Pos.y, 0);
+	bullet.Trans = Math::Matrix::CreateTranslation(bullet.Pos.x + SCENE.GetPlayer()->GetShakeAmount(), bullet.Pos.y + SCENE.GetPlayer()->GetShakeAmount(), 0);
 	bullet.Mat = bullet.Scale * bullet.Trans;
 }
 

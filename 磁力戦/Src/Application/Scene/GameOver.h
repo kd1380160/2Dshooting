@@ -11,6 +11,7 @@ public:
 	void Draw();
 
 	void Release();
+	KdTexture* GetSunTex() { return &SunTex; }
 private:
 
 	KdTexture tex;
@@ -35,6 +36,8 @@ private:
 	Math::Matrix SunMat[4];
 	Math::Vector2 SunPos[4] = { {640,360},{-640,360},{640,-360},{-640,-360} };
 
+	bool isShow;
+
 	float size;
 	float retrySize;
 	float LclickSize;
@@ -45,4 +48,7 @@ private:
 	float angle;
 	float sunAlpha;
 	float sunAlphaAdd;
+	float textAlpha;
+	float textAlphaAdd;
+	float retryAlpha;
 };

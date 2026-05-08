@@ -1,6 +1,7 @@
 #include "Boss.h"
 #include"../Bullet/BulletManager.h"
 #include"../Scene.h"
+#include "../Transition/Transition.h"
 
 C_Boss::C_Boss(KdTexture* tex, KdTexture* shieldTex, KdTexture* breakTex, KdTexture* LockOnTex, KdTexture* engineTex)
 {
@@ -233,7 +234,13 @@ void C_Boss::Update(int generatorHp)
 	else //ボスのHPが0になったら
 	{
 		attackAnimCnt = 5 * 23;
-		BULLET_MGR.EnemyHitCheck(boss.Pos, boss.Radius, false);
+		if (BULLET_MGR.EnemyHitCheck(boss.Pos, boss.Radius, false))
+		{
+			for (int j = 0;j < 20;++j)
+			{
+				EFFECT_MGR.SpawnEnemyDebri(boss.Pos, { 1.0f,0.6f,0.0f,1.0f });
+			}
+		}
 		deadCnt++;
 
 		if (deadCnt >= 90&&deadCnt < 210)
@@ -261,6 +268,7 @@ void C_Boss::Update(int generatorHp)
 					isDead = true;
 					boss.animCnt = 8;
 					SCENE_MGR.StopTimeCnt();
+					
 				}
 			}
 		}
@@ -290,7 +298,29 @@ void C_Boss::Update(int generatorHp)
 	}
 	if (isFinishLockOnAnim)
 	{
-		lockOnBlinkingCnt++;
+		if (!isReduction)
+		{
+			lockOnSize -= 0.4f;
+			if (lockOnSize <= 5.0f)
+			{
+				lockOnSize = 5.0f;
+				isReduction = true;
+			}
+		}
+		else
+		{
+			lockOnSize += 0.4f;
+			if (lockOnSize >= 7.0f)
+			{
+				lockOnSize = 7.0f;
+				isFinishReduction = true;
+			}
+		}
+
+		if (isFinishReduction)
+		{
+			lockOnBlinkingCnt++;
+		}
 	}
 	
 	boss.Scale = Math::Matrix::CreateScale(2.5f, -2.5f, 1);
@@ -308,7 +338,7 @@ void C_Boss::Update(int generatorHp)
 	if (!isDead)
 	{
 		//boss.Rot = Math::Matrix::CreateRotationZ(DirectX::XMConvertToRadians((bullet2angle + 90) / 2));
-		boss.Scale = Math::Matrix::CreateScale(11, 11, 1);
+		boss.Scale = Math::Matrix::CreateScale(lockOnSize+4, lockOnSize+4, 1);
 		boss.LockOnMat = boss.Scale * boss.Rot * boss.Trans;
 	}
 }

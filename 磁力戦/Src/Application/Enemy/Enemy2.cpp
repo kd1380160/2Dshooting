@@ -1,14 +1,16 @@
 #include "Enemy2.h"
 #include "../Scene.h"
 
-C_Enemy2::C_Enemy2(KdTexture* tex, KdTexture* breaktex, KdTexture* enginetex, KdTexture* lockonTex, int num)
+C_Enemy2::C_Enemy2(KdTexture* tex, KdTexture* breaktex, KdTexture* enginetex, KdTexture* lockonTex, int num,Math::Vector2 pos)
 {
 	enemy.Tex = tex;
 	enemy.BreakTex = breaktex;
 	enemy.EngineTex = enginetex;
 	enemy.LockOnTex = lockonTex;
 	enemyNumber = num;
-	enemy.Pos = { (float)(-550 + 150 * (rand() % 8) + (rand() % 100 - 50)),400 };
+	//enemy.Pos = { (float)(-450 + 150 * (rand() % 8) + (rand() % 100 - 50)),400 };
+	enemy.Pos = { (float)(-450+rand()%451+ rand() % 451),400 };
+	enemy.Pos = pos;
 	enemy.Move = { 0,-10 };
 	angle = 0;
 	if (enemyNumber == 0)
@@ -65,18 +67,22 @@ void C_Enemy2::Update(Math::Vector2 playerpos)
 	if (shotCnt >= 45)
 	{
 		shotRedBulletCnt++;
-		int random = rand() % 3;
 		//弾が無ければ生成
 		for (int i = 0;i < 3;i++)
 		{
 			if (enemyNumber == 0||enemyNumber==1)
 			{
-				if (shotRedBulletCnt >= 3)
+				if (shotRedBulletCnt >= 5)
 				{
-					if (i == random)
+					if (i == redBulletCnt)
 					{
 						BULLET_MGR.ShotBossBullet2(enemy.Pos, (angle - 30) + 30 * i);
 						shotRedBulletCnt = 0;
+						redBulletCnt += 1;
+						if (redBulletCnt >= 3)
+						{
+							redBulletCnt = 0;
+						}
 					}
 					else
 					{
@@ -90,12 +96,18 @@ void C_Enemy2::Update(Math::Vector2 playerpos)
 			}
 			else
 			{
-				if (shotRedBulletCnt >= 3)
+				if (shotRedBulletCnt >= 5)
 				{
-					if (i == random)
+					if (i == redBulletCnt)
 					{
 						BULLET_MGR.ShotBossBullet2(enemy.Pos, bulletMoveList[i].x, bulletMoveList[i].y);
 						shotRedBulletCnt = 0;
+
+						redBulletCnt += 1;
+						if (redBulletCnt >= 3)
+						{
+							redBulletCnt = 0;
+						}
 					}
 					else
 					{
@@ -112,20 +124,27 @@ void C_Enemy2::Update(Math::Vector2 playerpos)
 		shotCnt = 0;
 	}
 
-	if (BULLET_MGR.EnemyHitCheck(enemy.Pos, ENEMY_RADIUS, false))
+	if (enemy.HP > 0)
 	{
-		enemy.HP--;
-		if (enemy.HP <= 0)
+		if (BULLET_MGR.EnemyHitCheck(enemy.Pos, ENEMY_RADIUS, false))
 		{
-			enemy.HP = 0;
-			if (isHit == false)
+			enemy.HP--;
+			if (enemy.HP <= 0)
 			{
-				isHit = true;
-				enemy.animCnt = 0;
+				enemy.HP = 0;
+				if (isHit == false)
+				{
+					isHit = true;
+					enemy.animCnt = 0;
+				}
+
+				for (int j = 0;j < 40;++j)
+				{
+					EFFECT_MGR.SpawnEnemyDebri(enemy.Pos, { 0.9f,0.7f,0.7f,1.0f });
+				}
 			}
 		}
 	}
-
 	enemy.engineAnimCnt++;
 	if (enemy.engineAnimCnt >= 21)
 	{
@@ -148,7 +167,29 @@ void C_Enemy2::Update(Math::Vector2 playerpos)
 	}
 	if (isFinishLockOnAnim)
 	{
-		lockOnBlinkingCnt++;
+		if (!isReduction)
+		{
+			lockOnSize -= 0.4f;
+			if (lockOnSize <= 5.0f)
+			{
+				lockOnSize = 5.0f;
+				isReduction = true;
+			}
+		}
+		else
+		{
+			lockOnSize += 0.4f;
+			if (lockOnSize >= 7.0f)
+			{
+				lockOnSize = 7.0f;
+				isFinishReduction = true;
+			}
+		}
+
+		if (isFinishReduction)
+		{
+			lockOnBlinkingCnt++;
+		}
 	}
 
 	if (enemyNumber == 0)
@@ -165,12 +206,12 @@ void C_Enemy2::Update(Math::Vector2 playerpos)
 
 	}
 	enemy.Scale = Math::Matrix::CreateScale(2, -2, 1);
-	enemy.Trans = Math::Matrix::CreateTranslation(enemy.Pos.x, enemy.Pos.y, 0);
+	enemy.Trans = Math::Matrix::CreateTranslation(enemy.Pos.x + SCENE.GetPlayer()->GetShakeAmount(), enemy.Pos.y + SCENE.GetPlayer()->GetShakeAmount(), 0);
 	enemy.Mat = enemy.Scale *enemy.Rot* enemy.Trans;
 
 	enemy.EngineMat = enemy.Scale * enemy.Rot * enemy.Trans;
 
-	enemy.Scale = Math::Matrix::CreateScale(7, 7, 1);
+	enemy.Scale = Math::Matrix::CreateScale(lockOnSize, lockOnSize, 1);
 	enemy.LockOnMat = enemy.Scale * enemy.Trans;
 
 }

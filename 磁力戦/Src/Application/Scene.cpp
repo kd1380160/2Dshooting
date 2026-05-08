@@ -17,7 +17,7 @@ void Scene::Draw2D()
 	}*/
 
 	char str[80];
-	sprintf_s(str, sizeof(str),"“G‚ğ“|‚µ‚½”: %d", ENEMY_MGR.GetEnemyKillCnt());
+	sprintf_s(str, sizeof(str),"“G‚ğ“|‚µ‚½”: %f", GetPlayer()->GetPlayerPos().y);
 	//SHADER.m_spriteShader.DrawString(-600, 300, str, Math::Vector4{ 1,1,1,1 });
 
 	sprintf_s(str, sizeof(str), "ƒNƒŠƒAƒ^ƒCƒ€: %d", SCENE_MGR.GePlayTime());
@@ -76,23 +76,32 @@ void Scene::Init()
 void Scene::LoadTexture()
 {
 	//‰æ‘œ“Ç‚İ‚İ
-	playerTex.Load("Assets/Image/Player/player.png");
+	playerhp4Tex.Load("Assets/Image/Player/playerlife4.png");
+	playerhp3Tex.Load("Assets/Image/Player/playerlife3.png");
+	playerhp2Tex.Load("Assets/Image/Player/playerlife2.png");
+	playerhp1Tex.Load("Assets/Image/Player/playerlife1.png");
 	playerEngineTex.Load("Assets/Image/Player/playerEngine.png");
 	playerEngineBaseTex.Load("Assets/Image/Player/playerEngineBase.png");
+	playerExplosionTex.Load("Assets/Image/Effect/PlayerExplosion.png");
 
 
 
 	//‰æ‘œƒZƒbƒg
-	player.SetPlayerTex(&playerTex);
+	player.SetPlayerTex(&playerhp1Tex,&playerhp2Tex, &playerhp3Tex, &playerhp4Tex);
 	player.SetPlayerEngineTex(&playerEngineTex);
 	player.SetPlayerEngineBaseTex(&playerEngineBaseTex);
+	player.SetPlayerExplosionTex(&playerExplosionTex);
 }
 
 void Scene::Release()
 {
-	playerTex.Release();
+	playerhp1Tex.Release();
+	playerhp2Tex.Release();
+	playerhp3Tex.Release();
+	playerhp4Tex.Release();
 	playerEngineTex.Release();
 	playerEngineBaseTex.Release();
+	playerExplosionTex.Release();
 	ENEMY_MGR.Release();
 	BULLET_MGR.Release();
 	BACKGRND.Release();

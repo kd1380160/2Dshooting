@@ -1,6 +1,7 @@
 #include "SceneManager.h"
 #include"../Scene.h"
 #include"../Effect/EffectManager.h"
+#include"../Transition/Transition.h"
 #include"../UI/UI.h"
 
 
@@ -13,6 +14,8 @@ void C_SceneManager::Init()
 		break;
 	case SceneList::Game:
 		isTime = false;
+		isWave1TextFinish = false;
+		isWave1TextStart = false;
 		timeCnt = 0;
 		SCENE.GetPlayer()->Init();
 		BULLET_MGR.Init();
@@ -46,54 +49,85 @@ void C_SceneManager::Init()
 
 void C_SceneManager::Update()
 {
-	switch (NowScene)
-	{
-	case SceneList::Title:
-		BACKGRND.Update();
-		title.Update();
-		break;
-	case SceneList::Game:
+	
+		switch (NowScene)
+		{
+		case SceneList::Title:
+			BACKGRND.Update();
+			title.Update();
+			break;
+		case SceneList::Game:
 
-		if (isTime)
-		{
-			timeCnt++;
-		}
 
-		BACKGRND.Update();
-		SCENE.GetPlayer()->Update();
-		text.Update();
-		if (SCENE.GetPlayer()->GetCanStartGame())
-		{
-			ENEMY_MGR.Update();
-			BULLET_MGR.Update();
-			
-			EFFECT_MGR.Update();
-		}
-		UI.Update();
-		break;
-	case SceneList::Result:
-		BACKGRND.Update();
-		result.Update();
-		break;
-	case SceneList::GameOver:
-		
-		gameOver.Update();
-		break;
-	case SceneList::Tutorial:
-		tutorial.Update();
-		BACKGRND.Update();
-		if (!tutorial.GetIsShowWindow())
-		{
-			SCENE.GetPlayer()->Update();
-			ENEMY_MGR.Update();
-			BULLET_MGR.Update();
+			if (!isWave1TextFinish)
+			{
+				if (!isWave1TextStart)
+				{
+					
+					ENEMY_MGR.Update();
+				
+					isWave1TextStart = true;
+					SCENE_MGR.GetText()->ChangeWave(1);
+				}
+				SCENE.GetPlayer()->Update();
+				BACKGRND.Update();
+				UI.Update();
+				
+				if (SCENE_MGR.GetText()->GetIsFinishDirection())
+				{
+					isWave1TextFinish = true;
+				}
+			}
+			else
+			{
+				if (isTime)
+				{
+					timeCnt++;
+				}
+
+				SCENE.GetPlayer()->Update();
+				if (SCENE.GetPlayer()->GetPlayerHp() > 0)
+				{
+
+					BACKGRND.Update();
+
+
+					if (SCENE.GetPlayer()->GetCanStartGame())
+					{
+						ENEMY_MGR.Update();
+						BULLET_MGR.Update();
+
+						EFFECT_MGR.Update();
+					}
+					UI.Update();
+				}
+			}
 			text.Update();
-			EFFECT_MGR.Update();
-			UI.Update();
-		}
-		break;
-	}
+			break;
+		case SceneList::Result:
+			BACKGRND.Update();
+			result.Update();
+			break;
+		case SceneList::GameOver:
 
+			gameOver.Update();
+			break;
+		case SceneList::Tutorial:
+			tutorial.Update();
+			BACKGRND.Update();
+			if (!tutorial.GetIsShowWindow())
+			{
+				SCENE.GetPlayer()->Update();
+				ENEMY_MGR.Update();
+				BULLET_MGR.Update();
+				text.Update();
+				EFFECT_MGR.Update();
+				UI.Update();
+			}
+			break;
+		}
+	
+	TRANSITION.Update();
 	cursor.Update();
 }
 
@@ -108,11 +142,15 @@ void C_SceneManager::Draw()
 	case SceneList::Game:
 		BACKGRND.Draw();
 		text.Draw();
-		SCENE.GetPlayer()->Draw();
+		
 		BULLET_MGR.Draw();
 		ENEMY_MGR.Draw();
+		SCENE.GetPlayer()->Draw();
 		EFFECT_MGR.Draw();
-		UI.Draw();
+		if (SCENE.GetPlayer()->GetPlayerHp() > 0)
+		{
+			UI.Draw();
+		}
 		break;
 	case SceneList::Result:
 		
@@ -140,6 +178,7 @@ void C_SceneManager::Draw()
 		break;
 	}
 
+	TRANSITION.Draw();
 	cursor.Draw();
 }
 

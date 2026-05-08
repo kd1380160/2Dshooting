@@ -1,4 +1,5 @@
 #include "BossBullet2.h"
+#include "../Scene.h"
 
 C_BossBullet2::C_BossBullet2(KdTexture* tex, Math::Vector2 pos, int degree)
 {
@@ -44,7 +45,7 @@ void C_BossBullet2::Update(Math::Vector2 playerpos)
 	bullet.Pos += bullet.Move;
 
 	bullet.Scale = Math::Matrix::CreateScale(1, 1, 1);
-	bullet.Trans = Math::Matrix::CreateTranslation(bullet.Pos.x, bullet.Pos.y, 0);
+	bullet.Trans = Math::Matrix::CreateTranslation(bullet.Pos.x + SCENE.GetPlayer()->GetShakeAmount(), bullet.Pos.y + SCENE.GetPlayer()->GetShakeAmount(), 0);
 	bullet.Mat = bullet.Scale * bullet.Trans;
 }
 

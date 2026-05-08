@@ -30,13 +30,15 @@ private:
 	Math::Vector2 moveAmount;
 	float degree;
 	float magDeg;
-	static const int SPEED = 13;
+	static const int SPEED = 25;
 	bool isShot;	//•ú‚½‚ê‚½‚©‚Ç‚¤‚©
 	bool isAbsorption;	//ƒvƒŒƒCƒ„[‚É‹zû‚³‚ê‚½‚©‚Ç‚¤‚©
 	bool isHoming;
 	bool isHaveTarget;
+	bool isCharge;
 
 	int targetEnemyNum ;	//’Ç”ö‚·‚é“G‚Ì”Ô†
 	int targetEnemyType	;	//’Ç”ö‚·‚é“G‚Ìí—Ş
 	int cnt;
+	int chargeCnt;
 };

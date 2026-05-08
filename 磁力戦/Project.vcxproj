@@ -170,6 +170,8 @@
     <ClInclude Include="Src\Application\Bullet\MagneticBullet.h" />
     <ClInclude Include="Src\Application\Effect\BulletExplosion.h" />
     <ClInclude Include="Src\Application\Effect\EffectManager.h" />
+    <ClInclude Include="Src\Application\Effect\EmitHeat\EmitHeat.h" />
+    <ClInclude Include="Src\Application\Effect\EnemyDebri\EnemyDebri.h" />
     <ClInclude Include="Src\Application\Enemy\Boss.h" />
     <ClInclude Include="Src\Application\Enemy\Enemy1.h" />
     <ClInclude Include="Src\Application\Enemy\Enemy2.h" />
@@ -194,6 +196,7 @@
     <ClInclude Include="Src\Application\Scene\SceneManager.h" />
     <ClInclude Include="Src\Application\Scene\Title.h" />
     <ClInclude Include="Src\Application\Scene\Tutorial.h" />
+    <ClInclude Include="Src\Application\Transition\Transition.h" />
     <ClInclude Include="Src\Application\UI\UI.h" />
     <ClInclude Include="Src\System\Audio\KdAudio.h" />
     <ClInclude Include="src\System\Direct3D\KdDirect3D.h" />
@@ -229,6 +232,8 @@
     <ClCompile Include="Src\Application\Bullet\MagneticBullet.cpp" />
     <ClCompile Include="Src\Application\Effect\BulletExplosion.cpp" />
     <ClCompile Include="Src\Application\Effect\EffectManager.cpp" />
+    <ClCompile Include="Src\Application\Effect\EmitHeat\EmitHeat.cpp" />
+    <ClCompile Include="Src\Application\Effect\EnemyDebri\EnemyDebri.cpp" />
     <ClCompile Include="Src\Application\Enemy\Boss.cpp" />
     <ClCompile Include="Src\Application\Enemy\Enemy1.cpp" />
     <ClCompile Include="Src\Application\Enemy\Enemy2.cpp" />
@@ -249,6 +254,7 @@
     <ClCompile Include="Src\Application\Scene\SceneManager.cpp" />
     <ClCompile Include="Src\Application\Scene\Title.cpp" />
     <ClCompile Include="Src\Application\Scene\Tutorial.cpp" />
+    <ClCompile Include="Src\Application\Transition\Transition.cpp" />
     <ClCompile Include="Src\Application\UI\UI.cpp" />
     <ClCompile Include="Src\System\Audio\KdAudio.cpp" />
     <ClCompile Include="src\System\Direct3D\KdDirect3D.cpp" />

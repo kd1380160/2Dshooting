@@ -1,5 +1,5 @@
 #include "BackGround.h"
-#include "../Scene/SceneManager.h"
+#include "../Scene.h"
 
 void C_BackGround::Init()
 {
@@ -16,8 +16,16 @@ void C_BackGround::Update()
 	if (backgroundPos[0].y <= -720)backgroundPos[0].y = 720;
 	if (backgroundPos[1].y <= -720)backgroundPos[1].y = 720;
 
-	backgroundMat[0] = Math::Matrix::CreateTranslation(backgroundPos[0].x, backgroundPos[0].y, 0);
-	backgroundMat[1] = Math::Matrix::CreateTranslation(backgroundPos[1].x, backgroundPos[1].y, 0);
+	if (SCENE_MGR.GetNowScene() == Result)
+	{
+		backgroundMat[0] = Math::Matrix::CreateTranslation(backgroundPos[0].x + SCENE_MGR.GetResult()->GetShakeAmount(), backgroundPos[0].y + SCENE_MGR.GetResult()->GetShakeAmount(), 0);
+		backgroundMat[1] = Math::Matrix::CreateTranslation(backgroundPos[1].x + SCENE_MGR.GetResult()->GetShakeAmount(), backgroundPos[1].y + SCENE_MGR.GetResult()->GetShakeAmount(), 0);
+	}
+	else
+	{
+		backgroundMat[0] = Math::Matrix::CreateTranslation(backgroundPos[0].x + SCENE.GetPlayer()->GetShakeAmount(), backgroundPos[0].y + SCENE.GetPlayer()->GetShakeAmount(), 0);
+		backgroundMat[1] = Math::Matrix::CreateTranslation(backgroundPos[1].x + SCENE.GetPlayer()->GetShakeAmount(), backgroundPos[1].y + SCENE.GetPlayer()->GetShakeAmount(), 0);
+	}
 }
 
 void C_BackGround::Draw()
@@ -25,10 +33,10 @@ void C_BackGround::Draw()
 	
 
 	SHADER.m_spriteShader.SetMatrix(backgroundMat[0]);
-	SHADER.m_spriteShader.DrawTex(&backgroundTex, Math::Rectangle{ 0,0,1280,720 });
+	SHADER.m_spriteShader.DrawTex(&backgroundTex, Math::Rectangle{ 0,0,1320,730 });
 
 	SHADER.m_spriteShader.SetMatrix(backgroundMat[1]);
-	SHADER.m_spriteShader.DrawTex(&backgroundTex, Math::Rectangle{ 0,0,1280,720 });
+	SHADER.m_spriteShader.DrawTex(&backgroundTex, Math::Rectangle{ 0,0,1320,730 });
 
 	
 }

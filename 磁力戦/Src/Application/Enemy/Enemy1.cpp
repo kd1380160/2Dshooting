@@ -3,7 +3,8 @@
 #include"../Bullet/BulletManager.h"
 
 
-C_Enemy1::C_Enemy1(KdTexture* tex,KdTexture* breakTex, KdTexture* enginetex, KdTexture* lockonTex, int num,int nowwave, int setCnt)
+C_Enemy1::C_Enemy1(KdTexture* tex,KdTexture* breakTex, KdTexture* enginetex, KdTexture* lockonTex,
+	int num,int nowwave, int setCnt)
 {
 	enemy.Tex = tex;
 	enemy.BreakTex = breakTex;
@@ -11,11 +12,14 @@ C_Enemy1::C_Enemy1(KdTexture* tex,KdTexture* breakTex, KdTexture* enginetex, KdT
 	enemy.LockOnTex = lockonTex;
 	nowWave = nowwave;
 	nowSet = setCnt;
+	number = num;
 	//enemy.Pos = { (float)( - 300 + 200 * num),400};
 	//enemy.Pos = {(float)(rand()%(1280-ENEMY_RADIUS)-640),400};
 	if (nowWave == Wave1)
 	{
-		enemy.Pos = { (float)(-550 + 150 * (rand() % 8) + (rand() % 100 - 50)),400 };
+		//enemy.Pos = { (float)(-550 + 150 * (rand() % 8) + (rand() % 100 - 50)),400 };
+
+		enemy.Pos = {(float)( - 200 + 100 * num) ,400};
 	}
 	else if (nowWave == Wave3)
 	{
@@ -77,7 +81,24 @@ void C_Enemy1::Update(Math::Vector2 playerpos)
 		enemy.Pos += enemy.Move;
 		if (nowWave == Wave1)
 		{
-			if (enemy.Pos.y <= 200)enemy.Pos.y = 200;
+			switch (number)
+			{
+			case 0:
+				if (enemy.Pos.y <= 220)enemy.Pos.y = 220;
+				break;
+			case 1:
+				if (enemy.Pos.y <= 200)enemy.Pos.y = 200;
+				break;
+			case 2:
+				if (enemy.Pos.y <= 180)enemy.Pos.y = 180;
+				break;
+			case 3:
+				if (enemy.Pos.y <= 200)enemy.Pos.y = 200;
+				break;
+			case 4:
+				if (enemy.Pos.y <= 220)enemy.Pos.y = 220;
+				break;
+			}
 		}
 		else if (nowWave == Wave3)
 		{
@@ -87,7 +108,7 @@ void C_Enemy1::Update(Math::Vector2 playerpos)
 		LockOn();
 
 		shotRandCnt++;
-		if (shotRandCnt >= rand() % 16 + 30)
+		if (shotRandCnt >= rand() % 16 + 50)
 		{
 			shotCnt++;
 			if (shotCnt == 10)
@@ -108,17 +129,25 @@ void C_Enemy1::Update(Math::Vector2 playerpos)
 			}
 		}
 
-		if (BULLET_MGR.EnemyHitCheck(enemy.Pos, ENEMY_RADIUS, false))
+		if (enemy.HP > 0)
 		{
-			enemy.HP--;
-			if (enemy.HP <= 0)
+			if (BULLET_MGR.EnemyHitCheck(enemy.Pos, ENEMY_RADIUS, false))
 			{
-				enemy.HP = 0;
-				if (isHit == false)
+				enemy.HP--;
+				if (enemy.HP <= 0)
 				{
-					isHit = true;
-					enemy.animCnt = 0;
-				}
+					enemy.HP = 0;
+					if (isHit == false)
+					{
+						isHit = true;
+						enemy.animCnt = 0;
+					}
+				
+					for (int j = 0;j < 40;++j)
+					{
+						EFFECT_MGR.SpawnEnemyDebri(enemy.Pos, { 0.7f,0.9f,0.7f,1.0f });
+					}
+				}			
 			}
 		}
 
@@ -145,7 +174,29 @@ void C_Enemy1::Update(Math::Vector2 playerpos)
 		}
 		if (isFinishLockOnAnim)
 		{
-			lockOnBlinkingCnt++;
+			if (!isReduction)
+			{
+				lockOnSize -= 0.4f;
+				if (lockOnSize <= 5.0f)
+				{
+					lockOnSize = 5.0f;
+					isReduction = true;
+				}
+			}
+			else
+			{
+				lockOnSize += 0.4f;
+				if (lockOnSize >= 7.0f)
+				{
+					lockOnSize = 7.0f;
+					isFinishReduction = true;
+				}
+			}
+
+			if (isFinishReduction)
+			{
+				lockOnBlinkingCnt++;
+			}
 		}
 	}
 	else
@@ -176,16 +227,24 @@ void C_Enemy1::Update(Math::Vector2 playerpos)
 			}
 		}
 
-		if (BULLET_MGR.EnemyHitCheck(enemy.Pos, ENEMY_RADIUS, false))
+		if (enemy.HP > 0)
 		{
-			enemy.HP--;
-			if (enemy.HP <= 0)
+			if (BULLET_MGR.EnemyHitCheck(enemy.Pos, ENEMY_RADIUS, false))
 			{
-				enemy.HP = 0;
-				if (isHit == false)
+				enemy.HP--;
+				if (enemy.HP <= 0)
 				{
-					isHit = true;
-					enemy.animCnt = 0;
+					enemy.HP = 0;
+					if (isHit == false)
+					{
+						isHit = true;
+						enemy.animCnt = 0;
+					}
+
+					for (int j = 0;j < 40;++j)
+					{
+						EFFECT_MGR.SpawnEnemyDebri(enemy.Pos, { 0.7f,0.9f,0.7f,1.0f });
+					}
 				}
 			}
 		}
@@ -212,19 +271,41 @@ void C_Enemy1::Update(Math::Vector2 playerpos)
 		}
 		if (isFinishLockOnAnim)
 		{
-			lockOnBlinkingCnt++;
+			if (!isReduction)
+			{
+				lockOnSize -= 0.4f;
+				if (lockOnSize <= 5.0f)
+				{
+					lockOnSize = 5.0f;
+					isReduction = true;
+				}
+			}
+			else
+			{
+				lockOnSize += 0.4f;
+				if (lockOnSize >= 7.0f)
+				{
+					lockOnSize = 7.0f;
+					isFinishReduction = true;
+				}
+			}
+
+			if (isFinishReduction)
+			{
+				lockOnBlinkingCnt++;
+			}
 		}
 
 	}
 	enemy.Scale = Math::Matrix::CreateScale(2, -2, 1);
-	enemy.Trans = Math::Matrix::CreateTranslation(enemy.Pos.x, enemy.Pos.y, 0);
+	enemy.Trans = Math::Matrix::CreateTranslation(enemy.Pos.x + SCENE.GetPlayer()->GetShakeAmount(), enemy.Pos.y + SCENE.GetPlayer()->GetShakeAmount(), 0);
 	enemy.Mat = enemy.Scale * enemy.Trans;
 
-	enemy.Scale = Math::Matrix::CreateScale(7, 7, 1);
+	enemy.Scale = Math::Matrix::CreateScale(lockOnSize, lockOnSize, 1);
 	enemy.LockOnMat = enemy.Scale * enemy.Trans;
 
 	enemy.Scale = Math::Matrix::CreateScale(2, -2, 1);
-	enemy.Trans = Math::Matrix::CreateTranslation(enemy.Pos.x, enemy.Pos.y, 0);
+	enemy.Trans = Math::Matrix::CreateTranslation(enemy.Pos.x + SCENE.GetPlayer()->GetShakeAmount(), enemy.Pos.y + SCENE.GetPlayer()->GetShakeAmount() + SCENE.GetPlayer()->GetShakeAmount(), 0);
 	enemy.EngineMat = enemy.Scale  * enemy.Trans;
 }
 

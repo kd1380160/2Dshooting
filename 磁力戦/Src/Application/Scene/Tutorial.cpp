@@ -23,13 +23,31 @@ void C_Tutorial::Init()
 	isPage2 = false;
 	canStartSceneChange = false;
 	windowSize = 0.1;
+	shotAlpha = 1.0f;
 	purgeCnt = 0;
 	sceneChangeCnt = 0;
+	tutorialCnt = 0;
 	page = WindowPage::page1;
 }
 
 void C_Tutorial::Update()
 {
+	if (ENEMY_MGR.GetIsEnemy1Lockon())
+	{
+		tutorialCnt++;
+		if (tutorialCnt>=15)
+		{
+			if (shotAlpha == 1.0f)
+			{
+				shotAlpha = 0.6f;
+			}
+			else if (shotAlpha == 0.6f)
+			{
+				shotAlpha = 1.0f;
+			}
+			tutorialCnt = 0;
+		}
+	}
 	if (GetAsyncKeyState(VK_LBUTTON) & 0x8000)
 	{
 		if (!isLClick)
@@ -79,7 +97,8 @@ void C_Tutorial::Update()
 			isWindow = true;
 		}
 	}
-	else
+
+	if(isWindow)
 	{
 		if (windowSize < 1.0f)
 		{
@@ -111,12 +130,7 @@ void C_Tutorial::Update()
 		{
 			sceneChangeCnt++;
 
-			if (sceneChangeCnt == 60)
-			{
-				SCENE_MGR.GetText()->ChangeWave(1);
-			}
-
-			if (SCENE_MGR.GetText()->GetIsFinishDirection())
+			if (sceneChangeCnt > 30)
 			{
 				SCENE_MGR.SetNowScene(Game);
 			}
@@ -199,7 +213,7 @@ void C_Tutorial::Draw()
 	//左クリックで発射！
 	if (ENEMY_MGR.GetIsEnemy1Lockon())
 	{
-		col = { 1.0f,1.0f,1.0f,0.7f };
+		col = { 1.0f,1.0f,1.0f,shotAlpha };
 		SHADER.m_spriteShader.SetMatrix(shotMat);
 		SHADER.m_spriteShader.DrawTex(&shotTex, Math::Rectangle{ 0,0,370,71 }, &col);
 	}

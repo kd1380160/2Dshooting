@@ -58,7 +58,9 @@ private:
 	Math::Matrix shotMat;
 
 	float windowSize;
+	float shotAlpha;
 	int lockOnBlinkingCnt = 0;
 	int purgeCnt;
 	int sceneChangeCnt;
+	int tutorialCnt;
 };

@@ -1,6 +1,7 @@
 #include "Player.h"
 #include"../Bullet/BulletManager.h"
 #include "../Scene.h"
+#include "../Transition/Transition.h"
 
 
 C_Player::C_Player()
@@ -12,9 +13,18 @@ C_Player::C_Player()
 	player.Hp = PLAYER_MAX_HP;
 	isInvincible = false;
 	canStartGame = false;
+	isDead = false;
+	isFinishExpAnim = false;
+	isLight = false;
+	isRecoil = false;
+	isShotMagBullet = false;
 	playerAlpha = 1.0f;
+	lightAlpha = 0.0f;
+	lightAlphaAdd = 0.1f;
+	recoil = -5.0f;
 	invincibleCnt = 0;
-	
+	expAnimXCnt = 0;
+	expAnimYCnt = 0;
 	player.Speed = 4;
 	player.Color = { 1,1,1,1 };
 }
@@ -27,149 +37,286 @@ void C_Player::Init()
 	animCnt = 0;
 	finishAnimCnt = 0;
 	player.Hp = PLAYER_MAX_HP;
+	//player.Hp = 1;
+
+	isShake = false;
 	isInvincible = false;
 	canStartGame = false;
+	isDead = false;
+	isLight = false;
+	isFinishExpAnim = false;
+	isRecoil = false;
+	isShotMagBullet = false;
+	isFinish = false;
 	playerAlpha = 1.0f;
+	lightAlpha = 0.0f;
+	lightAlphaAdd = 0.1f;
+	recoil = -5.0f;
 	invincibleCnt = 0;
+	expAnimXCnt = 0;
+	expAnimYCnt = 0;
+	expBeforeCnt = 0;
+	shakeAmount = 0;
+	shakeCnt = 0;
+	player.Color = { 1,1,1,1 };
 }
 
 void C_Player::Update()
 {
+
 	animCnt++;
 	if (animCnt >= 12)
 	{
 		animCnt = 0;
 	}
 
-
-	if (canStartGame)
+	if (!TRANSITION.GetIsTransition())
 	{
-		if (!ENEMY_MGR.GetIsBossDead())
+		if (canStartGame)
 		{
-			//WASDà⁄ìÆÇÃèàóù	
-			KeyProcess();
-		}
 
-		if (BULLET_MGR.PlayerHitCHeck(player.Pos, PLAYER_RADIUS))
-		{
-			if (!isInvincible)
+
+			if (!ENEMY_MGR.GetIsBossDead())
 			{
-				player.Hp -= 1;
-				if (player.Hp <= 0)player.Hp = 0;
-				isInvincible = true;
+				//WASDà⁄ìÆÇÃèàóù	
+				KeyProcess();
 			}
-		}
 
-		if (ENEMY_MGR.PlayerEnemyHitCheck(player.Pos, PLAYER_RADIUS))
-		{
-			if (!isInvincible)
+			Recoil();
+
+			if (BULLET_MGR.PlayerHitCHeck(player.Pos, PLAYER_RADIUS))
 			{
-				player.Hp -= 1;
-				if (player.Hp <= 0)player.Hp = 0;
-				isInvincible = true;
-			}
-		}
-
-		if (player.Hp <= 0)
-		{
-			SCENE_MGR.SetNowScene(GameOver);
-		}
-
-		//ñ≥ìGéûä‘ÇÃì_ñ≈
-		if (isInvincible)
-		{
-			invincibleCnt++;
-
-			if (invincibleCnt % 7 == 0)
-			{
-				if (playerAlpha == 1.0f)
+				if (!isInvincible)
 				{
-					playerAlpha = 0.2f;
-					player.Color = { 0.8,0.8,0.8,playerAlpha };
+					player.Hp -= 1;
+					if (player.Hp <= 0)
+					{
+						player.Hp = 0;
+					}
+					else
+					{
+						isInvincible = true;
+						isShake = true;
+					}
 				}
-				else if (playerAlpha == 0.2f)
+			}
+
+			if (ENEMY_MGR.PlayerEnemyHitCheck(player.Pos, PLAYER_RADIUS))
+			{
+				if (!isInvincible)
 				{
+					player.Hp -= 1;
+					if (player.Hp <= 0)player.Hp = 0;
+					isInvincible = true;
+					isShake = true;
+				}
+			}
+
+			if (isShake)
+			{
+				if (isShotMagBullet)
+				{
+					if (shakeCnt == 0)shakeAmount = 10;
+				}
+				else
+				{
+					if (shakeCnt == 0)shakeAmount = 8;
+				}
+
+				shakeCnt++;
+				if (shakeCnt % 3 == 0)
+				{
+					shakeAmount *= -0.8;
+					if (shakeCnt == 21)
+					{
+						shakeAmount = 0;
+						shakeCnt = 0;
+						isShake = false;
+						isShotMagBullet = false;
+					}
+				}
+			}
+
+
+
+
+			if (player.Hp <= 0)
+			{
+				isDead = true;
+
+			}
+
+			if (isDead)
+			{
+				expBeforeCnt++;
+
+				if (!isInvincible && expBeforeCnt > 40)
+				{
+					isInvincible = true;
+				}
+
+				if (expBeforeCnt > 120)
+				{
+					isShake = true;
+					expAnimXCnt++;
+
+					if (expAnimXCnt >= 20)
+					{
+						expAnimXCnt = 0;
+						expAnimYCnt++;
+
+						if (expAnimYCnt >= 4)
+						{
+							expAnimYCnt = 0;
+							isFinishExpAnim = true;
+						}
+					}
+				}
+			}
+
+			if (isFinishExpAnim)
+			{
+				SCENE_MGR.SetNowScene(GameOver);
+			}
+
+
+			//ñ≥ìGéûä‘ÇÃì_ñ≈
+			if (isInvincible)
+			{
+				invincibleCnt++;
+
+				if (invincibleCnt % 7 == 0)
+				{
+					if (playerAlpha == 1.0f)
+					{
+						playerAlpha = 0.2f;
+						player.Color = { 0.8,0.8,0.8,playerAlpha };
+					}
+					else if (playerAlpha == 0.2f)
+					{
+						playerAlpha = 1.0f;
+						player.Color = { 6,6,6,playerAlpha };
+					}
+				}
+
+				//120fÇ≈ñ≥ìGâèú
+				if (invincibleCnt >= 120)
+				{
+					isInvincible = false;
 					playerAlpha = 1.0f;
-					player.Color = { 6,6,6,playerAlpha };
+					invincibleCnt = 0;
+					player.Color = { 1,1,1,playerAlpha };
 				}
 			}
 
-			//120fÇ≈ñ≥ìGâèú
-			if (invincibleCnt >= 120)
+
+			if (SCENE_MGR.GetIsWave1TextFin())
 			{
-				isInvincible = false;
-				playerAlpha = 1.0f;
-				invincibleCnt = 0;
-				player.Color = { 1,1,1,playerAlpha };
+				if (player.Hp > 0)
+				{
+					if (SCENE_MGR.GetNowWave() == Boss)
+					{
+						if (ENEMY_MGR.GetBossHp() > 0)
+						{
+							//í èÌíeî≠éÀ
+							ShotNormalBullet();
+						}
+					}
+					else if (SCENE_MGR.GetNowScene() == Tutorial) {}
+					else
+					{
+						ShotNormalBullet();
+					}
+				}
+			}
+
+			if (!isLight)
+			{
+				if (BULLET_MGR.GetIsMagBulletMax())
+				{
+					isLight = true;
+				}
+			}
+			else
+			{
+				lightAlpha += lightAlphaAdd;
+				if (lightAlpha >= 1.0f)
+				{
+					lightAlphaAdd *= -1;
+				}
+				if (lightAlpha < 0.0f)
+				{
+					isLight = false;
+					lightAlpha = 0.0f;
+					lightAlphaAdd *= -1;
+				}
 			}
 		}
-
-
-		if (SCENE_MGR.GetNowWave() == Boss)
-		{
-			if (ENEMY_MGR.GetBossHp() > 0)
-			{
-				//í èÌíeî≠éÀ
-				ShotNormalBullet();
-			}
-		}
-		else if (SCENE_MGR.GetNowScene() == Tutorial){}
 		else
 		{
-			ShotNormalBullet();
+			if (player.Pos.y >= -200)
+			{
+				player.Pos.y = -200;
+				canStartGame = true;
+				SCENE_MGR.StartTimeCnt();
+			}
+		}
+
+		if (ENEMY_MGR.GetIsBossDead())
+		{
+			if (finishAnimCnt == 0)
+			{
+				player.Move = {};
+			}
+
+			finishAnimCnt++;
+
+
+			if (finishAnimCnt >= 150)
+			{
+				player.Move.y += 0.05;
+			}
+
+			player.Pos += player.Move;
+
+			if (!isFinish)
+			{
+				if (player.Pos.y >= 500.0f)
+				{
+					TRANSITION.Start(Result);
+					isFinish = true;
+				}
+			}
+		}
+		else
+		{
+			player.Pos += player.Move * player.Speed;
 		}
 	}
-	else
-	{
-		if (player.Pos.y >= -200)
-		{
-			player.Pos.y = -200;
-
-			canStartGame = true;
-			SCENE_MGR.StartTimeCnt();
-		}
-	}
-
-	if (ENEMY_MGR.GetIsBossDead())
-	{
-		if (finishAnimCnt == 0)
-		{
-			player.Move = {};
-		}
-
-		finishAnimCnt++;
-
-
-		if (finishAnimCnt >= 150)
-		{
-			player.Move.y += 0.05;
-		}
-
-		player.Pos += player.Move;
-
-		if (player.Pos.y >= 900)
-		{
-			SCENE_MGR.SetNowScene(Result);
-		}
-	}
-	else
-	{
-		player.Pos += player.Move * player.Speed;
-	}
-
 
 	
 	//çsóÒçÏê¨
 	player.Scale = Math::Matrix::CreateScale(2, 2, 1);
-	player.Trans = Math::Matrix::CreateTranslation(player.Pos.x, player.Pos.y, 0);
+	player.Trans = Math::Matrix::CreateTranslation(player.Pos.x+shakeAmount, player.Pos.y + shakeAmount, 0);
 	player.Mat = player.Scale * player.Trans;
 
 	Math::Matrix trans, scale;
-	trans = Math::Matrix::CreateTranslation(player.Pos.x, player.Pos.y - 11, 0);
+
+	trans = Math::Matrix::CreateTranslation(player.Pos.x , player.Pos.y + 5 , 0);
+	scale = Math::Matrix::CreateScale(0.5f, 0.5f, 1);
+	lightMat = scale * trans;
+
+	trans = Math::Matrix::CreateTranslation(player.Pos.x + shakeAmount, player.Pos.y - 11 + shakeAmount, 0);
 	scale = Math::Matrix::CreateScale(2, 2, 1);
 	engineBaseMat = scale * trans;
 
 	engineMat = scale * trans;
+
+	trans = Math::Matrix::CreateTranslation(player.Pos.x + shakeAmount, player.Pos.y + shakeAmount, 0);
+	scale = Math::Matrix::CreateScale(8, 8, 1);
+	expMat = scale * trans;
+
+
 }
 
 void C_Player::Draw()
@@ -183,10 +330,24 @@ void C_Player::Draw()
 		SHADER.m_spriteShader.DrawTex(player.EngineBaseTex, Math::Rectangle{ 0,0,48,48 }, &color);
 
 		SHADER.m_spriteShader.SetMatrix(player.Mat);
-		SHADER.m_spriteShader.DrawTex(player.Tex, Math::Rectangle{ 0,0,48,48 },&player.Color);
+		switch (player.Hp)
+		{
+		case 1:
+			SHADER.m_spriteShader.DrawTex(player.HP1Tex, Math::Rectangle{ 0,0,48,48 }, &player.Color);
+			break;
+		case 2:
+			SHADER.m_spriteShader.DrawTex(player.HP2Tex, Math::Rectangle{ 0,0,48,48 }, &player.Color);
+			break;
+		case 3:
+			SHADER.m_spriteShader.DrawTex(player.HP3Tex, Math::Rectangle{ 0,0,48,48 }, &player.Color);
+			break;
+		case 4:
+			SHADER.m_spriteShader.DrawTex(player.HP4Tex, Math::Rectangle{ 0,0,48,48 }, &player.Color);
+			break;
+		}
 
 		SHADER.m_spriteShader.SetMatrix(engineBaseMat);
-		SHADER.m_spriteShader.DrawTex(player.EngineTex, Math::Rectangle{ 48*(animCnt/4),0,48,48}, &player.Color);
+		SHADER.m_spriteShader.DrawTex(player.EngineTex, Math::Rectangle{ 48 * (animCnt / 4),0,48,48 }, &player.Color);
 
 		//íeÇà¯Ç´äÒÇπÇÈîÕàÕÇâ~Ç≈ï\é¶
 		if (!BULLET_MGR.GetIsJamming())
@@ -206,12 +367,45 @@ void C_Player::Draw()
 		}
 
 	}
+	else
+	{
+		if (expBeforeCnt <= 120)
+		{
+			SHADER.m_spriteShader.SetMatrix(engineBaseMat);
+			SHADER.m_spriteShader.DrawTex(player.EngineBaseTex, Math::Rectangle{ 0,0,48,48 }, &color);
+
+			SHADER.m_spriteShader.SetMatrix(player.Mat);
+			SHADER.m_spriteShader.DrawTex(player.HP1Tex, Math::Rectangle{ 0,0,48,48 }, &player.Color);
+
+			SHADER.m_spriteShader.SetMatrix(engineBaseMat);
+			SHADER.m_spriteShader.DrawTex(player.EngineTex, Math::Rectangle{ 48 * 4,0,48,48 }, &player.Color);
+		}
+		else
+		{
+			SHADER.m_spriteShader.SetMatrix(expMat);
+			SHADER.m_spriteShader.DrawTex(player.ExplosionTex, Math::Rectangle{ 64 * (expAnimXCnt / 5),64 * expAnimYCnt,64,64 });
+		}
+	}
+
+
+	if (isLight)
+	{
+		//êFÇÃÉuÉåÉìÉhï˚ñ@ÇÃê›íËÅiâ¡éZçáê¨Åj
+		D3D.SetBlendState(BlendMode::Add);
+
+		color = { 4,4,4,lightAlpha };
+		SHADER.m_spriteShader.SetMatrix(lightMat);
+		SHADER.m_spriteShader.DrawTex(SCENE_MGR.GetGameOver()->GetSunTex(), Math::Rectangle(0, 0, 128, 128),&color);
+
+		//êFÇÃÉuÉåÉìÉhï˚ñ@ÇÃê›íËÅiçáê¨Ç»ÇµÅj
+		D3D.SetBlendState(BlendMode::Alpha);
+	}
 }
 
 void C_Player::ShotNormalBullet()
 {
 	shotCnt++;
-	if (shotCnt >= 15)
+	if (shotCnt >= 30)
 	{
 		BULLET_MGR.ShotNormalBullet(player.Pos);
 		shotCnt = 0;
@@ -221,12 +415,63 @@ void C_Player::ShotNormalBullet()
 void C_Player::KeyProcess()
 {
 	player.Move = { 0,0 };
+	if (!isDead)
+	{
+		
 
-	//WASDÇ≈è„â∫ç∂âEà⁄ìÆ
-	if (GetAsyncKeyState('W') & 0x8000)	player.Move.y = 1;
-	if (GetAsyncKeyState('S') & 0x8000)	player.Move.y = -1;
-	if (GetAsyncKeyState('D') & 0x8000)	player.Move.x = 1;
-	if (GetAsyncKeyState('A') & 0x8000)	player.Move.x = -1;
-	
-	player.Move.Normalize();//ê≥ãKâª
+		//WASDÇ≈è„â∫ç∂âEà⁄ìÆ
+		if (GetAsyncKeyState('W') & 0x8000)	player.Move.y = 1;
+		if (GetAsyncKeyState('S') & 0x8000)	player.Move.y = -1;
+		if (GetAsyncKeyState('D') & 0x8000)	player.Move.x = 1;
+		if (GetAsyncKeyState('A') & 0x8000)	player.Move.x = -1;
+
+		player.Move.Normalize();//ê≥ãKâª
+	}
+}
+
+void C_Player::Recoil()
+{
+	if (!isRecoil)return;
+
+	Math::Color heatColor[2] = { {0.8f,0.8f,1.0f,1},{0.8f,0.4f,0.0f,1.0f} };
+	Math::Vector2 pos = {0,0};
+	pos = player.Pos - pos;
+
+
+	player.Pos.y += recoil;
+	if (recoil < 0)
+	{
+		recoil += 0.3f;
+	}
+	else
+	{
+		recoil += 0.1f;
+	}
+
+	if (recoil >0.0f)
+	{
+		for (int i = 0;i < 50;++i)
+		{
+			if (i < 40)
+			{
+				EFFECT_MGR.SpawnEmitHeat(pos, heatColor[0]);
+			}
+			else
+			{
+				EFFECT_MGR.SpawnEmitHeat(pos, heatColor[1]);
+			}
+		}
+
+		recoil = -5.0f;
+		isRecoil = false;
+	}
+		
+}
+
+void C_Player::SetPlayerTex(KdTexture* tex, KdTexture* hp2, KdTexture* hp3, KdTexture* hp4)
+{
+	player.HP1Tex = tex;
+	player.HP2Tex = hp2;
+	player.HP3Tex = hp3;
+	player.HP4Tex = hp4;
 }

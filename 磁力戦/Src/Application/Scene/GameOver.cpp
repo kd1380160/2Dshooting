@@ -1,5 +1,6 @@
 #include "GameOver.h"
 #include "SceneManager.h"
+#include"../Transition/Transition.h"
 
 C_GameOver::C_GameOver()
 {
@@ -28,6 +29,7 @@ void C_GameOver::Init()
 	LclickPos = { 0,-100 };
 	RclickPos = { 0,-300 };
 	
+	isShow = false;
 
 	size = 3.0f;
 	retrySize = 6.0f;
@@ -38,8 +40,11 @@ void C_GameOver::Init()
 	sizeAdd = 0.02f;
 	posAdd = 0.5f;
 	angle = 0;
-	sunAlpha = 1.0f;
+	sunAlpha = 0.0f;
 	sunAlphaAdd = 0.02f;
+	textAlpha = 0.0f;
+	textAlphaAdd = 0.02f;
+	retryAlpha = 0.0f;
 }
 
 void C_GameOver::Update()
@@ -57,18 +62,38 @@ void C_GameOver::Update()
 
 	if (GetAsyncKeyState(VK_LBUTTON) & 0x8000)
 	{
-		SCENE_MGR.SetNowScene(Game);
+		TRANSITION.Start(Game);
 	}
 	else if (GetAsyncKeyState(VK_RBUTTON) & 0x8000)
 	{
-		SCENE_MGR.SetNowScene(Title);
+		TRANSITION.Start(Title);
 	}
 
 
-	sunAlpha -= sunAlphaAdd;
-	if (sunAlpha >= 1.0f || sunAlpha <= 0.0f)
+	if(!isShow)
+	{ 
+		textAlpha += textAlphaAdd;
+		retryAlpha += textAlphaAdd;
+		if (retryAlpha >= 0.7f)
+		{
+			retryAlpha = 0.7f;
+		}
+
+		if (textAlpha >= 1.0f)
+		{
+			textAlpha = 1.0f;
+			isShow = true;
+		}
+	}
+	
+
+	if (isShow)
 	{
-		sunAlphaAdd *= -1;
+		sunAlpha += sunAlphaAdd;
+		if (sunAlpha >= 1.0f || sunAlpha <= 0.0f)
+		{
+			sunAlphaAdd *= -1;
+		}
 	}
 
 
@@ -99,26 +124,31 @@ void C_GameOver::Update()
 
 void C_GameOver::Draw()
 {
-	Math::Color color = { 1,1,1,0.8 };
+	Math::Color color = { 1,1,1,textAlpha-0.2f };
 
 	//色のブレンド方法の設定（半透明）
 	D3D.SetBlendState(BlendMode::Alpha);
 
-
+	//黒背景
 	SHADER.m_spriteShader.SetMatrix(Math::Matrix::CreateTranslation(0, 0, 0));
 	SHADER.m_spriteShader.DrawTex(&blackBackTex, Math::Rectangle{ 0,0,1280,720 }, &color);
 
-	color = { 1,0,0,1 };
+	//ゲームオーバー文字
+	color = { 1,0,0,textAlpha };
 	SHADER.m_spriteShader.SetMatrix(mat);
 	SHADER.m_spriteShader.DrawTex(&tex, Math::Rectangle{ 0,0,207,61 }, &color);
-
+	
+	color = { 1,1,1,textAlpha };
+	//左クリックでリトライ文字
 	SHADER.m_spriteShader.SetMatrix(LclickMat);
-	SHADER.m_spriteShader.DrawTex(&LclickTex, Math::Rectangle{ 0,0,387,71 });
+	SHADER.m_spriteShader.DrawTex(&LclickTex, Math::Rectangle{ 0,0,387,71 },&color);
 
+	//右クリックでタイトル文字
 	SHADER.m_spriteShader.SetMatrix(RclickMat);
-	SHADER.m_spriteShader.DrawTex(&RclickTex, Math::Rectangle{ 0,0,467,71 });
+	SHADER.m_spriteShader.DrawTex(&RclickTex, Math::Rectangle{ 0,0,467,71 },&color);
 
-	color = { 1,1,1,0.7 };
+	//リトライ文字
+	color = { 1,1,1,retryAlpha };
 	SHADER.m_spriteShader.SetMatrix(retryMat);
 	SHADER.m_spriteShader.DrawTex(&retryTex, Math::Rectangle{ 0,0,147,67 },&color);
 

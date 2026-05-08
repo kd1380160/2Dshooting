@@ -2,9 +2,13 @@
 
 struct S_player
 {
-	KdTexture* Tex;
+	KdTexture* HP4Tex;
+	KdTexture* HP3Tex;
+	KdTexture* HP2Tex;
+	KdTexture* HP1Tex;
 	KdTexture* EngineTex;
 	KdTexture* EngineBaseTex;
+	KdTexture* ExplosionTex;
 	Math::Matrix Mat;
 	Math::Matrix Trans;
 	Math::Matrix Scale;

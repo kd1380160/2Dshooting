@@ -42,7 +42,29 @@ void C_Generator::Update()
 	}
 	if (isFinishLockOnAnim)
 	{
-		lockOnBlinkingCnt++;
+		if (!isReduction)
+		{
+			lockOnSize -= 0.4f;
+			if (lockOnSize <= 5.0f)
+			{
+				lockOnSize = 5.0f;
+				isReduction = true;
+			}
+		}
+		else
+		{
+			lockOnSize += 0.4f;
+			if (lockOnSize >= 7.0f)
+			{
+				lockOnSize = 7.0f;
+				isFinishReduction = true;
+			}
+		}
+
+		if (isFinishReduction)
+		{
+			lockOnBlinkingCnt++;
+		}
 	}
 
 	rotateAngle += 70;
@@ -54,7 +76,7 @@ void C_Generator::Update()
 	enemy.Mat = enemy.Scale * rotateMat * enemy.Trans;
 
 
-	enemy.Scale = Math::Matrix::CreateScale(7, 7, 1);
+	enemy.Scale = Math::Matrix::CreateScale(lockOnSize, lockOnSize, 1);
 	enemy.LockOnMat = enemy.Scale * enemy.Trans;
 }
 

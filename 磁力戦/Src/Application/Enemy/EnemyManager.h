@@ -113,6 +113,7 @@ private:
 	bool isTutorialEnemyDead;
 	bool isStartChangeWave;
 	int SpawnCnt;
+	int waveCnt;
 	
 	
 private:

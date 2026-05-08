@@ -13,6 +13,7 @@ public:
 
 	void ChangeWave(int nextwave);
 	bool GetIsFinishDirection() { return isFinishDirection; }
+	void SetIsFinishDirectionFalse() { isFinishDirection = false; }
 private:
 
 	bool isChangingWave;

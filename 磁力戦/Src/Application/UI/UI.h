@@ -32,6 +32,7 @@ private:
 	float energyAlpha;
 	float redEnergyBlockAlpha;
 	bool isRedBlockDisappear;
+	bool isFirstAppear=false;
 
 	KdTexture SunTex;
 	Math::Matrix SunMat;

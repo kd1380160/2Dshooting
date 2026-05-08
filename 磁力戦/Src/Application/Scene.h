@@ -16,9 +16,13 @@ private:
 	bool clickFlg;		//クリック入力用フラグ
 
 	//プレイヤー
-	KdTexture playerTex;
+	KdTexture playerhp4Tex;
+	KdTexture playerhp3Tex;
+	KdTexture playerhp2Tex;
+	KdTexture playerhp1Tex;
 	KdTexture playerEngineTex;
 	KdTexture playerEngineBaseTex;
+	KdTexture playerExplosionTex;
 	C_Player player;
 	
 

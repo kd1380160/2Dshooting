@@ -1,4 +1,5 @@
 #include "Enemy3Bullet.h"
+#include "../Scene.h"
 
 C_Enemy3Bullet::C_Enemy3Bullet(KdTexture* tex, Math::Vector2 pos)
 {
@@ -38,7 +39,7 @@ void C_Enemy3Bullet::Update(Math::Vector2 playerpos)
 	}
 	color = { Red, Green, Blue, alpha };
 	//行列作成
-	bullet.Trans = Math::Matrix::CreateTranslation(bullet.Pos.x, bullet.Pos.y, 1);
+	bullet.Trans = Math::Matrix::CreateTranslation(bullet.Pos.x + SCENE.GetPlayer()->GetShakeAmount(), bullet.Pos.y + SCENE.GetPlayer()->GetShakeAmount(), 1);
 	bullet.Scale = Math::Matrix::CreateScale(circleSize, circleSize, 1);
 	bullet.Mat = bullet.Scale * bullet.Trans;
 }

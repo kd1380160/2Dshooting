@@ -248,12 +248,17 @@ void C_BulletManager::Update()
 					{
 						if (!isJamming) //磁力弾阻害が入っていない場合（敵3の弾が存在していない）
 						{
-							magneticBullets[i]->Shot();
-							magneticBullets[i]->SetIsHomingTrue();
+							if (!magneticBullets[i]->GetIsShotFlg())
+							{
+								magneticBullets[i]->Shot();
+								magneticBullets[i]->SetIsHomingTrue();
+							}
 						}
 					}
 				}
 
+				SCENE.GetPlayer()->SetIsRecoil(true);
+				SCENE.GetPlayer()->Shake();
 				ShotMagBullet();
 			}
 		}
@@ -742,6 +747,19 @@ bool C_BulletManager::MagneticBulletAliveCheck()
 		}
 	}
 	return false;
+}
+
+bool C_BulletManager::GetIsMagBulletMax() const
+{
+	for (int i = 0;i < MAGNETIC_BULLET_MAX;++i)
+	{
+		if (magneticBullets[i] == nullptr)
+		{
+			return false;
+		}
+	}
+	
+	return true;
 }
 
 void C_BulletManager::Release()

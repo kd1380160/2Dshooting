@@ -36,6 +36,8 @@ public:
 	bool EnemyBulletAliveCheck();
 	bool MagneticBulletAliveCheck();
 	bool GetIsJamming()const { return isJamming; }
+	bool GetIsMagBulletMax()const;
+	bool GeiIsShotMag()const { return isMagShot; }
 
 	void Release();
 	void ClearAllBullet();

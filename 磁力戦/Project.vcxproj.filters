@@ -172,6 +172,9 @@
     <ClInclude Include="Src\Application\UI\UI.h" />
     <ClInclude Include="Src\Application\Scene\Tutorial.h" />
     <ClInclude Include="Src\Application\GameSystem\Cursor\Cursor.h" />
+    <ClInclude Include="Src\Application\Effect\EnemyDebri\EnemyDebri.h" />
+    <ClInclude Include="Src\Application\Effect\EmitHeat\EmitHeat.h" />
+    <ClInclude Include="Src\Application\Transition\Transition.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Pch.cpp">
@@ -267,6 +270,9 @@
     <ClCompile Include="Src\Application\UI\UI.cpp" />
     <ClCompile Include="Src\Application\Scene\Tutorial.cpp" />
     <ClCompile Include="Src\Application\GameSystem\Cursor\Cursor.cpp" />
+    <ClCompile Include="Src\Application\Effect\EnemyDebri\EnemyDebri.cpp" />
+    <ClCompile Include="Src\Application\Effect\EmitHeat\EmitHeat.cpp" />
+    <ClCompile Include="Src\Application\Transition\Transition.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="説明.txt" />

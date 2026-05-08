@@ -37,7 +37,7 @@ void C_Enemy1Bullet::Update(Math::Vector2 playerpos)
 	bullet.Pos += bulletMove;
 
 	//行列作成
-	bullet.Trans = Math::Matrix::CreateTranslation(bullet.Pos.x, bullet.Pos.y, 1);
+	bullet.Trans = Math::Matrix::CreateTranslation(bullet.Pos.x + SCENE.GetPlayer()->GetShakeAmount(), bullet.Pos.y + SCENE.GetPlayer()->GetShakeAmount(), 1);
 	bullet.Scale = Math::Matrix::CreateScale(1, 1, 1);
 	bullet.Mat = bullet.Scale * bullet.Trans;
 }

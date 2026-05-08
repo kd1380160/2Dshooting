@@ -23,8 +23,9 @@ void C_UI::Init()
 	isInvincible = false;
 	isShake = false;
 	isRedBlockDisappear = false;
+	isFirstAppear = false;
 	shakeLock = 0;
-	energyAlpha = 0.7f;
+	energyAlpha = 0.0f;
 	redEnergyBlockAlpha = 1.0f;
 	sunAlpha = 1.0f;
 	energyColor = { 1,1,1,energyAlpha };
@@ -33,7 +34,15 @@ void C_UI::Init()
 
 void C_UI::Update()
 {
-
+	if (!isFirstAppear)
+	{
+		energyAlpha += 0.01f;
+		if (energyAlpha >= 0.7f)
+		{
+			energyAlpha = 0.7f;
+			isFirstAppear = true;
+		}
+	}
 	if (!isInvincible)
 	{
 		if (SCENE.GetPlayer()->GetisInvincible())

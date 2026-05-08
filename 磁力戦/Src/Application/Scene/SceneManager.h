@@ -47,10 +47,13 @@ public:
 	void		SetNowWave(WaveList now) { NowWave = now; }
 	bool		GetIsFinishPage2()		 { return tutorial.GetIsFinishPage2(); }
 	KdTexture* GetNumberTex()			 { return result.GetNumberTex(); }
+	C_GameOver* GetGameOver() { return &gameOver; }
 	void StartTimeCnt() { isTime = true; }
 	void StopTimeCnt()	{ isTime = false;}
 	int GePlayTime()	{ return timeCnt/60; }
 	C_Text* GetText()	{ return &text; }
+	C_Result* GetResult() { return &result; }
+	bool GetIsWave1TextFin() { return isWave1TextFinish; }
 private:
 
 	SceneList NowScene;
@@ -65,6 +68,8 @@ private:
 
 	int timeCnt=60*61;
 	bool isTime;
+	bool isWave1TextFinish=false;
+	bool isWave1TextStart=false;
 
 private:
 

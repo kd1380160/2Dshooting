@@ -9,11 +9,13 @@ C_MagneticBullet::C_MagneticBullet(KdTexture* tex, Math::Vector2 pos)
 	magDeg = 0;
 	degree = 0;
 	cnt = 0;
+	chargeCnt = 0;
 	moveAmount = { 0,0 };
 	isAbsorption = false;
 	isShot = false;
 	isHoming = false;
 	isHaveTarget = false;
+	isCharge = false;
 }
 
 void C_MagneticBullet::Init()
@@ -31,9 +33,24 @@ void C_MagneticBullet::Update(Math::Vector2 playerpos, Math::Vector2 enemypos,in
 
 		magDeg += degreeIncrease;
 
-		moveAmount.x = cos(magDeg * 3.14f / 180) * 100;
-		moveAmount.y = sin(magDeg * 3.14f / 180) * 100;
+		if (!isCharge)
+		{
+			moveAmount.x = cos(magDeg * 3.14f / 180) * 100;
+			moveAmount.y = sin(magDeg * 3.14f / 180) * 100;
+		}
+		else
+		{
+			chargeCnt++;
+			if (chargeCnt >= 10)
+			{
+				//chargeCnt = 0;
+				isCharge = false;
+				isShot = true;
+			}
 
+			moveAmount.x = cos(magDeg * 3.14f / 180) * (100 - chargeCnt * 5);
+			moveAmount.y = sin(magDeg * 3.14f / 180) * (100 - chargeCnt * 5);
+		}
 
 
 		bullet.Pos.x = SCENE.GetPlayer()->GetPlayerPos().x + moveAmount.x;
@@ -45,7 +62,7 @@ void C_MagneticBullet::Update(Math::Vector2 playerpos, Math::Vector2 enemypos,in
 		const float b = bullet.Pos.y - destinationPos.y;
 		const float c = sqrt(a * a + b * b);
 
-		if (c<10)
+		if (c<20)
 		{
 			isHoming = false;
 		}
@@ -60,8 +77,8 @@ void C_MagneticBullet::Update(Math::Vector2 playerpos, Math::Vector2 enemypos,in
 	}
 	
 	//s—ñì¬
-	bullet.Trans = Math::Matrix::CreateTranslation(bullet.Pos.x, bullet.Pos.y, 0);
-	bullet.Scale = Math::Matrix::CreateScale(1, 1, 1);
+	bullet.Trans = Math::Matrix::CreateTranslation(bullet.Pos.x+SCENE.GetPlayer()->GetShakeAmount(), bullet.Pos.y + SCENE.GetPlayer()->GetShakeAmount(), 0);
+	bullet.Scale = Math::Matrix::CreateScale(1.5, 1.5, 1);
 	bullet.Mat = bullet.Scale * bullet.Trans;
 }
 
@@ -101,7 +118,7 @@ float C_MagneticBullet::GetAngleDeg(float srcX, float srcY, float destX, float d
 
 void C_MagneticBullet::Shot()
 {
-	isShot = true;
+	isCharge = true;
 }
 
 void C_MagneticBullet::SetTarget(int enemytype, int enemynum)

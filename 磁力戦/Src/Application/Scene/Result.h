@@ -11,6 +11,7 @@ public:
 	void Update();
 	void Draw();
 
+	float GetShakeAmount() { return shakeAmount; }
 	KdTexture* GetNumberTex() { return &numberTex; }
 private:
 
@@ -24,6 +25,8 @@ private:
 	bool isRClick;
 	bool isBlight;
 	bool isFinishCounting;
+	bool isShow;
+	bool isShake;
 	KdTexture numberTex;
 	KdTexture clearTex;
 	KdTexture clearTimeTex;
@@ -48,8 +51,12 @@ private:
 	float lightAlphaAdd;
 	float choiceLightAlpha;
 	float choiceLightAlphaAdd;
+	float textAlpha;
+	float textAlphaAdd;
 	int time;
 	int timeCnt;
 	int minute;
 	int second;
+	int shakeCnt;
+	float shakeAmount;
 };

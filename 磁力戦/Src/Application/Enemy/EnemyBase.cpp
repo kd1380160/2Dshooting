@@ -35,15 +35,18 @@ void C_EnemyBase::LockOnAnimUpdate()
 	
 		lockOnPos[i] += lockOnMoveAmount;
 
-		if (distance<=20)
+		if (distance <= 20)
 		{
+
+
 			isFinishLockOnAnim = true;
+
 		}
 	}
 	
 
 	Math::Matrix trans, scale;
-	scale = Math::Matrix::CreateScale(7, 7, 1);
+	scale = Math::Matrix::CreateScale(7.0f, 7.0f, 1);
 
 	for(int i=0;i<LOCKON_DIVISION_NUM;++i)
 	{ 

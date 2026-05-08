@@ -26,6 +26,7 @@ private:
 	int shotRandCnt;
 	int nowWave;
 	int nowSet;
+	int number;
 	static const int ENEMY_RADIUS = 32;
 	static const int ENEMY_HP_MAX = 5;
 
