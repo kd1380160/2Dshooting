@@ -42,7 +42,8 @@ public:
 	bool GetIsEnemy1Dead()const;
 	bool GetIsFinishWave4();									//wave4が終了したかどうかを返す
 	int GetLeftEnemyNum();										//残りの敵数を返す
-	int GetMaxEnemyWaveNum();									//waveのMAX敵数を返す
+	int GetMaxEnemyWaveNum(int next);							//waveのMAX敵数を返す
+	bool GetIsFinishWave() { return isFinishWave; }
 	Math::Vector2 GetLockOnEnemyPos(int type, int number);
 
 	KdTexture* GetEnemy1Tex() { return &enemy1Tex; }
@@ -81,7 +82,7 @@ private:
 
 	//敵4
 	static const int ENEMY4_MAX = 5;
-	static const int WAVE4_AMOUNT = 10;
+	static const int WAVE4_AMOUNT = 15;
 	C_Enemy4* enemy4[ENEMY4_MAX] = {};
 	KdTexture enemy4Tex;
 	KdTexture enemy4BreakTex;

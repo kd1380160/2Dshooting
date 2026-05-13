@@ -47,8 +47,10 @@ void C_BossBullet::Update(Math::Vector2 playerpos)
 
 void C_BossBullet::Draw()
 {
+	Math::Color col = { 1,2,1,1.0f };
+
 	SHADER.m_spriteShader.SetMatrix(bullet.Mat);
-	SHADER.m_spriteShader.DrawTex(bullet.Tex, Math::Rectangle{ 0,0,16,16 });
+	SHADER.m_spriteShader.DrawTex(bullet.Tex, Math::Rectangle{ 0,0,16,16 },&col);
 }
 
 float C_BossBullet::GetAngleDeg(float srcX, float srcY, float destX, float destY)

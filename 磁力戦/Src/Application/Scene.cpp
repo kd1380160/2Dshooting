@@ -60,24 +60,28 @@ void Scene::Update()
 		SCENE_MGR.SetNowScene(Game);
 		SCENE_MGR.SetNowWave(Wave1);
 		UI.ShowLeftEnemy();
+		UI.SetNextWave(1);
 	}
 	else if (GetAsyncKeyState('6') & 0x8000)
 	{
 		SCENE_MGR.SetNowScene(Game);
 		SCENE_MGR.SetNowWave(Wave2);
 		UI.ShowLeftEnemy();
+		UI.SetNextWave(2);
 	}
 	else if (GetAsyncKeyState('7') & 0x8000)
 	{
 		SCENE_MGR.SetNowScene(Game);
 		SCENE_MGR.SetNowWave(Wave3);
 		UI.ShowLeftEnemy();
+		UI.SetNextWave(3);
 	}
 	else if (GetAsyncKeyState('8') & 0x8000)
 	{
 		SCENE_MGR.SetNowScene(Game);
 		SCENE_MGR.SetNowWave(Wave4);
 		UI.ShowLeftEnemy();
+		UI.SetNextWave(4);
 	}
 	else if (GetAsyncKeyState('9') & 0x8000)
 	{
@@ -143,6 +147,10 @@ void Scene::Init()
 	ENEMY_MGR.Init();
 	BULLET_MGR.Init();
 	BACKGRND.Init();
+
+	//BGM.StopBGM();
+	//BGM.SetBGM(Title);
+	//BGM.PlayBGM();
 }
 
 void Scene::LoadTexture()

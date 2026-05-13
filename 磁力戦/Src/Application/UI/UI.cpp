@@ -9,6 +9,7 @@ C_UI::C_UI()
 	SunTex.Load("Assets/Image/Effect/Sun.png");
 	leftEnemyTex.Load("Assets/Image/UI/enemy.png");
 	slashTex.Load("Assets/Image/UI/slash.png");
+	hpTex.Load("Assets/Image/UI/hp.png");
 }
 
 C_UI::~C_UI()
@@ -19,12 +20,15 @@ C_UI::~C_UI()
 	SunTex.Release();
 	leftEnemyTex.Release();
 	slashTex.Release();
+	hpTex.Release();
 }
 
 void C_UI::Init()
 {
 	life = LIFE_MAX;
 	leftEnemyNum = 0;
+	maxEnemyNum = 0;
+	nextWave = 1;
 	isInvincible = false;
 	isShake = false;
 	isRedBlockDisappear = false;
@@ -33,6 +37,7 @@ void C_UI::Init()
 	canCntUp = false;
 	shakeLock = 0;
 	enemyUpCnt = 0;
+	enemyMaxUpCnt = 0;
 	energyAlpha = 0.0f;
 	leftEnemyAlpha = 0.0f;
 	redEnergyBlockAlpha = 1.0f;
@@ -56,7 +61,7 @@ void C_UI::Update()
 	//============================
 
 	
-
+	//体力ゲージの表示
 	if (!isFirstAppear)
 	{
 		energyAlpha += 0.01f;
@@ -67,6 +72,7 @@ void C_UI::Update()
 		}
 	}
 
+	//残り敵数の表示
 	if (canShowLeftEnemy)
 	{
 		leftEnemyAlpha += 0.01f;
@@ -77,9 +83,10 @@ void C_UI::Update()
 		}
 	}
 
+	//残り敵数・MAX敵数のカウントアップ
 	if (canCntUp)
 	{
-		if (leftEnemyNum < ENEMY_MGR.GetMaxEnemyWaveNum())
+		if (leftEnemyNum < ENEMY_MGR.GetMaxEnemyWaveNum(nextWave))
 		{
 			enemyUpCnt++;
 			if (enemyUpCnt >= 10)
@@ -92,10 +99,33 @@ void C_UI::Update()
 		{
 			canCntUp = false;
 		}
+
+		if (maxEnemyNum < ENEMY_MGR.GetMaxEnemyWaveNum(nextWave))
+		{
+			enemyMaxUpCnt++;
+			if (enemyMaxUpCnt >= 3)
+			{
+				maxEnemyNum++;
+				enemyMaxUpCnt = 0;
+			}
+		}
+		else if(maxEnemyNum>ENEMY_MGR.GetMaxEnemyWaveNum(nextWave))
+		{
+			enemyMaxUpCnt++;
+			if (enemyMaxUpCnt >= 3)
+			{
+				maxEnemyNum--;
+				enemyMaxUpCnt = 0;
+			}
+		}
 	}
 	else
 	{
-		leftEnemyNum = ENEMY_MGR.GetLeftEnemyNum();
+		if (!ENEMY_MGR.GetIsFinishWave())
+		{
+			leftEnemyNum = ENEMY_MGR.GetLeftEnemyNum();
+			maxEnemyNum = ENEMY_MGR.GetMaxEnemyWaveNum(nextWave);
+		}
 	}
 
 	if (!isInvincible)
@@ -170,6 +200,10 @@ void C_UI::Update()
 	trans = Math::Matrix::CreateTranslation(redEnergyBlockPos.x + shakeLock, redEnergyBlockPos.y + shakeLock, 0);
 	redEnergyBlockMat = scale * trans;
 
+	scale = Math::Matrix::CreateScale(0.6f, 0.6f, 0);
+	trans = Math::Matrix::CreateTranslation(energyPos.x - 150 + shakeLock, energyPos.y + 4 + shakeLock, 0);
+	hpMat = scale * trans;
+
 	scale = Math::Matrix::CreateScale(1, 1, 0);
 	trans = Math::Matrix::CreateTranslation(SunPos.x, SunPos.y, 0);
 	SunMat = scale * trans;
@@ -239,6 +273,8 @@ void C_UI::Draw()
 	}
 
 	
+	SHADER.m_spriteShader.SetMatrix(hpMat);
+	SHADER.m_spriteShader.DrawTex(&hpTex, Math::Rectangle{ 0,0,67,61 }, &energyColor);
 
 	if (SCENE_MGR.GetNowScene() != SceneList::Tutorial)
 	{
@@ -264,11 +300,11 @@ void C_UI::Draw()
 			}
 			else if (i == 3)
 			{
-				SHADER.m_spriteShader.DrawTex(SCENE_MGR.GetResult()->GetNumberTex(), Math::Rectangle{ ENEMY_MGR.GetMaxEnemyWaveNum() / 10 * 6,0,6,11 }, &color);
+				SHADER.m_spriteShader.DrawTex(SCENE_MGR.GetResult()->GetNumberTex(), Math::Rectangle{ maxEnemyNum / 10 * 6,0,6,11 }, &color);
 			}
 			else if (i == 4)
 			{
-				SHADER.m_spriteShader.DrawTex(SCENE_MGR.GetResult()->GetNumberTex(), Math::Rectangle{ ENEMY_MGR.GetMaxEnemyWaveNum() % 10 * 6,0,6,11 }, &color);
+				SHADER.m_spriteShader.DrawTex(SCENE_MGR.GetResult()->GetNumberTex(), Math::Rectangle{ maxEnemyNum % 10 * 6,0,6,11 }, &color);
 			}
 		}
 	}
@@ -287,7 +323,6 @@ void C_UI::ShakeEnergy()
 			shakeLock = 0;
 			shakeCnt = 0;
 			isShake = false;
-			
 		}
 	}
 }

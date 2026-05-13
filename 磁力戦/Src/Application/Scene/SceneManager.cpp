@@ -203,6 +203,7 @@ void C_SceneManager::SetNowScene(SceneList now)
 		EFFECT_MGR.Init();
 		UI.Init();
 		UI.ShowLeftEnemy();
+		UI.StartCntUp();
 		NowWave = WaveList::Wave1;
 	}
 	else

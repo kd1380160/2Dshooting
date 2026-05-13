@@ -196,6 +196,8 @@
     <ClInclude Include="Src\Application\Scene\SceneManager.h" />
     <ClInclude Include="Src\Application\Scene\Title.h" />
     <ClInclude Include="Src\Application\Scene\Tutorial.h" />
+    <ClInclude Include="Src\Application\Sound\BGM\BGM.h" />
+    <ClInclude Include="Src\Application\Sound\SE\SE.h" />
     <ClInclude Include="Src\Application\Transition\Transition.h" />
     <ClInclude Include="Src\Application\UI\UI.h" />
     <ClInclude Include="Src\System\Audio\KdAudio.h" />
@@ -254,6 +256,8 @@
     <ClCompile Include="Src\Application\Scene\SceneManager.cpp" />
     <ClCompile Include="Src\Application\Scene\Title.cpp" />
     <ClCompile Include="Src\Application\Scene\Tutorial.cpp" />
+    <ClCompile Include="Src\Application\Sound\BGM\BGM.cpp" />
+    <ClCompile Include="Src\Application\Sound\SE\SE.cpp" />
     <ClCompile Include="Src\Application\Transition\Transition.cpp" />
     <ClCompile Include="Src\Application\UI\UI.cpp" />
     <ClCompile Include="Src\System\Audio\KdAudio.cpp" />

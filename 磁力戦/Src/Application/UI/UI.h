@@ -14,6 +14,7 @@ public:
 	void ShakeEnergy();
 	void ShowLeftEnemy() { canShowLeftEnemy = true; }
 	void StartCntUp() { canCntUp = true; }
+	void SetNextWave(int next) { nextWave = next; }
 private:
 
 	static const int LIFE_MAX = 4;
@@ -29,17 +30,23 @@ private:
 	KdTexture redEnergyBlockTex;
 	KdTexture leftEnemyTex;
 	KdTexture slashTex;
+	KdTexture hpTex;
 	Math::Matrix energyMat;
 	Math::Matrix redEnergyBlockMat;
 	Math::Matrix leftEnemyMat;
 	Math::Matrix numberMat[5];
+	Math::Matrix hpMat;
 	Math::Vector2 energyPos = {0,-320};
 	Math::Vector2 redEnergyBlockPos = {94,-320};
 	Math::Vector2 leftEnemyPos = { -63,-280 };
+	
 	Math::Color energyColor;
 	int life;
 	int leftEnemyNum;
+	int maxEnemyNum;
 	int enemyUpCnt;
+	int enemyMaxUpCnt;
+	int nextWave;
 	float energyAlpha;
 	float leftEnemyAlpha;
 	float redEnergyBlockAlpha;
@@ -49,7 +56,7 @@ private:
 	//ライト関連
 	KdTexture SunTex;
 	Math::Matrix SunMat;
-	Math::Vector2 SunPos = { -95,-300 };
+	Math::Vector2 SunPos = { -95,-320 };
 	float sunAlpha;
 	float sunCnt;
 	

@@ -651,7 +651,7 @@ void C_EnemyManager::Update()
 
 									while (canspawn == false)
 									{
-										pos.y = rand() % 401 - 300;
+										pos.y = rand() % 391 - 240;
 										for (int j = 0;j < ENEMY4_MAX;++j)
 										{
 											if (enemy4[j] != nullptr)
@@ -945,14 +945,17 @@ void C_EnemyManager::WaveInterval()
 				case Wave1:
 					isStartChangeWave = true;
 					SCENE_MGR.GetText()->ChangeWave(2);
+					UI.SetNextWave(2);
 					break;
 				case Wave2:
 					isStartChangeWave = true;
 					SCENE_MGR.GetText()->ChangeWave(3);
+					UI.SetNextWave(3);
 					break;
 				case Wave3:
 					isStartChangeWave = true;
 					SCENE_MGR.GetText()->ChangeWave(4);
+					UI.SetNextWave(4);
 					break;
 				case Wave4:
 					isStartChangeWave = true;
@@ -962,7 +965,7 @@ void C_EnemyManager::WaveInterval()
 					SCENE_MGR.SetNowScene(SceneList::Result);
 					break;
 				}
-				
+				UI.StartCntUp();
 			}
 		}
 	}
@@ -1611,20 +1614,20 @@ int C_EnemyManager::GetLeftEnemyNum()
 	return 0;
 }
 
-int C_EnemyManager::GetMaxEnemyWaveNum()
+int C_EnemyManager::GetMaxEnemyWaveNum(int next)
 {
-	switch (SCENE_MGR.GetNowWave())
+	switch (next)
 	{
-	case WaveList::Wave1:
+	case 1:
 		return WAVE1_AMOUNT;
 		break;
-	case WaveList::Wave2:
+	case 2:
 		return WAVE2_AMOUNT;
 		break;
-	case WaveList::Wave3:
+	case 3:
 		return WAVE3_AMOUNT;
 		break;
-	case WaveList::Wave4:
+	case 4:
 		return WAVE4_AMOUNT;
 		break;
 	}

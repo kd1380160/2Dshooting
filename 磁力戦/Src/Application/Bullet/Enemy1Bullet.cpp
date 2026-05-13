@@ -44,8 +44,10 @@ void C_Enemy1Bullet::Update(Math::Vector2 playerpos)
 
 void C_Enemy1Bullet::Draw()
 {
+	Math::Color col = { 1,2,1,1.0f };
+
 	SHADER.m_spriteShader.SetMatrix(bullet.Mat);
-	SHADER.m_spriteShader.DrawTex(bullet.Tex, Math::Rectangle(0, 0, 16, 16));
+	SHADER.m_spriteShader.DrawTex(bullet.Tex, Math::Rectangle(0, 0, 16, 16),&col);
 }
 
 float C_Enemy1Bullet::GetAngleDeg(float srcX, float srcY, float destX, float destY)

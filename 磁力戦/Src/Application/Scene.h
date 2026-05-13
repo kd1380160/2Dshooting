@@ -1,5 +1,7 @@
 #pragma once
 #include"Scene/SceneManager.h"
+#include"Sound/BGM/BGM.h"
+#include"Sound/SE/SE.h"
 
 class Scene
 {

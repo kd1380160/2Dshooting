@@ -29,11 +29,13 @@ void C_BackGround::Update()
 
 void C_BackGround::Draw()
 {
+	Math::Color col = { 0.5f,0.5f,0.5f,1.0f };
+
 	SHADER.m_spriteShader.SetMatrix(backgroundMat[0]);
-	SHADER.m_spriteShader.DrawTex(&backgroundTex, Math::Rectangle{ 0,0,1320,730 });
+	SHADER.m_spriteShader.DrawTex(&backgroundTex, Math::Rectangle{ 0,0,1320,730 },&col);
 
 	SHADER.m_spriteShader.SetMatrix(backgroundMat[1]);
-	SHADER.m_spriteShader.DrawTex(&backgroundTex, Math::Rectangle{ 0,0,1320,730 });
+	SHADER.m_spriteShader.DrawTex(&backgroundTex, Math::Rectangle{ 0,0,1320,730 },&col);
 }
 
 void C_BackGround::Release()

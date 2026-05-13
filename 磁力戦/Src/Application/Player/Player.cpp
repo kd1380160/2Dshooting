@@ -426,7 +426,8 @@ void C_Player::Draw()
 			{
 				//非ジャミング
 				SHADER.m_spriteShader.SetMatrix(Math::Matrix::CreateTranslation(0, 0, 0));
-				SHADER.m_spriteShader.DrawCircle(player.Pos.x, player.Pos.y, 100, &Math::Color(0, 0, 10, 0.7), false); // 半透明の青い線
+				SHADER.m_spriteShader.DrawCircle(player.Pos.x, player.Pos.y, 100, &Math::Color(0, 1, 10, 0.7), false); // 半透明の緑の線
+				SHADER.m_spriteShader.DrawCircle(player.Pos.x, player.Pos.y, 99,  &Math::Color(0, 1, 0, 0.7), false);  // 半透明の緑の線
 			}
 		}
 		else
@@ -434,6 +435,7 @@ void C_Player::Draw()
 			//ジャミング中
 			SHADER.m_spriteShader.SetMatrix(Math::Matrix::CreateTranslation(0, 0, 0));
 			SHADER.m_spriteShader.DrawCircle(player.Pos.x, player.Pos.y, 100, &Math::Color(10, 0, 0, 0.7), false); // 半透明の赤い線
+			SHADER.m_spriteShader.DrawCircle(player.Pos.x, player.Pos.y, 99, &Math::Color(10, 0, 0, 0.7), false);  // 半透明の赤い線
 		}
 
 	}
