@@ -5,13 +5,12 @@ void C_BackGround::Init()
 {
 	backgroundPos[0] = {0,0};
 	backgroundPos[1] = {0,720};
-	
 }
 
 void C_BackGround::Update()
 {
-	backgroundPos[0].y -= 8;
-	backgroundPos[1].y -= 8;
+	backgroundPos[0].y -= 6;
+	backgroundPos[1].y -= 6;
 
 	if (backgroundPos[0].y <= -720)backgroundPos[0].y = 720;
 	if (backgroundPos[1].y <= -720)backgroundPos[1].y = 720;
@@ -30,19 +29,14 @@ void C_BackGround::Update()
 
 void C_BackGround::Draw()
 {
-	
-
 	SHADER.m_spriteShader.SetMatrix(backgroundMat[0]);
 	SHADER.m_spriteShader.DrawTex(&backgroundTex, Math::Rectangle{ 0,0,1320,730 });
 
 	SHADER.m_spriteShader.SetMatrix(backgroundMat[1]);
 	SHADER.m_spriteShader.DrawTex(&backgroundTex, Math::Rectangle{ 0,0,1320,730 });
-
-	
 }
 
 void C_BackGround::Release()
 {
-	backgroundTex.Release();
-	
+	backgroundTex.Release();	
 }

@@ -1,5 +1,6 @@
 #include "main.h"
 #include "Scene.h"
+#include "UI/UI.h"
 
 void Scene::Draw2D()
 {
@@ -44,6 +45,7 @@ void Scene::Update()
 	else if (GetAsyncKeyState('2') & 0x8000)
 	{
 		SCENE_MGR.SetNowScene(Game);
+		UI.ShowLeftEnemy();
 	}
 	else if (GetAsyncKeyState('3') & 0x8000)
 	{
@@ -52,6 +54,76 @@ void Scene::Update()
 	else if (GetAsyncKeyState('4') & 0x8000)
 	{
 		SCENE_MGR.SetNowScene(GameOver);
+	}
+	else if (GetAsyncKeyState('5') & 0x8000)
+	{
+		SCENE_MGR.SetNowScene(Game);
+		SCENE_MGR.SetNowWave(Wave1);
+		UI.ShowLeftEnemy();
+	}
+	else if (GetAsyncKeyState('6') & 0x8000)
+	{
+		SCENE_MGR.SetNowScene(Game);
+		SCENE_MGR.SetNowWave(Wave2);
+		UI.ShowLeftEnemy();
+	}
+	else if (GetAsyncKeyState('7') & 0x8000)
+	{
+		SCENE_MGR.SetNowScene(Game);
+		SCENE_MGR.SetNowWave(Wave3);
+		UI.ShowLeftEnemy();
+	}
+	else if (GetAsyncKeyState('8') & 0x8000)
+	{
+		SCENE_MGR.SetNowScene(Game);
+		SCENE_MGR.SetNowWave(Wave4);
+		UI.ShowLeftEnemy();
+	}
+	else if (GetAsyncKeyState('9') & 0x8000)
+	{
+		SCENE_MGR.SetNowScene(Game);
+		SCENE_MGR.SetNowWave(Boss);
+		UI.ShowLeftEnemy();
+	}
+	
+	if (GetAsyncKeyState('J') & 0x8000)
+	{
+		SCENE_MGR.SetTimeCnt(60 * 180);
+		//timeCnt = 60 * 180;
+		SCENE_MGR.SetNowScene(Result);
+	}
+	if (GetAsyncKeyState('K') & 0x8000)
+	{
+		SCENE_MGR.SetTimeCnt(60 * 240);
+		//timeCnt = 60 * 240;
+		SCENE_MGR.SetNowScene(Result);
+	}
+	if (GetAsyncKeyState('L') & 0x8000)
+	{
+		SCENE_MGR.SetTimeCnt(60 * 241);
+		//timeCnt = 60 * 241;
+		SCENE_MGR.SetNowScene(Result);
+	}
+
+	if (GetAsyncKeyState(VK_SPACE) & 0x8000)
+	{
+		if (!isSpace_Debug)
+		{
+			isSpace_Debug = true;
+			
+			if (isDebugWindow)
+			{
+				isDebugWindow = false;
+			}
+			else
+			{
+				isDebugWindow = true;
+			}
+		}
+	}
+	else
+	{
+		isSpace_Debug = false;
 	}
 }
 
@@ -111,10 +183,10 @@ void Scene::Release()
 
 void Scene::ImGuiUpdate()
 {
-	return;
+	if(!isDebugWindow)return;
 
 	ImGui::SetNextWindowPos(ImVec2(20, 20), ImGuiSetCond_Once);
-	ImGui::SetNextWindowSize(ImVec2(200, 100), ImGuiSetCond_Once);
+	ImGui::SetNextWindowSize(ImVec2(100, 50), ImGuiSetCond_Once);
 
 	// デバッグウィンドウ
 	if (ImGui::Begin("Debug Window"))

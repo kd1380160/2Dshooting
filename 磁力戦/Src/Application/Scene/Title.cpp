@@ -44,23 +44,47 @@ void C_Title::Init()
 
 void C_Title::Update()
 {
-	if (!TRANSITION.GetIsTransition())
+	if (GetAsyncKeyState(VK_RETURN) & 0x8000)
 	{
-		if (GetAsyncKeyState(VK_LBUTTON) & 0x8000)
+		if (!isEnter_Debug)
 		{
-			if (!isClick)
+			isEnter_Debug = true;
+			if (canStartGame_Debug)
 			{
-				isClick = true;
-				if (!isChangeScene)
-				{
-					isChangeScene = true;
-				}
-
+				canStartGame_Debug = false;
+			}
+			else
+			{
+				canStartGame_Debug = true;
 			}
 		}
-		else
+	}
+	else
+	{
+		isEnter_Debug = false;
+	}
+
+
+	if (!TRANSITION.GetIsTransition())
+	{
+		if (canStartGame_Debug)
 		{
-			isClick = false;
+			if (GetAsyncKeyState(VK_LBUTTON) & 0x8000)
+			{
+				if (!isClick)
+				{
+					isClick = true;
+					if (!isChangeScene)
+					{
+						isChangeScene = true;
+					}
+
+				}
+			}
+			else
+			{
+				isClick = false;
+			}
 		}
 
 		if (GetAsyncKeyState('W') & 0x8000)

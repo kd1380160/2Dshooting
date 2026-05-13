@@ -26,6 +26,9 @@ private:
 	bool isS;
 	bool isD;
 
+	bool canStartGame_Debug = false;
+	bool isEnter_Debug = false;
+
 
 	KdTexture MAGTex;
 	KdTexture LOCKONTex;

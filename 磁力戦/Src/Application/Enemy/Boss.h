@@ -25,6 +25,8 @@ public:
 	int GetBossRadius()const { return BOSS_RADIUS; }
 private:
 
+	bool isB_Debug;
+
 	S_Enemy boss;
 	const int BOSS_HP_MAX = 100;
 	const int BOSS_RADIUS = 64;

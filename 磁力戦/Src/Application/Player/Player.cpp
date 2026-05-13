@@ -18,6 +18,7 @@ C_Player::C_Player()
 	isLight = false;
 	isRecoil = false;
 	isShotMagBullet = false;
+	cantShot_Debug = false;
 	playerAlpha = 1.0f;
 	lightAlpha = 0.0f;
 	lightAlphaAdd = 0.1f;
@@ -48,6 +49,7 @@ void C_Player::Init()
 	isRecoil = false;
 	isShotMagBullet = false;
 	isFinish = false;
+	cantShot_Debug = false;
 	playerAlpha = 1.0f;
 	lightAlpha = 0.0f;
 	lightAlphaAdd = 0.1f;
@@ -63,6 +65,7 @@ void C_Player::Init()
 
 void C_Player::Update()
 {
+
 
 	animCnt++;
 	if (animCnt >= 12)
@@ -210,22 +213,25 @@ void C_Player::Update()
 			}
 
 
-			if (SCENE_MGR.GetIsWave1TextFin())
+			if (!cantShot_Debug)
 			{
-				if (player.Hp > 0)
+				if (SCENE_MGR.GetIsWave1TextFin())
 				{
-					if (SCENE_MGR.GetNowWave() == Boss)
+					if (player.Hp > 0)
 					{
-						if (ENEMY_MGR.GetBossHp() > 0)
+						if (SCENE_MGR.GetNowWave() == Boss)
 						{
-							//通常弾発射
+							if (ENEMY_MGR.GetBossHp() > 0)
+							{
+								//通常弾発射
+								ShotNormalBullet();
+							}
+						}
+						else if (SCENE_MGR.GetNowScene() == Tutorial) {}
+						else
+						{
 							ShotNormalBullet();
 						}
-					}
-					else if (SCENE_MGR.GetNowScene() == Tutorial) {}
-					else
-					{
-						ShotNormalBullet();
 					}
 				}
 			}
@@ -291,9 +297,73 @@ void C_Player::Update()
 		else
 		{
 			player.Pos += player.Move * player.Speed;
+		
+			if (player.Pos.y >= 360 - PLAYER_RADIUS)
+			{
+				player.Pos.y = 360 - PLAYER_RADIUS;
+			}
 		}
+
+
+	}
+	//=============発表会用================
+
+	//体力ＭＡＸ
+	if (GetAsyncKeyState('Z') & 0x8000)
+	{
+		player.Hp = PLAYER_MAX_HP;
 	}
 
+	//通常弾を撃たないように(トグルスイッチ)
+	if (GetAsyncKeyState('X') & 0x8000)
+	{
+		if (!isX_Debug)
+		{
+			isX_Debug = true;
+			if (!cantShot_Debug)
+			{
+				cantShot_Debug = true;
+			}
+			else
+			{
+				cantShot_Debug = false;
+			}
+		}
+	}
+	else
+	{
+		isX_Debug = false;
+	}
+
+	//体力を０に
+	if (GetAsyncKeyState('C') & 0x8000)
+	{
+		if (!isC_Debug)
+		{
+			isC_Debug = true;
+			player.Hp = 0;
+		}
+	}
+	else
+	{
+		isC_Debug = false;
+	}
+
+	if (player.Pos.x <= -640 + PLAYER_RADIUS)
+	{
+		player.Pos.x = -640 + PLAYER_RADIUS;
+	}
+	else if (player.Pos.x >= 640 - PLAYER_RADIUS)
+	{
+		player.Pos.x = 640 - PLAYER_RADIUS;
+	}
+
+	if (player.Pos.y <= -360 + PLAYER_RADIUS+20)
+	{
+		player.Pos.y = -360 + PLAYER_RADIUS+20;
+	}
+	
+	//====================================
 	
 	//行列作成
 	player.Scale = Math::Matrix::CreateScale(2, 2, 1);
@@ -383,7 +453,7 @@ void C_Player::Draw()
 		else
 		{
 			SHADER.m_spriteShader.SetMatrix(expMat);
-			SHADER.m_spriteShader.DrawTex(player.ExplosionTex, Math::Rectangle{ 64 * (expAnimXCnt / 5),64 * expAnimYCnt,64,64 });
+			SHADER.m_spriteShader.DrawTex(player.ExplosionTex, Math::Rectangle{ 64 * (expAnimXCnt / 5),65 * expAnimYCnt,64,64 });
 		}
 	}
 
@@ -420,10 +490,10 @@ void C_Player::KeyProcess()
 		
 
 		//WASDで上下左右移動
-		if (GetAsyncKeyState('W') & 0x8000)	player.Move.y = 1;
-		if (GetAsyncKeyState('S') & 0x8000)	player.Move.y = -1;
-		if (GetAsyncKeyState('D') & 0x8000)	player.Move.x = 1;
-		if (GetAsyncKeyState('A') & 0x8000)	player.Move.x = -1;
+		if (GetAsyncKeyState('W') & 0x8000)	player.Move.y += 1;
+		if (GetAsyncKeyState('S') & 0x8000)	player.Move.y += -1;
+		if (GetAsyncKeyState('D') & 0x8000)	player.Move.x += 1;
+		if (GetAsyncKeyState('A') & 0x8000)	player.Move.x += -1;
 
 		player.Move.Normalize();//正規化
 	}

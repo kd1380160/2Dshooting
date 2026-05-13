@@ -13,6 +13,7 @@ public:
 	int GetHp() const { return enemy.HP; }
 private:
 	bool isHit;
+	bool isV_Debug;
 	static const int ENEMY_RADIUS = 32;
 	int rotateAngle;
 	Math::Matrix rotateMat;

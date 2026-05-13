@@ -1,5 +1,6 @@
 #include "Text.h"
 #include "../../Scene.h"
+#include "../../UI/UI.h"
 
 C_Text::C_Text()
 {
@@ -62,6 +63,7 @@ void C_Text::Update()
 				isUp = true;
 				waveCnt = 0;
 				waveAlphaAdd = -0.03f;
+				UI.StartCntUp();
 			}
 		}
 

@@ -20,6 +20,19 @@ void C_Generator::Init()
 
 void C_Generator::Update()
 {
+	if (GetAsyncKeyState('V') & 0x8000)
+	{
+		if (!isV_Debug)
+		{
+			isV_Debug = true;
+			enemy.HP = 0;
+		}
+	}
+	else
+	{
+		isV_Debug = false;
+	}
+
 	enemy.Pos += enemy.Move;
 	if (enemy.Pos.y <= 200)enemy.Pos.y = 200;
 
@@ -82,8 +95,8 @@ void C_Generator::Update()
 
 void C_Generator::Draw()
 {
-	Math::Color col = { 1,1,1,1 };
-	if (isLockOn)col = { 10,10,10,1 };
+	Math::Color col = { 5,5,5,1 };
+	//if (isLockOn)col = { 10,10,10,1 };
 
 	SHADER.m_spriteShader.SetMatrix(enemy.Mat);
 	SHADER.m_spriteShader.DrawTex(enemy.Tex, Math::Rectangle{ 0,0,64,64 },&col);

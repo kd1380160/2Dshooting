@@ -58,7 +58,7 @@ C_Enemy1::C_Enemy1(KdTexture* tex, KdTexture* breakTex, KdTexture* enginetex, Kd
 	enemy.LockOnTex = lockonTex;
 	isTutorial = istutorial;
 	enemy.Radius = ENEMY_RADIUS;
-	enemy.Pos = { 0,500 };
+	enemy.Pos = { 0,600 };
 	enemy.Move = { 0,-10 };
 	enemy.HP = ENEMY_HP_MAX;
 	isLockOn = false;
@@ -84,19 +84,19 @@ void C_Enemy1::Update(Math::Vector2 playerpos)
 			switch (number)
 			{
 			case 0:
-				if (enemy.Pos.y <= 220)enemy.Pos.y = 220;
+				if (enemy.Pos.y <= 240)enemy.Pos.y = 240;
 				break;
 			case 1:
-				if (enemy.Pos.y <= 200)enemy.Pos.y = 200;
+				if (enemy.Pos.y <= 210)enemy.Pos.y = 210;
 				break;
 			case 2:
 				if (enemy.Pos.y <= 180)enemy.Pos.y = 180;
 				break;
 			case 3:
-				if (enemy.Pos.y <= 200)enemy.Pos.y = 200;
+				if (enemy.Pos.y <= 210)enemy.Pos.y = 210;
 				break;
 			case 4:
-				if (enemy.Pos.y <= 220)enemy.Pos.y = 220;
+				if (enemy.Pos.y <= 240)enemy.Pos.y = 240;
 				break;
 			}
 		}

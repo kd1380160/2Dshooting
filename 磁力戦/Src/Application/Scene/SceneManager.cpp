@@ -49,6 +49,8 @@ void C_SceneManager::Init()
 
 void C_SceneManager::Update()
 {
+
+	
 	
 		switch (NowScene)
 		{
@@ -200,6 +202,7 @@ void C_SceneManager::SetNowScene(SceneList now)
 		text.Init();
 		EFFECT_MGR.Init();
 		UI.Init();
+		UI.ShowLeftEnemy();
 		NowWave = WaveList::Wave1;
 	}
 	else

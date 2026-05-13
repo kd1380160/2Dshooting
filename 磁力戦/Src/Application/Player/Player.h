@@ -62,6 +62,9 @@ private:
 	bool isRecoil;
 	bool isShotMagBullet;
 	bool isFinish=false;
+	bool cantShot_Debug;
+	bool isX_Debug;
+	bool isC_Debug;
 	int invincibleCnt;
 	int expAnimXCnt;
 	int expAnimYCnt;

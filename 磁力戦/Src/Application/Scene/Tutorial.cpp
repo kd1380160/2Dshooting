@@ -19,6 +19,8 @@ void C_Tutorial::Init()
 	isLClick = true;
 	isWindow = false;
 	isFinishWindow = false;
+	isFinishPage1 = false;
+	isFinishPage2 = false;
 	isPage1 = false;
 	isPage2 = false;
 	canStartSceneChange = false;

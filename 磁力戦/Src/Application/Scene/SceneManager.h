@@ -41,6 +41,7 @@ public:
 
 	void Release();
 	void SetNowScene(SceneList now);
+	void SetTimeCnt(int cnt) { timeCnt = cnt; }
 
 	WaveList	GetNowWave()			 { return NowWave; }
 	SceneList	GetNowScene()			 { return NowScene; }
@@ -66,11 +67,12 @@ private:
 	C_Tutorial tutorial;
 	C_Cursor cursor;
 
-	int timeCnt=60*61;
+	int timeCnt=60*241;
 	bool isTime;
 	bool isWave1TextFinish=false;
 	bool isWave1TextStart=false;
-
+	
+	
 private:
 
 	C_SceneManager() { 

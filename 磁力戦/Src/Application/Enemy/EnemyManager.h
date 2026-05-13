@@ -40,6 +40,9 @@ public:
 	bool GetIsBossDead();										//ボスを倒したかどうかを返す
 	bool GetIsEnemy1Lockon();
 	bool GetIsEnemy1Dead()const;
+	bool GetIsFinishWave4();									//wave4が終了したかどうかを返す
+	int GetLeftEnemyNum();										//残りの敵数を返す
+	int GetMaxEnemyWaveNum();									//waveのMAX敵数を返す
 	Math::Vector2 GetLockOnEnemyPos(int type, int number);
 
 	KdTexture* GetEnemy1Tex() { return &enemy1Tex; }
@@ -47,10 +50,11 @@ public:
 private:
 
 	bool isClick;
+	bool isFinishWave4;
 
 	//敵
 	static const int ENEMY1_MAX = 5;
-	static const int ENEMY1_AMOUNT = 10;
+	static const int WAVE1_AMOUNT = 10;
 	C_Enemy1* enemy1[ENEMY1_MAX] = {};
 	KdTexture enemy1Tex;
 	KdTexture enemy1BreakTex;
@@ -59,7 +63,7 @@ private:
 
 	//敵２
 	static const int ENEMY2_MAX = 5;
-	static const int ENEMY2_AMOUNT = 10;
+	static const int WAVE2_AMOUNT = 15;
 	C_Enemy2* enemy2[ENEMY2_MAX] = {};
 	KdTexture enemy2Tex;
 	KdTexture enemy2BreakTex;
@@ -67,7 +71,7 @@ private:
 
 	//敵3
 	static const int ENEMY3_MAX = 1;
-	static const int ENEMY3_AMOUNT = 10;
+	static const int WAVE3_AMOUNT = 13;
 	C_Enemy3* enemy3= {};
 	KdTexture enemy3Tex;
 	KdTexture enemy3BreakTex;
@@ -77,7 +81,7 @@ private:
 
 	//敵4
 	static const int ENEMY4_MAX = 5;
-	static const int ENEMY4_AMOUNT = 10;
+	static const int WAVE4_AMOUNT = 10;
 	C_Enemy4* enemy4[ENEMY4_MAX] = {};
 	KdTexture enemy4Tex;
 	KdTexture enemy4BreakTex;
@@ -88,7 +92,8 @@ private:
 	C_Generator* generator[GENERATOR_MAX] = {};
 	KdTexture generatorTex;
 
-	int enemyKillCnt=0;
+	int enemySpawnCnt=0;
+	int enemyKillCnt = 0;
 	int returnPosCnt=0;
 	
 	static	const int LOCKON_ENEMY_MAX = 5;

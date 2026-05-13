@@ -4,7 +4,7 @@
 class C_Enemy4 : public C_EnemyBase
 {
 public:
-	C_Enemy4(KdTexture* tex, KdTexture* breaktex, KdTexture* engineTex, KdTexture* lockonTex);
+	C_Enemy4(KdTexture* tex, KdTexture* breaktex, KdTexture* engineTex, KdTexture* lockonTex,Math::Vector2 pos);
 
 	void Init();
 	void Update(Math::Vector2 playerpos);

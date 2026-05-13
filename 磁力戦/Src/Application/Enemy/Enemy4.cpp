@@ -1,28 +1,29 @@
 #include "Enemy4.h"
 #include "../Scene.h"
 
-C_Enemy4::C_Enemy4(KdTexture* tex, KdTexture* breaktex,KdTexture* enginetex, KdTexture* lockonTex)
+C_Enemy4::C_Enemy4(KdTexture* tex, KdTexture* breaktex,KdTexture* enginetex, KdTexture* lockonTex,Math::Vector2 pos)
 {
 	enemy.Tex = tex;
 	enemy.BreakTex = breaktex;
 	enemy.EngineTex = enginetex;
 	enemy.LockOnTex = lockonTex;
+	enemy.Pos = pos;
 	if (rand() % 2 == 0) //左から出現、右に移動
 	{
-		enemy.Pos.x = -700+rand() % 101; // -650から-550の範囲でランダムに出現
+		enemy.Pos.x = -750+rand() % 101; // -650から-550の範囲でランダムに出現
 		enemy.Move = { 3,0 };
 		rotateAngle = 90;
 	}
 	else //右から出現、左に移動
 	{
-		enemy.Pos.x = 700+rand() % 101; // 650から750の範囲でランダムに出現
+		enemy.Pos.x = 750+rand() % 101; // 650から750の範囲でランダムに出現
 		enemy.Move = { -3,0 };
 		rotateAngle = -90;
 	}
 
-	enemy.HP = 5;
+	enemy.HP = 7;
 	enemy.Radius = ENEMY_RADIUS;
-	enemy.Pos.y = rand() % 301 - 200;
+	//enemy.Pos.y = rand() % 301 - 200;
 	isLockOn = false;
 	isHit = false;
 	isAppear = false;

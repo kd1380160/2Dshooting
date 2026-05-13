@@ -15,6 +15,9 @@ private:
 	POINT releasePos;	//クリックを離した瞬間のマウス座標
 	bool clickFlg;		//クリック入力用フラグ
 
+	bool isDebugWindow=false;
+	bool isSpace_Debug=false;
+
 	//プレイヤー
 	KdTexture playerhp4Tex;
 	KdTexture playerhp3Tex;

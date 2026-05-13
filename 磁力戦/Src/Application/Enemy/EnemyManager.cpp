@@ -1,6 +1,7 @@
 #include "EnemyManager.h"
 #include"../Scene.h"
 #include "../Transition/Transition.h"
+#include "../UI/UI.h"
 
 void C_EnemyManager::Draw()
 {
@@ -163,6 +164,8 @@ void C_EnemyManager::Init()
 	isFinishWave = false;
 	isTutorialEnemySpawn = false;
 	isTutorialEnemyDead = false;
+	isFinishWave4 = false;
+	enemySpawnCnt = 0;
 	enemyKillCnt = 0;
 	returnPosCnt = 0;
 	SpawnCnt = 0;
@@ -271,7 +274,7 @@ void C_EnemyManager::Update()
 
 				if (!isFinishWave)
 				{
-					if (enemyKillCnt < 10)
+					if (enemySpawnCnt < WAVE1_AMOUNT)
 					{
 						if (SpawnCnt >= 20)
 						{
@@ -281,6 +284,7 @@ void C_EnemyManager::Update()
 								if (enemy1[i] == nullptr)
 								{
 									SpawnCnt = 0;
+									enemySpawnCnt++;
 									enemy1[i] = new C_Enemy1(&enemy1Tex, &enemy1BreakTex, &enemy1EngineTex, &lockOnTex, i, WaveList::Wave1, setCnt);
 									break;
 								}
@@ -344,7 +348,7 @@ void C_EnemyManager::Update()
 			case Wave2:
 				if (!isFinishWave)
 				{
-					if (enemyKillCnt < 15)
+					if (enemySpawnCnt < WAVE2_AMOUNT)
 					{
 						if (SpawnCnt >= 20)
 						{
@@ -357,19 +361,31 @@ void C_EnemyManager::Update()
 										
 									Math::Vector2 pos = { 0,400 };
 									pos.x = rand() % 1001 - 500;
+									bool canspawn = false;
 
-									for (int j = 2;j < ENEMY2_MAX;++j)
+									while (canspawn==false)
 									{
-										if (enemy2[j] != nullptr)
+										pos.x = rand() % 1001 - 500;
+										for (int j = 2;j < ENEMY2_MAX;++j)
 										{
-											if (abs(enemy2[j]->GetPos().x - pos.x) <= 150)
+											if (enemy2[j] != nullptr)
 											{
-												pos.x = rand() % 1001 - 500;
-
+												if (abs(enemy2[j]->GetPos().x - pos.x) <= 200)
+												{
+													break;
+												}
+												else if (j == ENEMY2_MAX - 1)
+												{
+													canspawn = true;
+												}
+											}
+											else if (j == ENEMY2_MAX - 1)
+											{
+												canspawn = true;
 											}
 										}
 									}
-
+									enemySpawnCnt++;
 									enemy2[i] = new C_Enemy2(&enemy2Tex, &enemy2BreakTex, &enemy2EngineTex, &lockOnTex, i, pos);
 									break;
 								}
@@ -398,13 +414,9 @@ void C_EnemyManager::Update()
 							enemy2[i]->Update(SCENE.GetPlayer()->GetPlayerPos());
 							if (enemy2[i]->GetFinishAnim())
 							{
-
-
 								delete enemy2[i];
 								enemy2[i] = nullptr;
 								enemyKillCnt++;
-
-
 							}
 						}
 					}
@@ -445,7 +457,6 @@ void C_EnemyManager::Update()
 							if (enemy3 == nullptr)
 							{
 								enemy3 = new C_Enemy3(&enemy3Tex, &enemy3BreakTex, &enemy3EngineTex, &lockOnTex);
-
 							}
 
 							for (int i = 0;i < ENEMY1_MAX;i++)
@@ -468,10 +479,7 @@ void C_EnemyManager::Update()
 						{
 							for (int i = 0;i < ENEMY1_MAX;++i)
 							{
-								if (enemy1[i] != nullptr)
-								{
-									break;
-								}
+								if (enemy1[i] != nullptr)break;
 
 								if (i == ENEMY1_MAX - 1)
 								{
@@ -483,7 +491,6 @@ void C_EnemyManager::Update()
 								}
 							}
 						}
-
 					}
 					else if (setCnt == 2)
 					{
@@ -509,11 +516,8 @@ void C_EnemyManager::Update()
 						{
 							for (int i = 0;i < ENEMY1_MAX;++i)
 							{
-								if (enemy1[i] != nullptr)
-								{
-									break;
-								}
-
+								if (enemy1[i] != nullptr)break;
+								
 								if (i == ENEMY1_MAX - 1)
 								{
 									spawnEnemy = false;
@@ -547,7 +551,6 @@ void C_EnemyManager::Update()
 						{
 							if (enemy3 == nullptr)
 							{
-
 								for (int i = 0;i < ENEMY1_MAX;++i)
 								{
 									if (enemy1[i] != nullptr)
@@ -557,7 +560,6 @@ void C_EnemyManager::Update()
 
 									if (i == ENEMY1_MAX - 1)
 									{
-
 										spawnEnemy = false;
 										isFinishWave = true;
 										setCnt = 0;
@@ -577,6 +579,7 @@ void C_EnemyManager::Update()
 							{
 								delete enemy1[i];
 								enemy1[i] = nullptr;
+								enemyKillCnt++;
 							}
 						}
 					}
@@ -588,6 +591,7 @@ void C_EnemyManager::Update()
 						{
 							delete enemy3;
 							enemy3 = nullptr;
+							enemyKillCnt++;
 						}
 					}
 
@@ -630,7 +634,7 @@ void C_EnemyManager::Update()
 			case Wave4:
 				if (!isFinishWave)
 				{
-					if (enemyKillCnt < 10)
+					if (enemySpawnCnt < WAVE4_AMOUNT)
 					{
 						if (SpawnCnt >= 20)
 						{
@@ -640,7 +644,35 @@ void C_EnemyManager::Update()
 								if (enemy4[i] == nullptr)
 								{
 									SpawnCnt = 0;
-									enemy4[i] = new C_Enemy4(&enemy4Tex, &enemy4BreakTex, &enemy4EngineTex, &lockOnTex);
+
+									Math::Vector2 pos = { 0,0 };
+									pos.y = rand() % 1001 - 500;
+									bool canspawn = false;
+
+									while (canspawn == false)
+									{
+										pos.y = rand() % 401 - 300;
+										for (int j = 0;j < ENEMY4_MAX;++j)
+										{
+											if (enemy4[j] != nullptr)
+											{
+												if (abs(enemy4[j]->GetPos().y - pos.y) <= 60)
+												{
+													break;
+												}
+												else if (j == ENEMY4_MAX - 1)
+												{
+													canspawn = true;
+												}
+											}
+											else if (j == ENEMY4_MAX - 1)
+											{
+												canspawn = true;
+											}
+										}
+									}
+									enemySpawnCnt++;
+									enemy4[i] = new C_Enemy4(&enemy4Tex, &enemy4BreakTex, &enemy4EngineTex, &lockOnTex,pos);
 									break;
 								}
 							}
@@ -654,18 +686,31 @@ void C_EnemyManager::Update()
 
 									Math::Vector2 pos = { 0,400 };
 									pos.x = rand() % 1001 - 500;
+									bool canspawnene2 = false;
 
-									for (int j = 2;j < ENEMY2_MAX;++j)
+									while (canspawnene2 == false)
 									{
-										if (enemy2[j] != nullptr)
+										pos.x = rand() % 1001 - 500;
+										for (int j = 2;j < ENEMY2_MAX;++j)
 										{
-											if (abs(enemy2[j]->GetPos().x - pos.x) <= 150)
+											if (enemy2[j] != nullptr)
 											{
-												pos.x = rand() % 1001 - 500;
-
+												if (abs(enemy2[j]->GetPos().x - pos.x) <= 200)
+												{
+													break;
+												}
+												else if (j == ENEMY2_MAX - 1)
+												{
+													canspawnene2 = true;
+												}
+											}
+											else if (j == ENEMY2_MAX - 1)
+											{
+												canspawnene2 = true;
 											}
 										}
 									}
+									enemySpawnCnt++;
 									enemy2[i] = new C_Enemy2(&enemy2Tex, &enemy2BreakTex, &enemy2EngineTex, &lockOnTex, i, pos);
 									break;
 								}
@@ -685,7 +730,7 @@ void C_EnemyManager::Update()
 									if (enemy4[j] != nullptr)break;
 									if (j == ENEMY4_MAX - 1)
 									{
-
+										isFinishWave4 = true;
 										isFinishWave = true;
 									}
 								}
@@ -892,6 +937,9 @@ void C_EnemyManager::WaveInterval()
 
 			if (!isStartChangeWave)
 			{
+				enemyKillCnt = 0;
+				enemySpawnCnt = 0;
+				
 				switch (SCENE_MGR.GetNowWave())
 				{
 				case Wave1:
@@ -926,6 +974,7 @@ void C_EnemyManager::WaveInterval()
 
 		if (isStartChangeWave)
 		{
+			
 			switch (SCENE_MGR.GetNowWave())
 			{
 			case Wave1:
@@ -933,7 +982,6 @@ void C_EnemyManager::WaveInterval()
 				{
 					SCENE_MGR.SetNowWave(Wave2);
 					SCENE_MGR.GetText()->SetIsFinishDirectionFalse();
-					enemyKillCnt = 0;
 					isFinishWave = false;
 					isStartChangeWave = false;
 					waveCnt = 0;
@@ -944,7 +992,6 @@ void C_EnemyManager::WaveInterval()
 				{
 					SCENE_MGR.SetNowWave(Wave3);
 					SCENE_MGR.GetText()->SetIsFinishDirectionFalse();
-					enemyKillCnt = 0;
 					waveCnt = 0;
 					isFinishWave = false;
 					isStartChangeWave = false;
@@ -955,7 +1002,6 @@ void C_EnemyManager::WaveInterval()
 				{
 					SCENE_MGR.SetNowWave(Wave4);
 					SCENE_MGR.GetText()->SetIsFinishDirectionFalse();
-					enemyKillCnt = 0;
 					waveCnt = 0;
 					isFinishWave = false;
 					isStartChangeWave = false;
@@ -966,7 +1012,6 @@ void C_EnemyManager::WaveInterval()
 				{
 					SCENE_MGR.SetNowWave(Boss);
 					SCENE_MGR.GetText()->SetIsFinishDirectionFalse();
-					enemyKillCnt = 0;
 					waveCnt = 0;
 					isFinishWave = false;
 					isStartChangeWave = false;
@@ -1538,6 +1583,52 @@ bool C_EnemyManager::GetIsEnemy1Dead()const
 	}
 
 	return false;
+}
+
+bool C_EnemyManager::GetIsFinishWave4()
+{
+	return isFinishWave4;
+}
+
+int C_EnemyManager::GetLeftEnemyNum()
+{
+	switch (SCENE_MGR.GetNowWave())
+	{
+	case WaveList::Wave1:
+		return WAVE1_AMOUNT - enemyKillCnt;
+		break;
+	case WaveList::Wave2:
+		return WAVE2_AMOUNT - enemyKillCnt;
+		break;
+	case WaveList::Wave3:
+		return WAVE3_AMOUNT - enemyKillCnt;
+		break;
+	case WaveList::Wave4:
+		return WAVE4_AMOUNT - enemyKillCnt;
+		break;
+	}
+
+	return 0;
+}
+
+int C_EnemyManager::GetMaxEnemyWaveNum()
+{
+	switch (SCENE_MGR.GetNowWave())
+	{
+	case WaveList::Wave1:
+		return WAVE1_AMOUNT;
+		break;
+	case WaveList::Wave2:
+		return WAVE2_AMOUNT;
+		break;
+	case WaveList::Wave3:
+		return WAVE3_AMOUNT;
+		break;
+	case WaveList::Wave4:
+		return WAVE4_AMOUNT;
+		break;
+	}
+	return 0;
 }
 
 

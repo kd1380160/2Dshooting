@@ -48,6 +48,19 @@ void C_Boss::Init()
 
 void C_Boss::Update(int generatorHp)
 {	
+	if (GetAsyncKeyState('B') & 0x8000)
+	{
+		if (!isB_Debug)
+		{
+			isB_Debug = true;
+			boss.HP = 0;
+		}
+	}
+	else
+	{
+		isB_Debug = false;
+	}
+
 	if (boss.HP > 0)
 	{
 		attackAnimCnt+=1;
@@ -57,9 +70,9 @@ void C_Boss::Update(int generatorHp)
 		}
 	
 
-		if (boss.Pos.y < 250)
+		if (boss.Pos.y < 220)
 		{
-			boss.Pos.y = 250;
+			boss.Pos.y = 220;
 			boss.Move.y = 0;
 			isShot = true;
 		}
@@ -122,21 +135,25 @@ void C_Boss::Update(int generatorHp)
 				if (shotCnt <= 20)
 				{
 					BULLET_MGR.ShotBossBullet(boss.Pos, angle, 4);
+					//BULLET_MGR.ShotBossBullet(boss.Pos, bossLV1Angle, 4);
 					angle += 3;
 				}
 				else if (shotCnt <= 30)
 				{
 					BULLET_MGR.ShotBossBullet2(boss.Pos, angle);
+					//BULLET_MGR.ShotBossBullet2(boss.Pos, bossLV1Angle);
 					angle += 3;
 				}
 				else if (shotCnt <= 40)
 				{
 					BULLET_MGR.ShotBossBullet(boss.Pos, angle, 4);
+					//BULLET_MGR.ShotBossBullet(boss.Pos, bossLV1Angle, 4);
 					angle += 3;
 				}
 				else if (shotCnt <= 50)
 				{
 					BULLET_MGR.ShotBossBullet2(boss.Pos, angle);
+					//BULLET_MGR.ShotBossBullet2(boss.Pos, bossLV1Angle);
 					angle += 3;
 				}
 				else if (shotCnt >= 80)
@@ -148,8 +165,9 @@ void C_Boss::Update(int generatorHp)
 
 				
 				bossLV1AngleAdd++;
-				bossLV1Angle = sin(bossLV1AngleAdd * 0.05) * 60.0f;
+				bossLV1Angle = sin(bossLV1AngleAdd * 0.043) * 60.0f;
 				boss.Rot = Math::Matrix::CreateRotationZ(DirectX::XMConvertToRadians(bossLV1Angle));
+				//boss.Rot = Math::Matrix::CreateRotationZ(DirectX::XMConvertToRadians(angle));
 			}
 			else //シールド破壊後（第二形態）
 			{
@@ -215,21 +233,7 @@ void C_Boss::Update(int generatorHp)
 		}
 		
 		boss.Pos += boss.Move;
-		//if (!isMove) //中央に来た時に止める(第二形態への移行のため)
-		//{
-		//	if (boss.Pos.x < 0)
-		//	{
-		//		boss.Pos.x += 1;
-		//		if (boss.Pos.x >= 0)boss.Pos.x = 0;
-		//		bossMoveXangle = 0;
-		//	}
-		//	else
-		//	{
-		//		boss.Pos.x -= 1;
-		//		if (boss.Pos.x <= 0)boss.Pos.x = 0;
-		//		bossMoveXangle = 0;
-		//	}
-		//}
+		
 	}
 	else //ボスのHPが0になったら
 	{

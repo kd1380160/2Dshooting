@@ -218,12 +218,12 @@ void C_Enemy2::Update(Math::Vector2 playerpos)
 
 void C_Enemy2::Draw()
 {
-	Math::Color col = { 1,1,1,1 };
+	Math::Color col = { 3,3,3,1 };
 
 
 	if (isHit)
 	{
-		Math::Color col = { 1,1,1,1 };
+		col = { 1,1,1,1 };
 		SHADER.m_spriteShader.SetMatrix(enemy.Mat);
 		SHADER.m_spriteShader.DrawTex(enemy.BreakTex, Math::Rectangle(64 * (enemy.animCnt/3), 0, 64, 64), &col);
 	}
